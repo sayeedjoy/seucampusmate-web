@@ -56,15 +56,15 @@ const testimonials = [
 ];
 
 const Testimonials = () => (
-  <div className="flex min-h-screen items-center justify-center py-12">
-    <div className="h-full w-full">
-      <h2 className="text-pretty px-6 text-center font-semibold text-5xl tracking-[-0.03em]">
+  <div className="flex min-h-0 items-center justify-center py-8 md:py-12">
+    <div className="h-full w-full overflow-hidden">
+      <h2 className="text-pretty px-6 text-center font-semibold text-3xl sm:text-4xl md:text-5xl tracking-[-0.03em]">
         What our users say
       </h2>
       <p className="mt-3 text-center text-muted-foreground text-xl">
         See what our users have to say about CampusMate
       </p>
-      <div className="relative mt-14">
+      <div className="relative mt-8 md:mt-14 overflow-hidden">
         <div className="absolute inset-y-0 left-0 z-10 w-[15%] bg-linear-to-r from-background to-transparent" />
         <div className="absolute inset-y-0 right-0 z-10 w-[15%] bg-linear-to-l from-background to-transparent" />
         <Marquee className="[--duration:20s]" pauseOnHover>
@@ -81,7 +81,7 @@ const Testimonials = () => (
 const TestimonialList = () =>
   testimonials.map((testimonial) => (
     <div
-      className="min-w-96 max-w-sm rounded-xl bg-accent p-6"
+      className="min-w-[280px] sm:min-w-96 max-w-sm rounded-xl bg-accent p-6"
       key={testimonial.id}
     >
       <div className="flex items-center justify-between">

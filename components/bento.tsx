@@ -190,12 +190,12 @@ const BentoGridSection = React.forwardRef<HTMLElement, BentoGridSectionProps>(
   ({ className, items = BENTO_ITEMS, ...props }, ref) => (
     <section
       ref={ref}
-      className={cn("w-full py-16 md:py-24", className)}
+      className={cn("w-full py-10 md:py-16 lg:py-24", className)}
       {...props}
     >
       <Container>
         <div className="mb-10 text-center">
-          <h2 className="text-balance text-5xl font-bold">
+          <h2 className="text-balance text-3xl sm:text-4xl md:text-5xl font-bold">
             Features for Your Campus Life
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">

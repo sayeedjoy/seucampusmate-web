@@ -19,10 +19,10 @@ export default function IntegrationsSection() {
 
     return (
         <section id="features">
-            <div className="py-32">
+            <div className="py-12 md:py-20 lg:py-32">
                 <Container className="py-0">
                     <div className="text-center">
-                        <h2 className="text-balance text-5xl font-bold">Everything You Need as an <AuroraText>SEU Student</AuroraText></h2>
+                        <h2 className="text-balance text-3xl sm:text-4xl md:text-5xl font-bold">Everything You Need as an <AuroraText>SEU Student</AuroraText></h2>
                         <p className="text-muted-foreground mt-6">Essential tools and resources to enhance your academic journey at Southeast University.</p>
                     </div>
 

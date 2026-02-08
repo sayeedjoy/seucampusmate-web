@@ -54,7 +54,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative bg-background min-h-screen lg:min-h-fit w-full pt-8 pb-2 sm:pt-10 sm:pb-4 md:pt-12 md:pb-5 lg:pt-16 lg:pb-0 xl:pt-20 xl:pb-0">
+    <section className="relative bg-background min-h-[60vh] sm:min-h-[70vh] lg:min-h-fit w-full pt-8 pb-2 sm:pt-10 sm:pb-4 md:pt-12 md:pb-5 lg:pt-16 lg:pb-0 xl:pt-20 xl:pb-0">
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={gridMaskStyle}
