@@ -29,7 +29,7 @@ export function BloodDonorStatistics({ availableDonors }: BloodDonorStatisticsPr
       'O+': { bg: 'bg-emerald-50', bar: 'bg-gradient-to-r from-emerald-400 to-emerald-500', text: 'text-emerald-700' },
       'O-': { bg: 'bg-emerald-50', bar: 'bg-gradient-to-r from-emerald-300 to-emerald-400', text: 'text-emerald-600' },
     };
-    return styles[bloodGroup] || { bg: 'bg-gray-50', bar: 'bg-gray-400', text: 'text-gray-700' };
+    return styles[bloodGroup] || { bg: 'bg-muted', bar: 'bg-muted-foreground/50', text: 'text-foreground' };
   };
 
   const sortedBloodGroups = Object.entries(bloodGroupDistribution)
@@ -40,7 +40,7 @@ export function BloodDonorStatistics({ availableDonors }: BloodDonorStatisticsPr
   return (
     <div className="space-y-6">
       {/* Main Stats Card */}
-      <Card className="p-6 bg-gradient-to-br from-red-50 via-white to-pink-50 border-0 shadow-lg overflow-hidden relative">
+      <Card className="p-6 bg-gradient-to-br from-red-50 via-background to-pink-50 dark:from-red-950/20 dark:via-background dark:to-pink-950/20 border-0 shadow-lg overflow-hidden relative">
         {/* Background decoration */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-100 to-pink-100 rounded-full blur-3xl opacity-60 -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-red-100 to-rose-100 rounded-full blur-2xl opacity-40 translate-y-1/2 -translate-x-1/2"></div>
@@ -53,8 +53,8 @@ export function BloodDonorStatistics({ availableDonors }: BloodDonorStatisticsPr
                 <Droplets className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-900">Blood Group Distribution</h3>
-                <p className="text-sm text-gray-500">Available donors by blood type</p>
+                <h3 className="text-lg font-bold text-foreground">Blood Group Distribution</h3>
+                <p className="text-sm text-muted-foreground">Available donors by blood type</p>
               </div>
             </div>
 
@@ -62,18 +62,18 @@ export function BloodDonorStatistics({ availableDonors }: BloodDonorStatisticsPr
             <div className="flex items-center gap-4">
               <div className="text-right">
                 <div className="flex items-center gap-1.5 justify-end">
-                  <Users className="h-4 w-4 text-gray-400" />
-                  <span className="text-2xl font-bold text-gray-900">{totalAvailableDonors}</span>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-2xl font-bold text-foreground">{totalAvailableDonors}</span>
                 </div>
-                <span className="text-xs text-gray-500">Total Donors</span>
+                <span className="text-xs text-muted-foreground">Total Donors</span>
               </div>
-              <div className="w-px h-10 bg-gray-200"></div>
+              <div className="w-px h-10 bg-border"></div>
               <div className="text-right">
                 <div className="flex items-center gap-1.5 justify-end">
                   <Heart className="h-4 w-4 text-green-500" />
                   <span className="text-2xl font-bold text-green-600">{readyDonors}</span>
                 </div>
-                <span className="text-xs text-gray-500">Ready Now</span>
+                <span className="text-xs text-muted-foreground">Ready Now</span>
               </div>
             </div>
           </div>
@@ -88,9 +88,9 @@ export function BloodDonorStatistics({ availableDonors }: BloodDonorStatisticsPr
                 <div key={bloodGroup} className={`p-3 rounded-xl ${style.bg} transition-all duration-200 hover:scale-[1.02]`}>
                   <div className="flex items-center justify-between mb-2">
                     <span className={`text-lg font-bold ${style.text}`}>{bloodGroup}</span>
-                    <span className="text-xl font-bold text-gray-900">{count}</span>
+                    <span className="text-xl font-bold text-foreground">{count}</span>
                   </div>
-                  <div className="h-2 bg-white/60 rounded-full overflow-hidden">
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className={`h-full ${style.bar} rounded-full transition-all duration-500`}
                       style={{ width: `${percentage}%` }}

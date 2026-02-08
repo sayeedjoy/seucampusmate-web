@@ -83,7 +83,7 @@ export function BloodDonorCard({ donor }: BloodDonorCardProps) {
   }
 
   return (
-    <Card className="relative overflow-hidden bg-white border border-gray-200">
+    <Card className="relative overflow-hidden">
       {/* Blood Group Badge */}
       <div className={`absolute top-0 right-0 ${getBloodGroupColor(donor.blood_group)} text-white px-4 py-2 rounded-bl-xl font-bold text-lg`}>
         {donor.blood_group}
@@ -100,7 +100,7 @@ export function BloodDonorCard({ donor }: BloodDonorCardProps) {
           </Avatar>
 
           <div className="flex-1 min-w-0 pt-1">
-            <h3 className="text-lg font-semibold text-gray-900 truncate pr-16">
+            <h3 className="text-lg font-semibold text-foreground truncate pr-16">
               {donor.name}
             </h3>
 
@@ -119,18 +119,18 @@ export function BloodDonorCard({ donor }: BloodDonorCardProps) {
         </div>
 
         {/* Divider */}
-        <div className="h-px bg-gray-200 mb-4" />
+        <div className="h-px bg-border mb-4" />
 
         {/* Contact & Info */}
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gray-100 rounded-lg">
-              <Phone className="h-4 w-4 text-gray-600" />
+            <div className="p-2 bg-muted rounded-lg">
+              <Phone className="h-4 w-4 text-muted-foreground" />
             </div>
             {showPhoneNumber ? (
               <a
                 href={`tel:${donor.phone_number}`}
-                className="text-gray-900 font-medium"
+                className="text-foreground font-medium"
               >
                 {donor.phone_number}
               </a>
@@ -142,11 +142,11 @@ export function BloodDonorCard({ donor }: BloodDonorCardProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gray-100 rounded-lg">
-              <Calendar className="h-4 w-4 text-gray-600" />
+            <div className="p-2 bg-muted rounded-lg">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
             </div>
-            <span className="text-sm text-gray-600">
-              Last donated: <span className="font-medium text-gray-800">{formatLastDonateDate(donor.last_donate_date)}</span>
+            <span className="text-sm text-muted-foreground">
+              Last donated: <span className="font-medium text-foreground">{formatLastDonateDate(donor.last_donate_date)}</span>
             </span>
           </div>
         </div>

@@ -5,8 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, Edit3, Eye } from 'lucide-react'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
-import { Header } from '@/components/navbar/header'
-import { Footer } from '@/components/footer'
 import {
   ClassicTemplate,
   ModernTemplate,
@@ -677,18 +675,15 @@ export default function CoverPageGenerator() {
   }
 
   return (
-    <>
-      <Header />
-
-      <div className="min-h-screen bg-gray-50">
-        {/* Simple Page Title */}
-        <div className="pt-6 sm:pt-8 pb-4 sm:pb-6">
-          <div className="container mx-auto px-4">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 text-center">
-              Cover Page Generator
-            </h1>
-          </div>
+    <div className="min-h-screen bg-background">
+      {/* Simple Page Title */}
+      <div className="pt-6 sm:pt-8 pb-4 sm:pb-6">
+        <div className="container mx-auto px-4">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-foreground text-center">
+            Cover Page Generator
+          </h1>
         </div>
+      </div>
 
         {/* Main Content */}
         <div className="container mx-auto px-4 py-4 sm:py-8 max-w-7xl">
@@ -706,7 +701,7 @@ export default function CoverPageGenerator() {
                   {/* Template Selection */}
                   <div className="mb-6">
                     <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-medium text-gray-700">
+                      <label className="text-sm font-medium text-muted-foreground">
                         Choose Template
                       </label>
                       <Button
@@ -722,7 +717,7 @@ export default function CoverPageGenerator() {
                       <select
                         value={selectedTemplate}
                         onChange={(e) => setSelectedTemplate(e.target.value as TemplateType)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 hover:border-gray-400 appearance-none bg-white pr-10"
+                        className="w-full px-4 py-3 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all duration-200 bg-background text-foreground appearance-none pr-10"
                       >
                         {templates.map((template) => (
                           <option key={template.id} value={template.id}>
@@ -740,7 +735,7 @@ export default function CoverPageGenerator() {
 
                   <div className="grid grid-cols-1 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-muted-foreground mb-1">
                         Task Title
                       </label>
                       <input
@@ -754,7 +749,7 @@ export default function CoverPageGenerator() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                           Faculty Initial
                         </label>
                         <input
@@ -766,7 +761,7 @@ export default function CoverPageGenerator() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                           Faculty Name
                         </label>
                         <input
@@ -781,7 +776,7 @@ export default function CoverPageGenerator() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                           Course Code
                         </label>
                         <input
@@ -793,7 +788,7 @@ export default function CoverPageGenerator() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                           Course Title
                         </label>
                         <input
@@ -807,7 +802,7 @@ export default function CoverPageGenerator() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-muted-foreground mb-1">
                         Program
                       </label>
                       <input
@@ -820,7 +815,7 @@ export default function CoverPageGenerator() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-muted-foreground mb-1">
                         Department
                       </label>
                       <input
@@ -834,7 +829,7 @@ export default function CoverPageGenerator() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                           Semester
                         </label>
                         <input
@@ -846,7 +841,7 @@ export default function CoverPageGenerator() {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                           Submission Date
                         </label>
                         <input
@@ -860,7 +855,7 @@ export default function CoverPageGenerator() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-muted-foreground mb-1">
                         Student Name
                       </label>
                       <input
@@ -873,7 +868,7 @@ export default function CoverPageGenerator() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-muted-foreground mb-1">
                         Student Code
                       </label>
                       <div className="flex gap-1 flex-wrap justify-start">
@@ -914,8 +909,8 @@ export default function CoverPageGenerator() {
             {/* Live Preview Panel */}
             <div className="space-y-4 sm:space-y-6">
               <Card className="shadow-lg border-0">
-                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 sm:p-6">
-                  <CardTitle className="flex items-center gap-2 text-gray-800 text-lg sm:text-xl">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-4 sm:p-6">
+                  <CardTitle className="flex items-center gap-2 text-foreground text-lg sm:text-xl">
                     <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                     Live Preview
                   </CardTitle>
@@ -927,9 +922,6 @@ export default function CoverPageGenerator() {
             </div>
           </div>
         </div>
-      </div>
-
-      <Footer />
-    </>
+    </div>
   )
 }

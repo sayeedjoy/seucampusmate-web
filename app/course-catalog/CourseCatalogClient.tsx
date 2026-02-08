@@ -3,8 +3,6 @@
 import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/ui/container";
-import { Header } from "@/components/navbar/header";
-import { Footer } from "@/components/footer";
 import {
     InputGroup,
     InputGroupInput,
@@ -12,7 +10,7 @@ import {
 } from "@/components/ui/input-group";
 import { Kbd } from "@/components/ui/kbd";
 import { Search, X, Filter } from "lucide-react";
-import { CourseSection } from "@/components/course-catalog/CourseSection";
+import { CourseSection } from "@/components/course-catalog/course-section";
 import { type Course, type CatalogData } from "./types";
 
 // Tabs configuration
@@ -59,10 +57,8 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
     const hasNoResults = !filteredCore.length && !filteredElectivesA.length && !filteredElectivesB.length;
 
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white">
-                <Container className="pt-16 md:pt-20 lg:pt-24 pb-16 text-zinc-900 font-inter">
+        <div className="min-h-screen bg-background">
+            <Container className="pt-16 md:pt-20 lg:pt-24 pb-16 text-foreground font-inter">
                     <div className="space-y-8 sm:space-y-10">
                         {/* Hero Header */}
                         <div className="text-center space-y-5 max-w-3xl mx-auto px-4">
@@ -71,13 +67,13 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
                                 Course Catalog
                             </h1>
 
-                            <p className="text-base sm:text-lg text-zinc-600 max-w-xl mx-auto leading-relaxed">
-                                Explore <strong className="text-zinc-800">{totalCourses}</strong> courses across core subjects and electives. Find prerequisites, credits, and detailed topics.
+                            <p className="text-base sm:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                                Explore <strong className="text-foreground">{totalCourses}</strong> courses across core subjects and electives. Find prerequisites, credits, and detailed topics.
                             </p>
 
                             {/* Search Bar */}
                             <div className="max-w-lg mx-auto mt-6">
-                                <InputGroup className="shadow-sm border-zinc-200">
+                                <InputGroup className="shadow-sm border-border">
                                     <InputGroupInput
                                         type="search"
                                         aria-label="Search courses"
@@ -93,7 +89,7 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
 
                                 {/* Search Results Count */}
                                 {searchQuery && (
-                                    <p className="text-sm text-zinc-500 mt-3 text-center">
+                                    <p className="text-sm text-muted-foreground mt-3 text-center">
                                         Found <strong className="text-primary">{totalFilteredCourses}</strong> of {totalCourses} courses
                                     </p>
                                 )}
@@ -102,15 +98,15 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
 
                         {/* Filter Tabs */}
                         <div className="flex justify-center px-4">
-                            <div className="inline-flex items-center gap-1 p-1 bg-zinc-100 rounded-xl shadow-inner">
-                                <Filter className="h-4 w-4 text-zinc-500 mx-2 hidden sm:block" />
+                            <div className="inline-flex items-center gap-1 p-1 bg-muted rounded-xl shadow-inner">
+                                <Filter className="h-4 w-4 text-muted-foreground mx-2 hidden sm:block" />
                                 {TABS.map((tab) => (
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`px-3 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${activeTab === tab.id
-                                            ? "bg-white text-primary shadow-md"
-                                            : "text-zinc-600 hover:text-zinc-900 hover:bg-white/50"
+                                            ? "bg-card text-primary shadow-md"
+                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
                                             }`}
                                     >
                                         {tab.label}
@@ -143,13 +139,13 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
 
                             {hasNoResults && (
                                 <div className="text-center py-16 sm:py-20">
-                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-zinc-100 mb-4">
-                                        <Search className="h-7 w-7 text-zinc-400" />
+                                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                                        <Search className="h-7 w-7 text-muted-foreground" />
                                     </div>
-                                    <h3 className="text-lg font-semibold text-zinc-800">
+                                    <h3 className="text-lg font-semibold text-foreground">
                                         No courses found
                                     </h3>
-                                    <p className="text-zinc-500 mt-1 text-sm">
+                                    <p className="text-muted-foreground mt-1 text-sm">
                                         No results for "{searchQuery}"
                                     </p>
                                     <button
@@ -164,8 +160,6 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
                         </div>
                     </div>
                 </Container>
-            </main>
-            <Footer />
-        </>
+        </div>
     );
 }

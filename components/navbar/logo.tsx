@@ -36,7 +36,7 @@ export function Logo({ className }: LogoProps) {
           className="object-contain"
         />
       </div>
-      <span className="font-semibold text-lg sm:text-xl md:text-2xl lg:text-2xl text-gray-900">
+      <span className="font-semibold text-lg sm:text-xl md:text-2xl lg:text-2xl text-foreground">
         <span className="hidden sm:inline">SEU CampusMate</span>
         <span className="sm:hidden">CAMPUSMATE</span>
       </span>

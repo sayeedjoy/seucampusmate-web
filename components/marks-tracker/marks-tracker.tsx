@@ -49,7 +49,7 @@ function Modal({ open, onClose, children, ariaLabel }: { open: boolean; onClose:
       className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto bg-black/40 backdrop-blur-sm"
     >
       <div className="absolute inset-0" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-lg mx-auto my-8 rounded-3xl bg-white shadow-2xl border border-gray-100 max-h-[90vh] overflow-hidden">
+      <div className="relative z-10 w-full max-w-lg mx-auto my-8 rounded-3xl bg-card shadow-2xl border border-border max-h-[90vh] overflow-hidden">
         {children}
       </div>
     </div>
@@ -97,7 +97,7 @@ function NumberInput({
 
   return (
     <label className="block">
-      <span className="text-xs font-medium text-gray-700">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground">{label}</span>
       <input
         id={id}
         type="text"
@@ -106,7 +106,7 @@ function NumberInput({
         onChange={handleChange}
         onBlur={handleBlur}
         placeholder={placeholder || "0"}
-        className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
+        className="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
       />
     </label>
   );
@@ -121,12 +121,12 @@ function Select({ label, value, onChange, options, id }: {
 }) {
   return (
     <label className="block">
-      <span className="text-sm font-medium text-gray-900">{label}</span>
+      <span className="text-sm font-medium text-foreground">{label}</span>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
+        className="mt-2 w-full rounded-xl border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
       >
         {options.map((opt) => (
           <option value={opt} key={opt}>{opt}</option>
@@ -223,8 +223,8 @@ export function MarksTracker() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900">Semester Marks Tracker</h2>
-          <p className="text-sm md:text-base text-gray-600 mt-1">Track your progress and plan for success</p>
+          <h2 className="text-xl md:text-2xl font-bold text-foreground">Semester Marks Tracker</h2>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">Track your progress and plan for success</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           {courses.length > 0 && (
@@ -259,27 +259,27 @@ export function MarksTracker() {
                 <CardHeader className="mb-2">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1">
-                      <div className="h-5 bg-gray-200 rounded-md w-3/4 mb-2"></div>
-                      <div className="h-4 bg-gray-200 rounded-md w-1/2"></div>
+                      <div className="h-5 bg-muted rounded-md w-3/4 mb-2"></div>
+                      <div className="h-4 bg-muted rounded-md w-1/2"></div>
                     </div>
                     <div className="flex gap-1">
-                      <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
-                      <div className="w-8 h-8 bg-gray-200 rounded-lg"></div>
+                      <div className="w-8 h-8 bg-muted rounded-lg"></div>
+                      <div className="w-8 h-8 bg-muted rounded-lg"></div>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                     {[1, 2, 3, 4, 5, 6].map((j) => (
-                      <div key={j} className="rounded-lg border border-gray-100 bg-gray-50 p-2 md:p-3">
-                        <div className="h-3 bg-gray-200 rounded w-full mb-1"></div>
-                        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                      <div key={j} className="rounded-lg border border-border bg-muted p-2 md:p-3">
+                        <div className="h-3 bg-muted rounded w-full mb-1"></div>
+                        <div className="h-4 bg-muted rounded w-2/3"></div>
                       </div>
                     ))}
                   </div>
                   <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                    <div className="h-4 bg-muted rounded w-1/3"></div>
                   </div>
                 </CardContent>
               </Card>
@@ -299,8 +299,8 @@ export function MarksTracker() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No courses yet</h3>
-                  <p className="text-gray-600 mb-6">Start tracking your academic progress by adding your first course.</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">No courses yet</h3>
+                  <p className="text-muted-foreground mb-6">Start tracking your academic progress by adding your first course.</p>
                   <div className="space-y-3">
                     <Button onClick={openCreate} className="w-full sm:w-auto">
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,15 +342,15 @@ export function MarksTracker() {
       <Modal open={isModalOpen} onClose={() => setModalOpen(false)} ariaLabel="Add or edit course">
         <div className="overflow-y-auto max-h-[90vh]">
           {/* Modal Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4">
+          <div className="sticky top-0 bg-card border-b border-border px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">{draft.id ? "Edit Course" : "Add New Course"}</h3>
-                <p className="text-sm text-gray-600 mt-1">Configure your course assessment breakdown</p>
+                <h3 className="text-xl font-semibold text-foreground">{draft.id ? "Edit Course" : "Add New Course"}</h3>
+                <p className="text-sm text-muted-foreground mt-1">Configure your course assessment breakdown</p>
               </div>
               <button
                 onClick={() => setModalOpen(false)}
-                className="rounded-full p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                className="rounded-full p-2 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                 aria-label="Close modal"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,13 +365,13 @@ export function MarksTracker() {
             {/* Course Name Section */}
             <div className="space-y-2">
               <label className="block">
-                <span className="text-sm font-medium text-gray-900">Course Name</span>
+                <span className="text-sm font-medium text-foreground">Course Name</span>
                 <input
                   type="text"
                   value={draft.name}
                   onChange={(e) => setDraft((d) => ({ ...d, name: e.target.value }))}
                   placeholder="e.g., CSE 3101 - Data Structures & Algorithms"
-                  className="mt-2 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
+                  className="mt-2 w-full rounded-xl border border-input px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-colors"
                   aria-invalid={!draft.name.trim()}
                 />
               </label>
@@ -380,15 +380,15 @@ export function MarksTracker() {
             {/* Assessment Components Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium text-gray-900">Assessment Components</h4>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Non-final max: 70</span>
+                <h4 className="text-sm font-medium text-foreground">Assessment Components</h4>
+                <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">Non-final max: 70</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {COURSE_COMPONENT_KEYS.map((key) => (
-                  <div key={key} className="group rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-4 hover:border-violet-200 transition-colors">
+                  <div key={key} className="group rounded-xl border border-border bg-gradient-to-br from-muted to-card p-4 hover:border-violet-200 transition-colors">
                     <div className="flex items-center justify-between mb-3">
-                      <h5 className="text-sm font-medium text-gray-900">{COURSE_COMPONENT_LABELS[key]}</h5>
+                      <h5 className="text-sm font-medium text-foreground">{COURSE_COMPONENT_LABELS[key]}</h5>
                       <div className="w-2 h-2 rounded-full bg-violet-200 group-hover:bg-violet-300 transition-colors"></div>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
@@ -436,7 +436,7 @@ export function MarksTracker() {
 
               {/* Live calculation summary */}
               <div className="space-y-2">
-                <span className="text-sm font-medium text-gray-900">Summary</span>
+                <span className="text-sm font-medium text-foreground">Summary</span>
                 <LiveSummaryEnhanced components={draft.components} targetGrade={draft.targetGrade} />
               </div>
             </div>
@@ -446,7 +446,7 @@ export function MarksTracker() {
           </div>
 
           {/* Modal Footer */}
-          <div className="sticky bottom-0 bg-gray-50 border-t border-gray-100 px-6 py-4">
+          <div className="sticky bottom-0 bg-muted border-t border-border px-6 py-4">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
               <Button variant="secondary" onClick={() => setModalOpen(false)} size="sm" className="w-full sm:w-auto">
                 Cancel
@@ -471,9 +471,9 @@ export function MarksTracker() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-1.732-.833-2.5 0L4.234 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900">Delete Course</h3>
+            <h3 className="text-lg font-semibold text-foreground">Delete Course</h3>
           </div>
-          <p className="text-gray-600 mb-6">Are you sure you want to delete this course? This action cannot be undone and all your progress data will be lost.</p>
+          <p className="text-muted-foreground mb-6">Are you sure you want to delete this course? This action cannot be undone and all your progress data will be lost.</p>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
             <Button variant="secondary" onClick={() => setConfirmDeleteId(null)} size="sm" className="w-full sm:w-auto">Cancel</Button>
             <Button
@@ -498,8 +498,8 @@ export function MarksTracker() {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Clear All Courses</h3>
-              <p className="text-sm text-gray-600">End of semester cleanup</p>
+              <h3 className="text-lg font-semibold text-foreground">Clear All Courses</h3>
+              <p className="text-sm text-muted-foreground">End of semester cleanup</p>
             </div>
           </div>
 
@@ -543,20 +543,20 @@ function LiveSummaryEnhanced({ components, targetGrade }: { components: CourseCo
   const percentage = totals.total > 0 ? Math.round((totals.obtained / totals.total) * 100) : 0;
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-gradient-to-br from-violet-50 to-white p-4">
+    <div className="rounded-xl border border-border bg-gradient-to-br from-violet-50 to-card dark:from-violet-950/20 dark:to-card p-4">
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-gray-600">Current Progress</span>
+          <span className="text-xs font-medium text-muted-foreground">Current Progress</span>
           <span className="text-xs font-semibold text-violet-600">{percentage}%</span>
         </div>
 
         <div className="text-sm">
-          <div className="text-gray-900 font-medium">{totals.obtained} / {Math.min(70, totals.total)} marks</div>
+          <div className="text-foreground font-medium">{totals.obtained} / {Math.min(70, totals.total)} marks</div>
           <div className="text-gray-500 text-xs">Non-final components</div>
         </div>
 
-        <div className="pt-2 border-t border-gray-200">
-          <div className="text-xs text-gray-600 mb-1">Required for {targetGrade}:</div>
+        <div className="pt-2 border-t border-border">
+          <div className="text-xs text-muted-foreground mb-1">Required for {targetGrade}:</div>
           <div className={`text-sm font-semibold ${req.achievable ? "text-green-700" : "text-red-600"}`}>
             {req.requiredClamped} / 30 final marks
           </div>
@@ -610,7 +610,7 @@ function CourseCard({ course, onEdit, onDelete }: { course: Course; onEdit: () =
             <div className="text-xs md:text-sm text-gray-500 mt-1">
               <span className="block sm:inline">Target: <span className="font-medium">{course.targetGrade}</span></span>
               <span className="hidden sm:inline sm:mx-2">•</span>
-              <span className="block sm:inline">Required Final: <span className={`font-medium ${req.achievable ? "text-gray-700" : "text-red-600"}`}>{req.requiredClamped}/30</span></span>
+              <span className="block sm:inline">Required Final: <span className={`font-medium ${req.achievable ? "text-muted-foreground" : "text-red-600"}`}>{req.requiredClamped}/30</span></span>
               {!req.achievable && <span className="text-red-600 text-xs block sm:inline sm:ml-1">(Not achievable)</span>}
             </div>
           </div>
@@ -618,7 +618,7 @@ function CourseCard({ course, onEdit, onDelete }: { course: Course; onEdit: () =
             <button
               aria-label="Edit course"
               onClick={onEdit}
-              className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg text-gray-600 hover:text-violet-600 hover:bg-violet-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500"
+              className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg text-muted-foreground hover:text-violet-600 hover:bg-violet-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-violet-500"
             >
               <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -627,7 +627,7 @@ function CourseCard({ course, onEdit, onDelete }: { course: Course; onEdit: () =
             <button
               aria-label="Delete course"
               onClick={onDelete}
-              className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -641,16 +641,16 @@ function CourseCard({ course, onEdit, onDelete }: { course: Course; onEdit: () =
           {COURSE_COMPONENT_KEYS.map((key) => {
             const c = course.components[key];
             return (
-              <div key={key} className="rounded-lg border border-gray-100 bg-gray-50 p-2 md:p-3">
-                <div className="text-gray-600 truncate" title={COURSE_COMPONENT_LABELS[key]}>{COURSE_COMPONENT_LABELS[key]}</div>
-                <div className="font-medium text-gray-900">{c.obtained} / {c.total}</div>
+              <div key={key} className="rounded-lg border border-border bg-muted p-2 md:p-3">
+                <div className="text-muted-foreground truncate" title={COURSE_COMPONENT_LABELS[key]}>{COURSE_COMPONENT_LABELS[key]}</div>
+                <div className="font-medium text-foreground">{c.obtained} / {c.total}</div>
               </div>
             );
           })}
         </div>
         <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm">
-          <div className="text-gray-700 font-medium">Current: {totals.obtained} / {Math.min(70, totals.total)} (non-final)</div>
-          <div className="text-gray-700 font-medium">Target: {course.targetGrade}</div>
+          <div className="text-muted-foreground font-medium">Current: {totals.obtained} / {Math.min(70, totals.total)} (non-final)</div>
+          <div className="text-muted-foreground font-medium">Target: {course.targetGrade}</div>
         </div>
       </CardContent>
     </Card>

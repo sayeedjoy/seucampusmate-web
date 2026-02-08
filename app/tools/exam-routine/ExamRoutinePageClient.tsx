@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback, startTransition } from 'react';
 import { Container } from '@/components/ui/container';
-import { Header } from '@/components/navbar/header';
-import { Footer } from '@/components/footer';
 import { ExamApiResponse, ExamResult } from '@/lib/exam-utils';
 import { toast } from 'sonner';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -716,10 +714,8 @@ export default function ExamRoutinePageClient() {
     }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
 
     return (
-        <>
-            <Header />
-            <main className="pt-12 md:pt-16">
-                <Container className="py-6 md:py-8">
+        <div className="pt-12 md:pt-16">
+            <Container className="py-6 md:py-8">
                     <div className="max-w-4xl mx-auto">
                         {/* Header Section */}
                         <div className="text-center mb-8 px-4">
@@ -793,9 +789,7 @@ export default function ExamRoutinePageClient() {
                             )}
                         </div>
                     </div>
-                </Container>
-            </main>
-            <Footer />
-        </>
+            </Container>
+        </div>
     );
 }

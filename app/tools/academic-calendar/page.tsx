@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container } from '@/components/ui/container';
 import { Badge } from '@/components/ui/badge';
-import { Header } from '@/components/navbar/header';
-import { Footer } from '@/components/footer';
 import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, Calendar, BookOpen, Clock, RefreshCw } from 'lucide-react';
 
@@ -578,69 +576,60 @@ export default function AcademicCalendarPage() {
 
         if (loading) {
         return (
-            <>
-                <Header />
-                <main className="pt-12">
-                    <Container className="py-16">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="text-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto"></div>
-                                <p className="mt-4 text-gray-600">Loading academic calendar...</p>
-                            </div>
+            <div className="pt-12">
+                <Container className="py-16">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto"></div>
+                            <p className="mt-4 text-muted-foreground">Loading academic calendar...</p>
                         </div>
-                    </Container>
-                </main>
-                <Footer />
-            </>
+                    </div>
+                </Container>
+            </div>
         );
     }
 
     // Show error state if no data and error occurred
     if (hasError && events.length === 0) {
         return (
-            <>
-                <Header />
-                <main className="pt-12">
-                    <Container className="py-16">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="text-center">
-                                <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                </div>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-2">Unable to Load Academic Calendar</h2>
-                                <p className="text-gray-600 mb-6">There was an issue connecting to the server. Please try refreshing the page.</p>
-                                <button
-                                    onClick={handleRefresh}
-                                    disabled={refreshing}
-                                    className="flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mx-auto"
-                                >
-                                    <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                                    <span>{refreshing ? 'Retrying...' : 'Retry'}</span>
-                                </button>
+            <div className="pt-12">
+                <Container className="py-16">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
                             </div>
+                            <h2 className="text-2xl font-bold text-foreground mb-2">Unable to Load Academic Calendar</h2>
+                            <p className="text-muted-foreground mb-6">There was an issue connecting to the server. Please try refreshing the page.</p>
+                            <button
+                                onClick={handleRefresh}
+                                disabled={refreshing}
+                                className="flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mx-auto"
+                            >
+                                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                                <span>{refreshing ? 'Retrying...' : 'Retry'}</span>
+                            </button>
                         </div>
-                    </Container>
-                </main>
-                <Footer />
-            </>
+                    </div>
+                </Container>
+            </div>
         );
     }
 
     return (
         <>
-            <Header />
-            <main className="pt-12 sm:pt-16 bg-gradient-to-br from-gray-50 via-white to-violet-50/30 min-h-screen">
+        <div className="pt-12 sm:pt-16 bg-gradient-to-br from-muted via-background to-violet-50/30 dark:from-muted/50 dark:via-background dark:to-violet-950/20 min-h-screen">
                 <Container className="py-6 sm:py-8 lg:py-12">
                     <div className="max-w-7xl mx-auto">
                         {/* Hero Section with Refresh Button */}
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 lg:mb-6 gap-4">
                             <div className="text-center sm:text-left">
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-gray-900 via-violet-700 to-purple-700 bg-clip-text text-transparent leading-tight">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-foreground via-violet-700 to-purple-700 bg-clip-text text-transparent leading-tight">
                                     Academic Calendar
                                 </h1>
-                                <p className="text-sm sm:text-base lg:text-base xl:text-lg text-gray-600 max-w-2xl leading-relaxed">
+                                <p className="text-sm sm:text-base lg:text-base xl:text-lg text-muted-foreground max-w-2xl leading-relaxed">
                                     Stay updated with semester dates, holidays, and important academic events.
                                 </p>
                             </div>
@@ -655,12 +644,12 @@ export default function AcademicCalendarPage() {
                                         flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 shadow-sm
                                         ${refreshing || loading 
                                             ? 'bg-violet-100 border border-violet-200 cursor-not-allowed' 
-                                            : 'bg-white border border-slate-200 hover:border-violet-300 hover:bg-violet-50 hover:shadow-md active:scale-95'
+                                            : 'bg-card border border-border hover:border-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950/30 hover:shadow-md active:scale-95'
                                         }
                                     `}
                                 >
                                     <RefreshCw className={`w-4 h-4 ${refreshing || loading ? 'animate-spin text-violet-700' : 'text-violet-600'}`} />
-                                    <span className={`text-xs sm:text-sm font-medium ${refreshing || loading ? 'text-violet-700' : 'text-gray-700'}`}>
+                                    <span className={`text-xs sm:text-sm font-medium ${refreshing || loading ? 'text-violet-700' : 'text-muted-foreground'}`}>
                                         {refreshing ? 'Refreshing...' : loading ? 'Loading...' : 'Refresh'}
                                     </span>
                                 </button>
@@ -690,7 +679,7 @@ export default function AcademicCalendarPage() {
                         {/* Semester Filter - Only affects Events sidebar */}
                         <div className="mb-4">
                             <div className="flex items-center gap-2 mb-2">
-                                <h3 className="text-sm lg:text-base font-semibold text-gray-700">Filter Events by Semester:</h3>
+                                <h3 className="text-sm lg:text-base font-semibold text-muted-foreground">Filter Events by Semester:</h3>
                             </div>
                             <div className="flex flex-wrap gap-1.5 justify-center lg:justify-start">
                                 <Badge 
@@ -715,36 +704,36 @@ export default function AcademicCalendarPage() {
 
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
                             {/* Calendar View - Full width on mobile, 2/3 on desktop */}
-                            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-4 lg:p-5 hover:border-violet-200 transition-colors duration-200 shadow-sm">
+                            <div className="lg:col-span-2 bg-card border border-border rounded-xl p-4 lg:p-5 hover:border-violet-200 transition-colors duration-200 shadow-sm">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 lg:mb-4 gap-2">
                                     <div className="flex items-center gap-2">
                                         <div className="w-8 h-8 bg-violet-50 rounded-lg flex items-center justify-center">
                                             <Calendar className="w-4 h-4 text-violet-600" />
                                         </div>
-                                        <h2 className="text-lg lg:text-xl font-bold text-gray-900">Calendar</h2>
+                                        <h2 className="text-lg lg:text-xl font-bold text-foreground">Calendar</h2>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <button
                                             onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))}
-                                            className="p-2 hover:bg-violet-50 rounded-lg transition-colors duration-200 border border-slate-200"
+                                            className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors duration-200 border border-border"
                                         >
-                                            <ChevronLeft className="w-4 h-4 text-gray-600" />
+                                            <ChevronLeft className="w-4 h-4 text-muted-foreground" />
                                         </button>
-                                        <span className="font-semibold text-gray-900 min-w-[120px] lg:min-w-[140px] text-center text-sm lg:text-base px-3">
+                                        <span className="font-semibold text-foreground min-w-[120px] lg:min-w-[140px] text-center text-sm lg:text-base px-3">
                                             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                                         </span>
                                         <button
                                             onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1))}
-                                            className="p-2 hover:bg-violet-50 rounded-lg transition-colors duration-200 border border-slate-200"
+                                            className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors duration-200 border border-border"
                                         >
-                                            <ChevronRight className="w-4 h-4 text-gray-600" />
+                                            <ChevronRight className="w-4 h-4 text-muted-foreground" />
                                         </button>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-7 gap-1 lg:gap-2 mb-2 lg:mb-3">
                                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-                                        <div key={index} className="text-center text-xs lg:text-sm font-semibold text-gray-500 py-1.5">
+                                        <div key={index} className="text-center text-xs lg:text-sm font-semibold text-muted-foreground py-1.5">
                                             {day}
                                         </div>
                                     ))}
@@ -755,8 +744,8 @@ export default function AcademicCalendarPage() {
                                         <div
                                             key={index}
                                             className={`
-                                                min-h-[50px] lg:min-h-[65px] p-1.5 lg:p-2 border border-slate-100 relative rounded-lg cursor-pointer transition-all duration-200
-                                                ${date ? 'hover:bg-violet-50 hover:border-violet-200' : 'bg-slate-50/50 cursor-default'}
+                                                min-h-[50px] lg:min-h-[65px] p-1.5 lg:p-2 border border-border relative rounded-lg cursor-pointer transition-all duration-200
+                                                ${date ? 'hover:bg-violet-50 hover:border-violet-200' : 'bg-muted/50 cursor-default'}
                                                 ${isToday(date!) ? 'bg-violet-100 border-violet-300' : ''}
                                                 ${date && getEventsForDate(date).length > 0 ? 'border-violet-200 bg-violet-50/50' : ''}
                                             `}
@@ -765,7 +754,7 @@ export default function AcademicCalendarPage() {
                                             {date && (
                                                 <>
                                                     <div className={`text-xs lg:text-sm font-semibold mb-1 ${
-                                                        isToday(date) ? 'text-violet-700' : 'text-gray-900'
+                                                        isToday(date) ? 'text-violet-700' : 'text-foreground'
                                                     }`}>
                                                         {date.getDate()}
                                                     </div>
@@ -801,12 +790,12 @@ export default function AcademicCalendarPage() {
                             </div>
 
                             {/* Events Sidebar */}
-                            <div className="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-4 hover:border-violet-200 transition-colors duration-200 shadow-sm">
+                            <div className="lg:col-span-1 bg-card border border-border rounded-xl p-4 hover:border-violet-200 transition-colors duration-200 shadow-sm">
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center">
                                         <BookOpen className="w-3 h-3 text-blue-600" />
                                     </div>
-                                    <h2 className="text-sm lg:text-base font-bold text-gray-900">
+                                    <h2 className="text-sm lg:text-base font-bold text-foreground">
                                         Events {selectedSemester !== 'All' && `(${selectedSemester})`}
                                     </h2>
                                 </div>
@@ -825,12 +814,12 @@ export default function AcademicCalendarPage() {
                                             >
                                                 <div className="flex-1 min-w-0">
                                                     <h3 className={`font-semibold mb-2 text-xs lg:text-sm leading-tight ${
-                                                        isImportant ? 'text-red-900' : 'text-gray-900'
+                                                        isImportant ? 'text-red-900 dark:text-red-200' : 'text-foreground'
                                                     }`}>
                                                         {event.Details}
                                                     </h3>
                                                     <div className="flex flex-col gap-1.5">
-                                                        <div className="flex items-center gap-1.5 bg-white border border-slate-200 px-2 py-1 rounded-full w-fit">
+                                                        <div className="flex items-center gap-1.5 bg-card border border-border px-2 py-1 rounded-full w-fit">
                                                             <Clock className={`w-3 h-3 ${isImportant ? 'text-red-600' : 'text-violet-600'}`} />
                                                             <span className="font-medium text-[10px] lg:text-xs">{event.Date}</span>
                                                         </div>
@@ -852,9 +841,9 @@ export default function AcademicCalendarPage() {
                                 </div>
 
                                 {filteredEvents.length === 0 && (
-                                    <div className="text-center py-8 text-gray-500">
-                                        <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-3">
-                                            <Calendar className="w-6 h-6 text-gray-400" />
+                                    <div className="text-center py-8 text-muted-foreground">
+                                        <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-3">
+                                            <Calendar className="w-6 h-6 text-muted-foreground" />
                                         </div>
                                         <p className="text-sm font-medium">No events found for the selected semester.</p>
                                     </div>
@@ -865,10 +854,10 @@ export default function AcademicCalendarPage() {
                         {/* Additional Info */}
                         <div className="mt-6 lg:mt-8 text-center">
                             <div className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 rounded-xl p-4 lg:p-6 shadow-sm">
-                                <h3 className="text-base lg:text-lg font-bold text-gray-900 mb-2 lg:mb-3">
+                                <h3 className="text-base lg:text-lg font-bold text-foreground mb-2 lg:mb-3">
                                     Stay Organized with CampusMate
                                 </h3>
-                                <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed text-xs lg:text-sm">
+                                <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed text-xs lg:text-sm">
                                     Never miss important academic deadlines, holidays, or events. 
                                     Our comprehensive calendar helps you plan your semester effectively.
                                 </p>
@@ -876,19 +865,18 @@ export default function AcademicCalendarPage() {
                         </div>
                     </div>
                 </Container>
-            </main>
-            <Footer />
+        </div>
 
-            {/* Event Popup */}
+        {/* Event Popup */}
             {showEventPopup && selectedDate && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl border border-slate-200 max-w-md w-full max-h-[80vh] overflow-hidden animate-in zoom-in-95 duration-200">
+                    <div className="bg-card rounded-2xl border border-border max-w-md w-full max-h-[80vh] overflow-hidden animate-in zoom-in-95 duration-200">
                         <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-4 text-white">
                             <div className="flex items-center justify-between mb-2">
                                 <h3 className="text-lg font-bold">Events</h3>
                                 <button
                                     onClick={closeEventPopup}
-                                    className="p-1.5 hover:bg-white/20 rounded-lg transition-colors duration-200"
+                                    className="p-1.5 hover:bg-white/20 dark:hover:bg-white/10 rounded-lg transition-colors duration-200"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -909,12 +897,12 @@ export default function AcademicCalendarPage() {
                                                 : 'border-violet-400 bg-gradient-to-r from-violet-50 to-transparent'
                                         }`}>
                                             <h4 className={`font-semibold mb-2 leading-relaxed text-sm ${
-                                                isImportant ? 'text-red-900' : 'text-gray-900'
+                                                isImportant ? 'text-red-900 dark:text-red-200' : 'text-foreground'
                                             }`}>
                                                 {event.Details}
                                             </h4>
-                                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                <div className="flex items-center gap-1 bg-white border border-slate-200 px-2 py-1 rounded-full">
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <div className="flex items-center gap-1 bg-card border border-border px-2 py-1 rounded-full">
                                                     <Clock className={`w-3 h-3 ${isImportant ? 'text-red-600' : 'text-violet-600'}`} />
                                                     <span className="font-medium text-xs">{event.Date}</span>
                                                 </div>

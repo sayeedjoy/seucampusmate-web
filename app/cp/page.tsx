@@ -1,5 +1,3 @@
-import { Header } from '@/components/navbar/header';
-import { Footer } from '@/components/footer';
 import { Container } from '@/components/ui/container';
 import { LeaderboardTable } from '@/components/cp/leaderboard-table';
 import type { Metadata } from 'next';
@@ -34,14 +32,10 @@ export const dynamic = 'force-dynamic';
 
 export default function CPPage() {
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-background font-inter">
-        <Container className="pt-16 md:pt-20 lg:pt-24 pb-16">
-          <LeaderboardTable />
-        </Container>
-      </main>
-      <Footer />
-    </>
+    <div className="min-h-screen bg-background font-inter">
+      <Container className="pt-16 md:pt-20 lg:pt-24 pb-16">
+        <LeaderboardTable />
+      </Container>
+    </div>
   );
 }

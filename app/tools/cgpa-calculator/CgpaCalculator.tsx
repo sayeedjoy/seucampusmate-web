@@ -159,10 +159,10 @@ const CgpaCalculator: React.FC = () => {
                     <div
                         key={course.id}
                         className={`
-                            bg-white border rounded-lg p-6 transition-all duration-200 
+                            bg-card border rounded-lg p-6 transition-all duration-200 
                             ${errors[course.id]
                                 ? 'border-red-300 bg-red-50/50 shadow-sm'
-                                : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
+                                : 'border-border hover:border-border hover:shadow-sm'
                             }
                         `}
                     >
@@ -171,7 +171,7 @@ const CgpaCalculator: React.FC = () => {
                                 <div className="w-8 h-8 bg-primary text-white rounded-lg flex items-center justify-center text-sm font-semibold">
                                     {index + 1}
                                 </div>
-                                <h3 className="text-lg font-semibold text-gray-900">Course {index + 1}</h3>
+                                <h3 className="text-lg font-semibold text-foreground">Course {index + 1}</h3>
                             </div>
                             {courses.length > 1 && (
                                 <Button
@@ -187,28 +187,28 @@ const CgpaCalculator: React.FC = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Course Name <span className="text-gray-400 font-normal">(Optional)</span>
+                                <label className="block text-sm font-medium text-muted-foreground">
+                                    Course Name <span className="text-muted-foreground font-normal">(Optional)</span>
                                 </label>
                                 <input
                                     type="text"
                                     value={course.courseName}
                                     onChange={(e) => updateCourse(course.id, 'courseName', e.target.value)}
                                     placeholder="e.g., Mathematics 101"
-                                    className="w-full px-3 py-2.5 border border-gray-300 rounded-md bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                    className="w-full px-3 py-2.5 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors"
                                 />
                             </div>
 
                             <div className="space-y-2">
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-muted-foreground">
                                     Credit Hours <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     value={course.credit}
                                     onChange={(e) => updateCourse(course.id, 'credit', e.target.value)}
-                                    className={`w-full px-3 py-2.5 border rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 transition-colors ${errors[course.id] && !course.credit
+                                    className={`w-full px-3 py-2.5 border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${errors[course.id] && !course.credit
                                             ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                            : 'border-input focus:ring-ring focus:border-ring'
                                         }`}
                                 >
                                     <option value="">Select credits</option>
@@ -219,15 +219,15 @@ const CgpaCalculator: React.FC = () => {
                             </div>
 
                             <div className="space-y-2 sm:col-span-2 lg:col-span-1">
-                                <label className="block text-sm font-medium text-gray-700">
+                                <label className="block text-sm font-medium text-muted-foreground">
                                     Grade Point <span className="text-red-500">*</span>
                                 </label>
                                 <select
                                     value={course.grade}
                                     onChange={(e) => updateCourse(course.id, 'grade', e.target.value)}
-                                    className={`w-full px-3 py-2.5 border rounded-md bg-white text-gray-900 focus:outline-none focus:ring-2 transition-colors ${errors[course.id] && !course.grade
+                                    className={`w-full px-3 py-2.5 border rounded-md bg-background text-foreground focus:outline-none focus:ring-2 transition-colors ${errors[course.id] && !course.grade
                                             ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                                            : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                                            : 'border-input focus:ring-ring focus:border-ring'
                                         }`}
                                 >
                                     <option value="">Select grade</option>
@@ -258,11 +258,11 @@ const CgpaCalculator: React.FC = () => {
                         <Button
                             onClick={addCourse}
                             variant="outline"
-                            className="border-dashed border-2 border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50 px-6 py-3"
+                            className="border-dashed border-2 border-border text-muted-foreground hover:bg-muted px-6 py-3"
                         >
                             + Add Another Course
                         </Button>
-                        <p className="text-sm text-gray-500 mt-2">
+                        <p className="text-sm text-muted-foreground mt-2">
                             You can add up to {10 - courses.length} more course{10 - courses.length !== 1 ? 's' : ''}
                         </p>
                     </div>
@@ -274,14 +274,14 @@ const CgpaCalculator: React.FC = () => {
                 <Button
                     onClick={calculateCgpa}
                     disabled={courses.length === 0}
-                    className="px-8 py-3 text-base font-medium min-w-[160px] bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    className="px-8 py-3 text-base font-medium min-w-[160px] bg-blue-600 hover:bg-blue-700 disabled:bg-muted disabled:cursor-not-allowed"
                 >
                     Calculate CGPA
                 </Button>
                 <Button
                     onClick={clearAll}
                     variant="outline"
-                    className="px-8 py-3 text-base font-medium min-w-[160px] border-gray-300 text-gray-700 hover:bg-gray-50"
+                    className="px-8 py-3 text-base font-medium min-w-[160px] border-border text-muted-foreground hover:bg-muted"
                 >
                     Clear All
                 </Button>
@@ -289,10 +289,10 @@ const CgpaCalculator: React.FC = () => {
 
             {/* Results Section */}
             {result && (
-                <div className="space-y-6 pt-6 border-t border-gray-200">
+                <div className="space-y-6 pt-6 border-t border-border">
                     {/* Main CGPA Result */}
                     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-8 text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Your CGPA Results</h2>
+                        <h2 className="text-2xl font-bold text-foreground mb-6">Your CGPA Results</h2>
                         <div className="text-6xl font-bold text-blue-600 mb-4">
                             {result.cgpa.toFixed(2)}
                         </div>
@@ -308,19 +308,19 @@ const CgpaCalculator: React.FC = () => {
 
                     {/* Statistics */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-sm transition-shadow">
+                        <div className="bg-card border border-border rounded-lg p-6 text-center hover:shadow-sm transition-shadow">
                             <h4 className="font-medium text-gray-700 mb-2">Total Credits</h4>
                             <p className="text-3xl font-bold text-blue-600">{result.totalCredits}</p>
                             <p className="text-sm text-gray-500 mt-1">Credit Hours</p>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-sm transition-shadow">
+                        <div className="bg-card border border-border rounded-lg p-6 text-center hover:shadow-sm transition-shadow">
                             <h4 className="font-medium text-gray-700 mb-2">Performance</h4>
                             <p className="text-xl font-bold text-green-600">{result.remarks}</p>
                             <p className="text-sm text-gray-500 mt-1">Overall Rating</p>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-lg p-6 text-center hover:shadow-sm transition-shadow sm:col-span-3 sm:col-start-2 sm:max-w-xs sm:mx-auto lg:col-span-1 lg:max-w-none lg:mx-0">
+                        <div className="bg-card border border-border rounded-lg p-6 text-center hover:shadow-sm transition-shadow sm:col-span-3 sm:col-start-2 sm:max-w-xs sm:mx-auto lg:col-span-1 lg:max-w-none lg:mx-0">
                             <h4 className="font-medium text-gray-700 mb-2">Total Courses</h4>
                             <p className="text-3xl font-bold text-blue-600">{courses.length}</p>
                             <p className="text-sm text-gray-500 mt-1">Courses Added</p>
@@ -328,9 +328,9 @@ const CgpaCalculator: React.FC = () => {
                     </div>
 
                     {/* Course Breakdown */}
-                    <div className="bg-white border border-gray-200 rounded-lg">
-                        <div className="px-6 py-4 border-b border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-900">Course Breakdown</h3>
+                    <div className="bg-card border border-border rounded-lg">
+                        <div className="px-6 py-4 border-b border-border">
+                            <h3 className="text-lg font-semibold text-foreground">Course Breakdown</h3>
                             <p className="text-sm text-gray-500 mt-1">Detailed breakdown of your courses and their contribution</p>
                         </div>
                         <div className="p-6">
@@ -339,23 +339,23 @@ const CgpaCalculator: React.FC = () => {
                                     const gradeOption = GRADE_OPTIONS.find(option => option.startsWith(course.grade));
                                     const gradeLetter = gradeOption ? gradeOption.split('(')[1]?.replace(')', '') : course.grade;
                                     return (
-                                        <div key={course.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-100">
+                                        <div key={course.id} className="flex items-center justify-between p-4 bg-muted rounded-lg border border-border">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-8 h-8 bg-blue-100 text-blue-700 rounded-lg flex items-center justify-center text-sm font-semibold">
                                                     {index + 1}
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold text-gray-900">
+                                                    <p className="font-semibold text-foreground">
                                                         {course.courseName || `Course ${index + 1}`}
                                                     </p>
-                                                    <p className="text-sm text-gray-600">
+                                                    <p className="text-sm text-muted-foreground">
                                                         {course.credit} credits • Grade: {gradeLetter}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-semibold text-gray-900">{course.grade} points</p>
-                                                <p className="text-sm text-gray-600">
+                                                <p className="font-semibold text-foreground">{course.grade} points</p>
+                                                <p className="text-sm text-muted-foreground">
                                                     {(parseFloat(course.credit) * parseFloat(course.grade)).toFixed(1)} total
                                                 </p>
                                             </div>

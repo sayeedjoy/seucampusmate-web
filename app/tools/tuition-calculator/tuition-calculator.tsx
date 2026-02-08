@@ -34,7 +34,7 @@ const InputField: React.FC<{
 
     return (
         <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-muted-foreground">
                 {label}
                 {required && <span className="text-red-500 ml-1">*</span>}
             </label>
@@ -48,7 +48,7 @@ const InputField: React.FC<{
                 spellCheck="false"
                 className={cn(
                     "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors",
-                    error ? "border-red-300 bg-red-50" : "border-gray-300"
+                    error ? "border-red-300 bg-red-50 dark:bg-red-950/30" : "border-input bg-background"
                 )}
             />
             {error && (
@@ -300,7 +300,7 @@ const TuitionCalculator: React.FC = () => {
                             </div>
                             {/* Installment Plan */}
                             <div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-4">Installment Payment Plan</h3>
+                                <h3 className="text-lg font-semibold text-foreground mb-4">Installment Payment Plan</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                                         <h4 className="font-medium text-green-800 mb-1">1st Installment (40%)</h4>

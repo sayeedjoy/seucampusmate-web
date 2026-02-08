@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export const metadata: Metadata = {
     title: 'Attendance Calculator - CampusMate',
@@ -8,19 +9,21 @@ export const metadata: Metadata = {
 export default function AttendanceCalculatorPage() {
     return (
         <div className="mx-auto max-w-6xl px-4 py-6">
-            <div className="bg-white rounded-xl shadow-lg p-8">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-                    Track Your Attendance
-                </h2>
-                <p className="text-gray-600 mb-8">
-                    Monitor your attendance percentage and calculate how many classes you can miss while maintaining the required 75% attendance.
-                </p>
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl">Track Your Attendance</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <p className="text-muted-foreground">
+                        Monitor your attendance percentage and calculate how many classes you can miss while maintaining the required 75% attendance.
+                    </p>
 
-                {/* Attendance Calculator component will go here */}
-                <div className="bg-gray-50 rounded-lg p-6 text-center">
-                    <p className="text-gray-500">Attendance Calculator component coming soon...</p>
-                </div>
-            </div>
+                    {/* Attendance Calculator component will go here */}
+                    <div className="bg-muted rounded-lg p-6 text-center">
+                        <p className="text-muted-foreground">Attendance Calculator component coming soon...</p>
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }

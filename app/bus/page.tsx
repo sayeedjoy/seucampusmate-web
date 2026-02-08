@@ -1,5 +1,3 @@
-import { Header } from "@/components/navbar/header";
-import { Footer } from "@/components/footer";
 import { Container } from "@/components/ui/container";
 import BusRouteMap from "./bus";
 import type { Metadata } from "next";
@@ -33,23 +31,19 @@ export const metadata: Metadata = {
 
 export default function BusPage() {
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-white font-inter">
-                <Container className="pt-16 md:pt-20 lg:pt-24 pb-16">
-                    <div className="mb-8">
-                        <h1 className="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">
-                            Bus Routes
-                        </h1>
-                        <p className="text-neutral-600">
-                            Interactive map of SEU bus routes. Click on markers for stop
-                            details.
-                        </p>
-                    </div>
-                    <BusRouteMap />
-                </Container>
-            </main>
-            <Footer />
-        </>
+        <div className="min-h-screen bg-background font-inter">
+            <Container className="pt-16 md:pt-20 lg:pt-24 pb-16">
+                <div className="mb-8">
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                        Bus Routes
+                    </h1>
+                    <p className="text-muted-foreground">
+                        Interactive map of SEU bus routes. Click on markers for stop
+                        details.
+                    </p>
+                </div>
+                <BusRouteMap />
+            </Container>
+        </div>
     );
 }

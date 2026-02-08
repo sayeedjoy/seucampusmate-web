@@ -72,7 +72,7 @@ export function BloodDonorList({ donors }: BloodDonorListProps) {
       return `${baseStyle} ${selectedColors[bloodGroup] || 'bg-gray-500 text-white'}`;
     }
 
-    return `${baseStyle} bg-gray-100 text-gray-700`;
+    return `${baseStyle} bg-muted text-muted-foreground`;
   }
 
   const hasActiveFilters = searchTerm || selectedBloodGroups.length > 0 || showOnlyAvailable;
@@ -80,24 +80,24 @@ export function BloodDonorList({ donors }: BloodDonorListProps) {
   return (
     <div className="space-y-6">
       {/* Search and Filters */}
-      <Card className="p-6 bg-white border border-gray-200">
+      <Card className="p-6">
         <div className="space-y-4">
           {/* Search Bar */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search by name or phone number..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-md bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2.5 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
             />
           </div>
 
           {/* Blood Group Filters */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-gray-700">Filter by Blood Group</span>
+              <span className="text-sm font-medium text-muted-foreground">Filter by Blood Group</span>
               {hasActiveFilters && (
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
                   <X className="h-3.5 w-3.5 mr-1" />
@@ -125,12 +125,12 @@ export function BloodDonorList({ donors }: BloodDonorListProps) {
                   type="checkbox"
                   checked={showOnlyAvailable}
                   onChange={(e) => setShowOnlyAvailable(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-input text-primary focus:ring-ring"
                 />
-                <span className="text-sm text-gray-700">Show only available donors</span>
+                <span className="text-sm text-muted-foreground">Show only available donors</span>
               </label>
 
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 Showing {visibleDonors.length} of {filteredDonors.length} donors
               </span>
             </div>
@@ -157,15 +157,15 @@ export function BloodDonorList({ donors }: BloodDonorListProps) {
           )}
         </>
       ) : (
-        <Card className="p-12 text-center bg-white border border-gray-200">
+        <Card className="p-12 text-center">
           <div className="max-w-sm mx-auto">
-            <div className="w-12 h-12 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
-              <Search className="h-6 w-6 text-gray-400" />
+            <div className="w-12 h-12 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+              <Search className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-foreground mb-2">
               No donors found
             </h3>
-            <p className="text-gray-500 mb-4">
+            <p className="text-muted-foreground mb-4">
               {hasActiveFilters
                 ? 'Try adjusting your search criteria or filters.'
                 : 'No blood donors are currently registered.'

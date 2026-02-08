@@ -139,27 +139,27 @@ export function MathCaptcha({ isOpen, onClose, onSuccess }: MathCaptchaProps) {
       }}
     >
       <div className="w-full max-w-sm sm:max-w-md mx-auto relative my-auto">
-        <Card className="p-4 sm:p-6 border-0 shadow-2xl bg-white rounded-2xl">
+        <Card className="p-4 sm:p-6 border-0 shadow-2xl rounded-2xl">
           <div className="flex items-center justify-between mb-4 sm:mb-6">
-            <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+            <h3 className="text-base sm:text-lg font-semibold text-foreground">
               Verify You're Human
             </h3>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 hover:bg-muted rounded-full transition-colors"
             >
-              <X className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+              <X className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
             </button>
           </div>
         
           <div className="text-center">
-            <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+            <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">
               Please solve this simple math problem to view the phone number:
             </p>
             
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 sm:p-6 mb-4 sm:mb-6 border border-blue-100">
               <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-                <span className="text-2xl sm:text-3xl font-bold text-gray-900">{question}</span>
+                <span className="text-2xl sm:text-3xl font-bold text-foreground">{question}</span>
                 <button
                   onClick={handleRefresh}
                   className="p-1.5 sm:p-2 hover:bg-blue-100 rounded-lg transition-colors"
@@ -177,7 +177,7 @@ export function MathCaptcha({ isOpen, onClose, onSuccess }: MathCaptchaProps) {
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
                   placeholder="Enter your answer"
-                  className="w-full px-4 sm:px-6 py-3 sm:py-4 border-0 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200 text-center text-lg sm:text-xl font-bold placeholder-gray-400"
+                  className="w-full px-4 sm:px-6 py-3 sm:py-4 border border-input rounded-xl bg-background focus:ring-2 focus:ring-ring transition-all duration-200 text-center text-lg sm:text-xl font-bold text-foreground placeholder:text-muted-foreground"
                   autoFocus
                   required
                 />

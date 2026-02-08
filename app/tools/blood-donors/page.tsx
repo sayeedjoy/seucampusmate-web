@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { Container } from '@/components/ui/container';
-import { Header } from '@/components/navbar/header';
-import { Footer } from '@/components/footer';
 import { BloodDonorList } from '@/components/blood-donation/donor-lists';
 import { BloodDonorResponse } from '@/lib/blood-donor-types';
 import { Card } from '@/components/ui/card';
@@ -46,79 +44,71 @@ export default function BloodDonorsPage() {
 
     if (loading) {
         return (
-            <>
-                <Header />
-                <main className="pt-12 min-h-screen bg-white">
-                    <Container className="py-16">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="text-center mb-12">
-                                <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-red-500 rounded-xl">
-                                    <Droplets className="h-8 w-8 text-white" />
-                                </div>
-                                <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                                    Blood Donors
-                                </h1>
-                                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                    Connect with blood donors in the university community during emergencies.
-                                </p>
+            <div className="pt-12 min-h-screen bg-background">
+                <Container className="py-16">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-12">
+                            <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-red-500 rounded-xl">
+                                <Droplets className="h-8 w-8 text-white" />
                             </div>
-
-                            <Card className="p-12 text-center bg-white border border-gray-200">
-                                <RefreshCw className="h-10 w-10 mx-auto mb-4 text-red-500 animate-spin" />
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    Loading blood donors...
-                                </h3>
-                                <p className="text-gray-500">
-                                    Please wait while we fetch the latest donor information.
-                                </p>
-                            </Card>
+                            <h1 className="text-4xl font-bold text-foreground mb-4">
+                                Blood Donors
+                            </h1>
+                            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                                Connect with blood donors in the university community during emergencies.
+                            </p>
                         </div>
-                    </Container>
-                </main>
-                <Footer />
-            </>
+
+                        <Card className="p-12 text-center">
+                            <RefreshCw className="h-10 w-10 mx-auto mb-4 text-red-500 animate-spin" />
+                            <h3 className="text-lg font-semibold text-foreground mb-2">
+                                Loading blood donors...
+                            </h3>
+                            <p className="text-muted-foreground">
+                                Please wait while we fetch the latest donor information.
+                            </p>
+                        </Card>
+                    </div>
+                </Container>
+            </div>
         );
     }
 
     if (error) {
         return (
-            <>
-                <Header />
-                <main className="pt-12 min-h-screen bg-white">
-                    <Container className="py-16">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="text-center mb-12">
-                                <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-red-500 rounded-xl">
-                                    <Droplets className="h-8 w-8 text-white" />
-                                </div>
-                                <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                                    Blood Donors
-                                </h1>
-                                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                    Connect with blood donors in the university community during emergencies.
-                                </p>
+            <div className="pt-12 min-h-screen bg-background">
+                <Container className="py-16">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="text-center mb-12">
+                            <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-red-500 rounded-xl">
+                                <Droplets className="h-8 w-8 text-white" />
                             </div>
-
-                            <Card className="p-12 text-center bg-white border border-gray-200">
-                                <div className="w-12 h-12 mx-auto mb-4 bg-red-100 rounded-lg flex items-center justify-center">
-                                    <AlertCircle className="h-6 w-6 text-red-600" />
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                    Unable to load blood donors
-                                </h3>
-                                <p className="text-gray-500 mb-6">
-                                    {error}
-                                </p>
-                                <Button onClick={fetchBloodDonors}>
-                                    <RefreshCw className="h-4 w-4 mr-2" />
-                                    Try Again
-                                </Button>
-                            </Card>
+                            <h1 className="text-4xl font-bold text-foreground mb-4">
+                                Blood Donors
+                            </h1>
+                            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                                Connect with blood donors in the university community during emergencies.
+                            </p>
                         </div>
-                    </Container>
-                </main>
-                <Footer />
-            </>
+
+                        <Card className="p-12 text-center">
+                            <div className="w-12 h-12 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                                <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-foreground mb-2">
+                                Unable to load blood donors
+                            </h3>
+                            <p className="text-muted-foreground mb-6">
+                                {error}
+                            </p>
+                            <Button onClick={fetchBloodDonors}>
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                Try Again
+                            </Button>
+                        </Card>
+                    </div>
+                </Container>
+            </div>
         );
     }
 
@@ -127,57 +117,53 @@ export default function BloodDonorsPage() {
     }
 
     return (
-        <>
-            <Header />
-            <main className="pt-12 min-h-screen bg-white">
-                <Container className="py-16">
-                    <div className="max-w-6xl mx-auto">
-                        {/* Directory Header */}
-                        <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-red-500 rounded-lg">
-                                    <Heart className="h-5 w-5 text-white" />
-                                </div>
-                                <div>
-                                    <h2 className="text-xl font-bold text-gray-900">
-                                        Donor Directory
-                                    </h2>
-                                    <p className="text-sm text-gray-500">Browse and search available donors</p>
-                                </div>
+        <div className="pt-12 min-h-screen bg-background">
+            <Container className="py-16">
+                <div className="max-w-6xl mx-auto">
+                    {/* Directory Header */}
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-red-500 rounded-lg">
+                                <Heart className="h-5 w-5 text-white" />
                             </div>
-                            <Button variant="outline" onClick={fetchBloodDonors}>
-                                <RefreshCw className="h-4 w-4 mr-2" />
-                                Refresh
-                            </Button>
-                        </div>
-
-                        {/* Donors List */}
-                        <div className="mb-10">
-                            <BloodDonorList donors={data.data.donors} />
-                        </div>
-
-                        {/* Emergency Notice */}
-                        <Card className="p-6 bg-red-50 border border-red-200">
-                            <div className="flex items-start gap-4">
-                                <div className="p-2 bg-red-500 rounded-lg flex-shrink-0">
-                                    <AlertCircle className="h-5 w-5 text-white" />
-                                </div>
-                                <div>
-                                    <h3 className="font-bold text-red-900 mb-1">
-                                        Emergency Blood Donation
-                                    </h3>
-                                    <p className="text-red-800 text-sm">
-                                        In case of emergency, contact donors directly using their phone numbers.
-                                        Always verify blood type compatibility before transfusion.
-                                        This directory is for emergency use only.
-                                    </p>
-                                </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-foreground">
+                                    Donor Directory
+                                </h2>
+                                <p className="text-sm text-muted-foreground">Browse and search available donors</p>
                             </div>
-                        </Card>
+                        </div>
+                        <Button variant="outline" onClick={fetchBloodDonors}>
+                            <RefreshCw className="h-4 w-4 mr-2" />
+                            Refresh
+                        </Button>
                     </div>
-                </Container>
-            </main>
-            <Footer />
-        </>
+
+                    {/* Donors List */}
+                    <div className="mb-10">
+                        <BloodDonorList donors={data.data.donors} />
+                    </div>
+
+                    {/* Emergency Notice */}
+                    <Card className="p-6 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
+                        <div className="flex items-start gap-4">
+                            <div className="p-2 bg-red-500 rounded-lg flex-shrink-0">
+                                <AlertCircle className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-red-900 dark:text-red-200 mb-1">
+                                    Emergency Blood Donation
+                                </h3>
+                                <p className="text-red-800 dark:text-red-300 text-sm">
+                                    In case of emergency, contact donors directly using their phone numbers.
+                                    Always verify blood type compatibility before transfusion.
+                                    This directory is for emergency use only.
+                                </p>
+                            </div>
+                        </div>
+                    </Card>
+                </div>
+            </Container>
+        </div>
     );
 }
