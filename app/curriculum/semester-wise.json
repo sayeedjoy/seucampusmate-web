@@ -1,0 +1,142 @@
+{
+    "program": "B.Sc. in Computer Science & Engineering",
+    "total_semesters": 12,
+    "total_credits": 150,
+    "semesters": [
+      {
+        "semester": 1,
+        "total_credits": 12,
+        "courses": [
+          {"code": "CSE141", "title": "Computer Fundamentals", "credits": 3, "prerequisite": "Nil"},
+          {"code": "ENG101", "title": "Basic Composition", "credits": 3, "prerequisite": "Nil"},
+          {"code": "MAT141", "title": "Differential & Integral Calculus", "credits": 3, "prerequisite": "Nil"},
+          {"code": "ACT141", "title": "Introduction to Accounting", "credits": 3, "prerequisite": "Nil"}
+        ]
+      },
+      {
+        "semester": 2,
+        "total_credits": 13,
+        "courses": [
+          {"code": "ENG102", "title": "Intermediate Composition", "credits": 3, "prerequisite": "ENG101"},
+          {"code": "PHY161", "title": "Physics I", "credits": 3, "prerequisite": "Nil"},
+          {"code": "CSE161", "title": "Programming Language I", "credits": 3, "prerequisite": "CSE141"},
+          {"code": "CSE162", "title": "Programming Language I Lab", "credits": 1, "prerequisite": "CSE141"},
+          {"code": "MAT161", "title": "Coordinate Geometry & Vector Analysis", "credits": 3, "prerequisite": "MAT141"}
+        ]
+      },
+      {
+        "semester": 3,
+        "total_credits": 14,
+        "courses": [
+          {"code": "CSE181", "title": "Discrete Mathematics", "credits": 3, "prerequisite": "CSE161"},
+          {"code": "ENG103", "title": "Advanced English Skills", "credits": 3, "prerequisite": "ENG102"},
+          {"code": "EEE181", "title": "Electrical Circuits Design I", "credits": 3, "prerequisite": "Nil"},
+          {"code": "EEE182", "title": "Electrical Circuits Design I Lab", "credits": 1, "prerequisite": "Nil"},
+          {"code": "PHY181", "title": "Physics II", "credits": 3, "prerequisite": "PHY161"},
+          {"code": "PHY182", "title": "Physics II Lab", "credits": 1, "prerequisite": "PHY161"}
+        ]
+      },
+      {
+        "semester": 4,
+        "total_credits": 14,
+        "courses": [
+          {"code": "CSE241", "title": "Data Structures", "credits": 3, "prerequisite": "CSE181"},
+          {"code": "CSE242", "title": "Data Structures Lab", "credits": 1, "prerequisite": "CSE181"},
+          {"code": "ENG105", "title": "Public Speaking", "credits": 3, "prerequisite": "ENG103"},
+          {"code": "MAT241", "title": "Complex Variables & Transforms", "credits": 3, "prerequisite": "MAT141"},
+          {"code": "EEE241", "title": "Electronic Devices & Circuits I", "credits": 3, "prerequisite": "EEE181"},
+          {"code": "EEE242", "title": "Electronic Devices & Circuits I Lab", "credits": 1, "prerequisite": "EEE181, EEE182"}
+        ]
+      },
+      {
+        "semester": 5,
+        "total_credits": 14,
+        "courses": [
+          {"code": "CSE261", "title": "Numerical Methods", "credits": 3, "prerequisite": "CSE181, MAT161"},
+          {"code": "CSE263", "title": "Digital Logic Design", "credits": 3, "prerequisite": "CSE161"},
+          {"code": "CSE264", "title": "Digital Logic Design Lab", "credits": 1, "prerequisite": "CSE161"},
+          {"code": "MAT261", "title": "Linear Algebra & Matrices", "credits": 3, "prerequisite": "MAT241"},
+          {"code": "CSE265", "title": "Algorithm", "credits": 3, "prerequisite": "CSE241"},
+          {"code": "CSE266", "title": "Algorithm Lab", "credits": 1, "prerequisite": "CSE241, CSE242"}
+        ]
+      },
+      {
+        "semester": 6,
+        "total_credits": 14,
+        "courses": [
+          {"code": "MGT281", "title": "Introduction to Business & Management", "credits": 3, "prerequisite": "Nil"},
+          {"code": "CSE281", "title": "Programming Language II (Java)", "credits": 3, "prerequisite": "CSE161"},
+          {"code": "CSE282", "title": "Programming Language II Lab", "credits": 1, "prerequisite": "CSE161"},
+          {"code": "ETE281", "title": "Communication Theory", "credits": 3, "prerequisite": "MAT241, EEE241"},
+          {"code": "ETE282", "title": "Communication Lab", "credits": 1, "prerequisite": "MAT241, EEE241"},
+          {"code": "STA281", "title": "Statistical Methods & Probability", "credits": 3, "prerequisite": "Nil"}
+        ]
+      },
+      {
+        "semester": 7,
+        "total_credits": 14,
+        "courses": [
+          {"code": "CSE341", "title": "Computer Networking", "credits": 3, "prerequisite": "ETE281"},
+          {"code": "CSE342", "title": "Computer Networking Lab", "credits": 1, "prerequisite": "ETE281"},
+          {"code": "CSE343", "title": "Computer Architecture", "credits": 3, "prerequisite": "CSE263"},
+          {"code": "CSE345", "title": "Information System Design & Software Engineering", "credits": 3, "prerequisite": "CSE281"},
+          {"code": "CSE346", "title": "ISD & Software Engineering Lab", "credits": 1, "prerequisite": "CSE281"},
+          {"code": "SOC341", "title": "Engineering Ethics", "credits": 3, "prerequisite": "80 Credits Completed"}
+        ]
+      },
+      {
+        "semester": 8,
+        "total_credits": 14,
+        "courses": [
+          {"code": "Elective I", "title": "Group A Elective", "credits": 3, "prerequisite": "Varies"},
+          {"code": "CSE383", "title": "Database Design", "credits": 3, "prerequisite": "CSE281"},
+          {"code": "CSE384", "title": "Database Design Lab", "credits": 1, "prerequisite": "CSE281"},
+          {"code": "CSE363", "title": "Microprocessor Design & Assembly Language", "credits": 3, "prerequisite": "CSE161"},
+          {"code": "CSE364", "title": "Microprocessor Lab", "credits": 1, "prerequisite": "CSE161"},
+          {"code": "CSE365", "title": "Artificial Intelligence", "credits": 3, "prerequisite": "CSE265"}
+        ]
+      },
+      {
+        "semester": 9,
+        "total_credits": 12,
+        "courses": [
+          {"code": "CSE381", "title": "Introduction to Embedded Systems", "credits": 3, "prerequisite": "CSE363"},
+          {"code": "CSE382", "title": "Embedded Systems Lab", "credits": 1, "prerequisite": "CSE364"},
+          {"code": "CSE361", "title": "Operating Systems", "credits": 3, "prerequisite": "CSE343"},
+          {"code": "CSE362", "title": "Operating Systems Lab", "credits": 1, "prerequisite": "CSE266"},
+          {"code": "Elective II", "title": "Group B Elective", "credits": 3, "prerequisite": "Varies"},
+          {"code": "Elective II Lab", "title": "Associated Lab", "credits": 1, "prerequisite": "Varies"}
+        ]
+      },
+      {
+        "semester": 10,
+        "total_credits": 14,
+        "courses": [
+          {"code": "CSE441", "title": "Theory of Computing", "credits": 3, "prerequisite": "CSE265"},
+          {"code": "CSE443", "title": "Computer Graphics & Animation", "credits": 3, "prerequisite": "CSE281"},
+          {"code": "CSE444", "title": "Computer Graphics Lab", "credits": 1, "prerequisite": "CSE281"},
+          {"code": "Elective III", "title": "Group A Elective", "credits": 3, "prerequisite": "Varies"},
+          {"code": "Elective IV", "title": "Group B Elective", "credits": 3, "prerequisite": "Varies"},
+          {"code": "Elective IV Lab", "title": "Associated Lab", "credits": 1, "prerequisite": "Varies"}
+        ]
+      },
+      {
+        "semester": 11,
+        "total_credits": 12,
+        "courses": [
+          {"code": "CSE459", "title": "Research Methodology", "credits": 3, "prerequisite": "110 Credits Completed"},
+          {"code": "ECO461", "title": "Introduction to Economics", "credits": 3, "prerequisite": "Nil"},
+          {"code": "Elective V", "title": "Group A Elective", "credits": 3, "prerequisite": "Varies"},
+          {"code": "Elective VI", "title": "Group A Elective", "credits": 3, "prerequisite": "Varies"}
+        ]
+      },
+      {
+        "semester": 12,
+        "total_credits": 3,
+        "courses": [
+          {"code": "CSE489", "title": "Project or Internship", "credits": 3, "prerequisite": "CSE459"}
+        ]
+      }
+    ]
+  }
+  

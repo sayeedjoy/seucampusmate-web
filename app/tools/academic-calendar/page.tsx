@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container } from '@/components/ui/container';
 import { Badge } from '@/components/ui/badge';
-import Navbar from '@/components/navbar';
-import { Footer } from '@/components/footer/footer';
+import { Header } from '@/components/navbar/header';
+import { Footer } from '@/components/footer';
 import { toast } from 'sonner';
 import { ChevronLeft, ChevronRight, Calendar, BookOpen, Clock, RefreshCw } from 'lucide-react';
 
@@ -579,7 +579,7 @@ export default function AcademicCalendarPage() {
         if (loading) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <main className="pt-12">
                     <Container className="py-16">
                         <div className="max-w-6xl mx-auto">
@@ -599,7 +599,7 @@ export default function AcademicCalendarPage() {
     if (hasError && events.length === 0) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <main className="pt-12">
                     <Container className="py-16">
                         <div className="max-w-6xl mx-auto">
@@ -630,7 +630,7 @@ export default function AcademicCalendarPage() {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <main className="pt-12 sm:pt-16 bg-gradient-to-br from-gray-50 via-white to-violet-50/30 min-h-screen">
                 <Container className="py-6 sm:py-8 lg:py-12">
                     <div className="max-w-7xl mx-auto">

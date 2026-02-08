@@ -1,0 +1,1013 @@
+{
+  "course_catalog": [
+    {
+      "code": "ACT141",
+      "title": "Introduction to Accounting",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Financial Accounting: objectives/importance, accounting as information system, computerized applications, double entry, accounts & classification, accounting equation, cycle, journal/ledger/trial balance, financial statements, concepts & conventions",
+        "Cost & Management Accounting: cost concepts/classification, overheads & recovery, job order costing, job cost sheet & quotation price, inventory valuation, absorption vs marginal costing, CVP analysis, contribution-margin, sensitivity analysis",
+        "Investment decisions: short-term (relevant/differential costs), long-term (capital budgeting, evaluation techniques)"
+      ]
+    },
+
+    {
+      "code": "CSE141",
+      "title": "Computer Fundamentals",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Intro to computers, data representation",
+        "Input/output devices (keyboard, mouse, monitor, printer)",
+        "Memory & storage devices and performance",
+        "Processors, binary arithmetic, floating point representation",
+        "Software types, logic circuits, computer architecture",
+        "Computer languages and operating systems",
+        "Computer history",
+        "Internet fundamentals and telecommunications overview"
+      ]
+    },
+    {
+      "code": "CSE161",
+      "title": "Programming Language I",
+      "credits": 3,
+      "prerequisites": ["CSE141"],
+      "topics": [
+        "C fundamentals, data types, operators, expressions",
+        "Basic I/O, if-else, loops (for/while/do-while)",
+        "Functions; variable scopes (global/local/static/register)",
+        "Arrays; bubble sort; selection sort",
+        "Pointers and pointer arithmetic; arrays & pointers; pointer-to-pointer",
+        "Structures"
+      ]
+    },
+    {
+      "code": "CSE162",
+      "title": "Programming Language I (C) Lab",
+      "credits": 1,
+      "prerequisites": ["Nil"],
+      "topics": ["Laboratory work based on CSE161"]
+    },
+
+    {
+      "code": "CSE181",
+      "title": "Discrete Mathematics",
+      "credits": 3,
+      "prerequisites": ["CSE161", "CSE162"],
+      "topics": [
+        "Logic (propositional/predicate), quantifiers, proofs",
+        "Sets, functions, growth of functions, algorithm complexity",
+        "Integers/divisibility, number theory & applications",
+        "Matrices, induction, recursion",
+        "Counting, pigeonhole, permutations/combinations, binomial coefficients",
+        "Discrete probability, recurrence relations, generating functions",
+        "Relations/closures/equivalence/partial orders",
+        "Graphs (models/connectivity/coloring), trees and traversal"
+      ]
+    },
+
+    {
+      "code": "CSE241",
+      "title": "Data Structures",
+      "credits": 3,
+      "prerequisites": ["CSE181"],
+      "topics": [
+        "Elementary data types, structures, arrays, pointers",
+        "Intro to OOP",
+        "Searching: linear and binary",
+        "Stacks and queues",
+        "Recursion problem solving",
+        "Binary search trees, balanced trees",
+        "Heaps and priority queues",
+        "Graph representation and basic graph algorithms"
+      ]
+    },
+    {
+      "code": "CSE242",
+      "title": "Data Structures Lab",
+      "credits": 1,
+      "prerequisites": ["CSE181"],
+      "topics": ["Laboratory work based on CSE241"]
+    },
+
+    {
+      "code": "CSE261",
+      "title": "Numerical Methods",
+      "credits": 3,
+      "prerequisites": ["CSE161", "CSE162", "MAT161"],
+      "topics": [
+        "Numeric representation, floating-point arithmetic, precision error",
+        "Root finding (bracketing and open methods)",
+        "Solving linear systems",
+        "Forward/backward differences, Taylor series",
+        "Interpolation (polynomials)",
+        "Numerical integration (Trapezoidal/Simpson)",
+        "Runge–Kutta methods"
+      ]
+    },
+
+    {
+      "code": "CSE263",
+      "title": "Digital Logic Design",
+      "credits": 3,
+      "prerequisites": ["CSE181"],
+      "topics": [
+        "Binary systems",
+        "Boolean algebra and logic gates",
+        "Gate-level minimization",
+        "Combinational logic",
+        "Synchronous sequential logic",
+        "Registers and counters",
+        "Memory and programmable logic"
+      ]
+    },
+    {
+      "code": "CSE264",
+      "title": "Digital Logic Design Lab",
+      "credits": 1,
+      "prerequisites": ["CSE181"],
+      "topics": ["Laboratory work based on CSE263"]
+    },
+
+    {
+      "code": "CSE281",
+      "title": "Programming Language II (OOP in Java and C++)",
+      "credits": 3,
+      "prerequisites": ["CSE161", "CSE162"],
+      "topics": [
+        "OOP concepts; classes/objects/methods/variables",
+        "Operators/expressions/statements/blocks, control statements",
+        "Strings, arrays, inheritance, packages, interfaces",
+        "Exceptions, I/O",
+        "AWT/Swing GUI",
+        "JDBC database programming",
+        "Threads, events, applets, images",
+        "Project work"
+      ]
+    },
+    {
+      "code": "CSE282",
+      "title": "Programming Language II Lab (OOP in Java and C++)",
+      "credits": 1,
+      "prerequisites": ["CSE161", "CSE162"],
+      "topics": ["Laboratory work based on CSE281"]
+    },
+
+    {
+      "code": "CSE265",
+      "title": "Algorithm",
+      "credits": 3,
+      "prerequisites": ["CSE241", "CSE242"],
+      "topics": [
+        "Sorting (insertion/selection/merge/quick/counting/radix)",
+        "Growth of function, divide and conquer, solving recurrences",
+        "Heaps, median & order statistics, hashing",
+        "Basic graph algorithms, shortest paths, disjoint sets, MST",
+        "Backtracking, computational geometry intro",
+        "Greedy algorithms intro, dynamic programming intro"
+      ]
+    },
+    {
+      "code": "CSE266",
+      "title": "Algorithm Lab",
+      "credits": 1,
+      "prerequisites": ["CSE241", "CSE242"],
+      "topics": ["Laboratory work based on CSE265"]
+    },
+
+    {
+      "code": "CSE375",
+      "title": "Advanced Algorithm",
+      "credits": 3,
+      "prerequisites": ["CSE265"],
+      "topics": [
+        "Design/analysis of efficient algorithms, models of computation",
+        "Advanced sorting/searching, algebraic algorithms, graph algorithms",
+        "Matching algorithms, Fibonacci heaps, splay trees",
+        "MST and shortest paths, network flows, linear programming",
+        "Dynamic programming, probabilistic methods, approximation algorithms",
+        "Completeness, lower bound theory for parallel computation",
+        "Non-polynomial algorithms and satisfiability set construction"
+      ]
+    },
+    {
+      "code": "CSE376",
+      "title": "Advanced Algorithm Lab",
+      "credits": 1,
+      "prerequisites": ["CSE265", "CSE266"],
+      "topics": ["Laboratory work based on CSE375"]
+    },
+
+    {
+      "code": "CSE383",
+      "title": "Database Design",
+      "credits": 3,
+      "prerequisites": ["CSE281", "CSE282"],
+      "topics": [
+        "Database concepts; ER/EER modeling; integrity constraints",
+        "Relational algebra and SQL",
+        "Normalization (1NF..5NF), dependencies, decomposition properties",
+        "Storage/indexing (files, B+tree, hashing)",
+        "Transactions & concurrency (ACID, locks, deadlocks)",
+        "Recovery, query processing/optimization",
+        "Security/authorization, distributed databases"
+      ]
+    },
+    {
+      "code": "CSE384",
+      "title": "Database Design Lab",
+      "credits": 1,
+      "prerequisites": ["CSE281", "CSE282"],
+      "topics": ["Laboratory work based on CSE383"]
+    },
+
+    {
+      "code": "CSE363",
+      "title": "Microprocessor Design & Assembly Language Programming",
+      "credits": 3,
+      "prerequisites": ["CSE161", "CSE263"],
+      "topics": [
+        "HW/SW architecture, instruction formats, assembly format and process",
+        "Interrupts/system services, addressing modes",
+        "Control structures, subroutines/macros",
+        "Numeric and string processing",
+        "Disk geometry, file system and file I/O",
+        "8-bit/16-bit/32-bit microprocessor architectures, instruction set",
+        "Multitasking and virtual memory, memory/bus interfaces, coprocessor",
+        "Microcontrollers and interfacing chips"
+      ]
+    },
+    {
+      "code": "CSE364",
+      "title": "Microprocessor Design & Assembly Language Programming Lab",
+      "credits": 1,
+      "prerequisites": ["CSE162", "CSE264"],
+      "topics": ["Laboratory work based on CSE363"]
+    },
+
+    {
+      "code": "CSE343",
+      "title": "Computer Architecture",
+      "credits": 3,
+      "prerequisites": ["CSE263"],
+      "topics": [
+        "Performance and quantitative principles, memory hierarchy",
+        "Instruction set principles and encoding",
+        "Pipelining, hazards, ILP (dynamic scheduling, branch prediction)",
+        "Cache/main/virtual memory, protection",
+        "Storage systems, buses, I/O performance, RAID",
+        "Multiprocessors and shared memory, synchronization",
+        "Computer arithmetic, vector processors, RISC and Intel 80x86 survey"
+      ]
+    },
+
+    {
+      "code": "CSE349",
+      "title": "Mathematical Analysis for Computer Science",
+      "credits": 3,
+      "prerequisites": ["CSE181"],
+      "topics": [
+        "Proof techniques and notation",
+        "Sums/recurrences, modular arithmetic, basic number theory",
+        "Special sequences/functions (Stirling/Eulerian/Harmonic/Bernoulli/Fibonacci)",
+        "Generating functions and recurrence solving",
+        "Domino theory"
+      ]
+    },
+
+    {
+      "code": "CSE441",
+      "title": "Theory of Computing",
+      "credits": 3,
+      "prerequisites": ["CSE265"],
+      "topics": [
+        "Finite automata (DFA/NFA), regular languages, minimization",
+        "Regular expressions, pumping lemma, non-regular languages",
+        "CFGs, normal forms, pushdown automata, non-CFL",
+        "Turing machines and variants",
+        "Decidability/undecidability (Halting problem), reductions/diagonalization",
+        "Time complexity and classes P, NP, NPC"
+      ]
+    },
+
+    {
+      "code": "CSE361",
+      "title": "Operating Systems",
+      "credits": 3,
+      "prerequisites": ["CSE363"],
+      "topics": [
+        "Computer system & OS overview (Windows/UNIX/Linux)",
+        "Processes: states, control, security issues",
+        "Scheduling: uniprocessor/multiprocessor/real-time scheduling; Linux scheduling",
+        "Threads & SMP; microkernels",
+        "Concurrency: mutex/semaphores/monitors/message passing; deadlocks; Linux concurrency mechanisms",
+        "Memory management: paging/segmentation/virtual memory; Linux/Windows memory management",
+        "File management: organization/directories/security; UNIX/Linux VFS; Windows FS",
+        "Security threats: malware, viruses/worms/bots/rootkits"
+      ]
+    },
+    {
+      "code": "CSE362",
+      "title": "Operating Systems Lab",
+      "credits": 1,
+      "prerequisites": ["CSE363"],
+      "topics": [
+        "Linux shell and system overview",
+        "Linux file I/O and system calls",
+        "Boot loader / bare metal basics",
+        "Process management (fork/exec/wait)",
+        "IPC (pipes), pthread basics",
+        "Mutex/semaphore basics, Java monitor",
+        "Memory management and scheduling syscalls",
+        "Linux kernel module (LKM) intro",
+        "Lab work based on CSE361"
+      ]
+    },
+
+    {
+      "code": "CSE345",
+      "title": "Information System Design & Software Engineering",
+      "credits": 3,
+      "prerequisites": ["CSE281", "CSE383"],
+      "topics": [
+        "Information systems, analysis & fact-finding (interviews, questionnaires, JAD), prototyping",
+        "Design tools (DFD, data dictionary, ER/state diagrams, flowcharts, HIPO, structure charts)",
+        "UML (use case, class, sequence, collaboration, state/activity, component/deployment)",
+        "Ethical/social/security issues, estimation (COCOMO), scheduling (PERT/CPM, Gantt), cost-benefit",
+        "Software quality, process models, requirements, design methods, testing, maintenance, patterns, RUP/UML, project work"
+      ]
+    },
+
+    {
+      "code": "CSE341",
+      "title": "Computer Networking",
+      "credits": 3,
+      "prerequisites": ["ETE281"],
+      "topics": [
+        "OSI model overview, topology, MAC layer services/protocols",
+        "IEEE LAN standards; LLC protocols; HDLC; ALOHA",
+        "WAN/MAN; internetworking; TCP/IP; routers/bridges/gateways",
+        "X.25, Internet and related software",
+        "Transport layer and overview of upper layers, email/applications"
+      ]
+    },
+    {
+      "code": "CSE342",
+      "title": "Computer Networking Lab",
+      "credits": 1,
+      "prerequisites": ["ETE281"],
+      "topics": ["Laboratory work based on CSE341"]
+    },
+
+    {
+      "code": "CSE443",
+      "title": "Computer Graphics & Animation",
+      "credits": 3,
+      "prerequisites": ["CSE281", "MAT261"],
+      "topics": [
+        "Mesh modeling, affine transformations",
+        "3D viewing, lighting and shading",
+        "Texture mapping, skinning",
+        "Animation, collision detection, ray tracing"
+      ]
+    },
+    {
+      "code": "CSE444",
+      "title": "Computer Graphics & Animation Lab",
+      "credits": 1,
+      "prerequisites": ["CSE281", "MAT261"],
+      "topics": ["Lab work based on CSE443 (OpenGL, Blender)"]
+    },
+
+    {
+      "code": "CSE469",
+      "title": "Compiler Construction",
+      "credits": 3,
+      "prerequisites": ["CSE363", "CSE441"],
+      "topics": [
+        "Lexical analysis",
+        "Parsing (LL/LR)",
+        "Syntax-directed translation",
+        "Intermediate code generation",
+        "Error detection and recovery",
+        "Implementation using tools (flex, bison)"
+      ]
+    },
+
+    {
+      "code": "CSE365",
+      "title": "Artificial Intelligence",
+      "credits": 3,
+      "prerequisites": ["CSE265"],
+      "topics": [
+        "Graph search (A*, IDA*), local search (hill climbing, simulated annealing)",
+        "Constraint satisfaction",
+        "Adversarial search (minimax)",
+        "Knowledge representation and inference (propositional/first-order logic), Prolog",
+        "Artificial neural networks"
+      ]
+    },
+
+    {
+      "code": "CSE467",
+      "title": "E-Commerce & E-Governance",
+      "credits": 3,
+      "prerequisites": ["CSE383", "SOC341"],
+      "topics": [
+        "Electronic commerce foundations, evolution and environment",
+        "Technology infrastructure: Internet/WWW protocols, HTML/XML, intranet/extranet",
+        "Business strategies: revenue models, usability, marketing, CRM, search positioning",
+        "B2B activities: EDI, supply chain, marketplaces/portals",
+        "Legal/ethical/tax issues, IP, privacy, cybercrime",
+        "E-commerce software & security, hosting, client/channel/server security",
+        "Online payment systems and electronic cash/wallets",
+        "Enterprise architecture: frameworks, governance, process and maturity"
+      ]
+    },
+
+    {
+      "code": "CSE477",
+      "title": "Cloud Computing",
+      "credits": 3,
+      "prerequisites": ["CSE361"],
+      "topics": [
+        "SaaS/PaaS/IaaS, MapReduce, gossip/membership",
+        "Key-value stores, ordering/snapshots/multicast, Paxos/leader election",
+        "Mutual exclusion, concurrency control, replication",
+        "Stream/graph processing, scheduling",
+        "Distributed file systems, DSM, sensor networks",
+        "Security, data-center outages, deployment/maintenance"
+      ]
+    },
+
+    {
+      "code": "CSE359",
+      "title": "Graph Theory",
+      "credits": 3,
+      "prerequisites": ["CSE265"],
+      "topics": [
+        "Graphs/digraphs, incidence/adjacency matrices, isomorphism",
+        "Trees/forests, spanning trees",
+        "Connectivity (cuts, blocks, Menger’s theorem)",
+        "Euler/Hamilton tours, shortest paths",
+        "Matchings (Hall/Tutte/Konig), algorithms",
+        "Extremal problems (Turan/Ramsey), colorings (Brooks/Vizing)",
+        "Planar graphs and surfaces, directed graphs, flows",
+        "Selected topics (dominating sets, perfect graphs, random graphs)"
+      ]
+    },
+
+    {
+      "code": "CSE347",
+      "title": "Advanced Networking",
+      "credits": 3,
+      "prerequisites": ["CSE341"],
+      "topics": [
+        "Internet addressing, routing",
+        "NAT/PAT, subnetting/VLSM, VLAN",
+        "ICMPv4/v6, multicast, RSVP, IPng",
+        "Wireless/satellite/WAP, Mobile IP",
+        "VoIP, VPNs, network security and QoS",
+        "Bluetooth, Wi-Fi (802.11g), Wi-Max (802.16)"
+      ]
+    },
+    {
+      "code": "CSE348",
+      "title": "Advanced Networking Lab",
+      "credits": 1,
+      "prerequisites": ["CSE341", "CSE342"],
+      "topics": ["Lab work based on CSE347"]
+    },
+
+    {
+      "code": "CSE355",
+      "title": "Image Processing",
+      "credits": 3,
+      "prerequisites": ["CSE281", "CSE265"],
+      "topics": [
+        "Image fundamentals and representation",
+        "Transforms: FFT, DCT, KLT, wavelets/sub-band decomposition",
+        "Enhancement and restoration",
+        "Compression techniques and standards (JPEG, MPEG, H.261, H.263)"
+      ]
+    },
+
+    {
+      "code": "CSE471",
+      "title": "Web and Internet Programming",
+      "credits": 3,
+      "prerequisites": ["CSE345"],
+      "topics": [
+        "HTML/CSS, basic web programming",
+        "PHP basics and OOP in PHP",
+        "MySQL and relational DB",
+        "JavaScript, regex, sessions/cookies",
+        "MVC, PHP frameworks, jQuery, AJAX",
+        "Project work"
+      ]
+    },
+    {
+      "code": "CSE472",
+      "title": "Web and Internet Programming Lab",
+      "credits": 1,
+      "prerequisites": ["CSE345"],
+      "topics": ["Lab work based on CSE471"]
+    },
+
+    {
+      "code": "CSE473",
+      "title": "Software Development and Project Management",
+      "credits": 3,
+      "prerequisites": ["CSE345"],
+      "topics": [
+        "Software project management foundations, staffing, leadership, conflict management",
+        "Proposal and client management, planning/scheduling",
+        "Risk/configuration management, estimation/cost control",
+        "Quality assurance/accreditation, software measurement/testing",
+        "Maintenance, enterprise/team coordination; cloud and big data awareness"
+      ]
+    },
+    {
+      "code": "CSE474",
+      "title": "Software Development and Project Management Lab",
+      "credits": 1,
+      "prerequisites": ["CSE345"],
+      "topics": ["Lab work based on CSE473"]
+    },
+
+    {
+      "code": "CSE479",
+      "title": "Cryptography & Network Security",
+      "credits": 3,
+      "prerequisites": ["CSE341"],
+      "topics": [
+        "Classical cryptography and cryptanalysis; Shannon theory",
+        "DES and differential cryptanalysis",
+        "Public-key crypto: RSA, attacks, factoring; ElGamal, knapsack",
+        "Digital signatures, hashes, birthday attack",
+        "Key distribution/agreement (Kerberos, Diffie–Hellman)",
+        "Authentication/identification schemes",
+        "Secret sharing, pseudorandom generation, zero-knowledge proofs"
+      ]
+    },
+
+    {
+      "code": "CSE475",
+      "title": "Management Information System",
+      "credits": 3,
+      "prerequisites": ["Successful completion of 110 or more credits"],
+      "topics": [
+        "MIS components and integration for control/decision support",
+        "Functional applications and impact on society",
+        "Management environments, planning/organizing/controlling",
+        "Motivation, teamwork, group dynamics, leadership"
+      ]
+    },
+
+    {
+      "code": "CSE353",
+      "title": "Introduction to Data Mining",
+      "credits": 3,
+      "prerequisites": ["CSE265"],
+      "topics": [
+        "Data warehousing/OLAP",
+        "Classification (decision trees, evaluation, alternatives)",
+        "Association analysis and algorithms",
+        "Clustering concepts and issues",
+        "Frequent-pair algorithms, anomaly detection",
+        "Machine learning overview: Bayesian, neural nets, genetic algorithms, ensembles",
+        "Advanced topics: PageRank, web/stream mining, sequence mining, event discovery"
+      ]
+    },
+
+    {
+      "code": "CSE351",
+      "title": "Advanced Java",
+      "credits": 3,
+      "prerequisites": ["CSE281"],
+      "topics": [
+        "Threads, generics, reflection API",
+        "Java network programming, advanced JDBC",
+        "Intro to J2EE, JSP, RMI, frameworks",
+        "Project work"
+      ]
+    },
+    {
+      "code": "CSE352",
+      "title": "Advanced Java Lab",
+      "credits": 1,
+      "prerequisites": ["CSE282"],
+      "topics": ["Laboratory work based on Advanced Java"]
+    },
+
+    {
+      "code": "CSE465",
+      "title": "Parallel and Distributed Computing",
+      "credits": 3,
+      "prerequisites": ["CSE375", "CSE361", "CSE347"],
+      "topics": [
+        "HPC issues and multi-core; clusters/grids/cloud",
+        "Parallel architectures (Flynn taxonomy, GPU, interconnects, coherence)",
+        "Parallel algorithm design and performance analysis (Amdahl/Gustafson, isoefficiency)",
+        "MPI basics; shared-memory programming with Pthreads (mutex/locks/monitor)",
+        "Distributed computing: client/server, middleware, SOA, clusters, load balancing"
+      ]
+    },
+    {
+      "code": "CSE466",
+      "title": "Parallel and Distributed Computing Lab",
+      "credits": 1,
+      "prerequisites": ["CSE361", "CSE381"],
+      "topics": ["Laboratory work associated with CSE465 (per elective list)"]
+    },
+
+    {
+      "code": "CSE445",
+      "title": "Smart Device App Development",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Mobile development environment and constraints",
+        "App lifecycle and process states",
+        "UI design (views/layouts/menus)",
+        "Intents/broadcast receivers/adapters/internet",
+        "Data storage/sharing, maps and location services",
+        "Background work (services/threads/notifications)",
+        "Hardware access (media/camera/sensors/telephony/bluetooth/Wi-Fi/vibration)",
+        "Graphics/animation, security/permissions, localization"
+      ]
+    },
+
+    {
+      "code": "ECO461",
+      "title": "Principle of Economics",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Economic systems and fundamental problems",
+        "Demand/supply, elasticity, consumer behavior, utility approaches",
+        "Production theory, market structures, cost analysis",
+        "Optimization and distribution theory; derivatives in economics",
+        "Micro-economics: savings, investment, employment, national income",
+        "Inflation/monetary/fiscal/trade policy (Bangladesh context), development/planning"
+      ]
+    },
+
+    {
+      "code": "EEE181",
+      "title": "Electrical Circuit Design I",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "DC sources, resistance/conductance, Ohm’s law, power/energy",
+        "Series/parallel/series-parallel circuits",
+        "Mesh/node analysis, Kirchhoff’s laws, Y-Δ transform",
+        "Superposition/Norton/Thevenin/Millman theorems",
+        "Capacitors, magnetic circuits, inductors, RC/RL DC excitation"
+      ]
+    },
+    {
+      "code": "EEE182",
+      "title": "Electrical Circuit Design I Lab",
+      "credits": 1,
+      "prerequisites": ["Nil"],
+      "topics": ["Laboratory work based on EEE181"]
+    },
+
+    {
+      "code": "EEE241",
+      "title": "Electronic Devices and Circuits I",
+      "credits": 3,
+      "prerequisites": ["EEE181", "EEE182"],
+      "topics": [
+        "Semiconductors, p-n junction diode (biasing, ideal vs real, load line, equivalent circuits)",
+        "Diode applications and types",
+        "BJT: construction/operation, amplifying action, CB/CC/CE",
+        "Transistor biasing, Darlington pair, AC/DC load line",
+        "Low-frequency BJT behavior"
+      ]
+    },
+    {
+      "code": "EEE242",
+      "title": "Electronic Devices and Circuits Lab",
+      "credits": 1,
+      "prerequisites": ["EEE181", "EEE182"],
+      "topics": [
+        "Lab work based on EEE241",
+        "Practical studies: DC/AC circuits, motors, generators, transformers, starters, rectifiers, transistor amplifier, IC applications, wiring/layout"
+      ]
+    },
+
+    {
+      "code": "EEE425",
+      "title": "VLSI Design",
+      "credits": 3,
+      "prerequisites": ["CSE263", "CSE264"],
+      "topics": [
+        "MOS characteristics/equations, fabrication",
+        "NMOS/CMOS inverters (DC/transient), pass transistor/gates",
+        "Layout and λ-based design rules, stick diagrams",
+        "Complex CMOS gates, RC estimation, timing, scaling",
+        "Noise margin/power, interconnect, BiCMOS",
+        "Building blocks (adders/counters/multipliers), memory (DRAM/PLA/FPGA)",
+        "VLSI testing objectives/strategies"
+      ]
+    },
+    {
+      "code": "EEE456",
+      "title": "VLSI Design Lab",
+      "credits": 1,
+      "prerequisites": ["CSE263", "CSE264"],
+      "topics": ["Associated lab work for VLSI Design (per elective list)"]
+    },
+
+    {
+      "code": "ETE281",
+      "title": "Communication Theory",
+      "credits": 3,
+      "prerequisites": ["MAT241", "EEE241"],
+      "topics": [
+        "Communication system overview, noise, information theory, channel capacity",
+        "Analog/digital comm; AM/SSB/VSB/QAM detection; FM/PM demodulation",
+        "Pulse modulation (sampling, PCM, delta modulation)",
+        "Digital modulation (ASK/PSK/FSK) bandwidth, detection, noise performance",
+        "Multiplexing (TDM/FDM) and multiple access (TDMA/FDMA/CDMA)",
+        "System design parameters, channel selection, performance simulation"
+      ]
+    },
+    {
+      "code": "ETE282",
+      "title": "Communication Theory Lab",
+      "credits": 1,
+      "prerequisites": ["MAT241", "EEE241"],
+      "topics": ["Laboratory work based on ETE281"]
+    },
+
+    {
+      "code": "ETE357",
+      "title": "Telecommunication Engineering",
+      "credits": 3,
+      "prerequisites": ["EEE241", "ETE281"],
+      "topics": [
+        "Telecom principles/evolution/networks/regulatory bodies",
+        "Telephone apparatus and features",
+        "Analog and digital switching systems",
+        "Traffic analysis and queuing",
+        "Modern telephone services and networks",
+        "Intro to cellular telephony and satellite communication"
+      ]
+    },
+    {
+      "code": "ETE358",
+      "title": "Telecommunication Engineering Lab",
+      "credits": 1,
+      "prerequisites": ["EEE242", "ETE282"],
+      "topics": ["Laboratory work based on ETE357"]
+    },
+
+    {
+      "code": "ETE451",
+      "title": "Digital Signal Processing",
+      "credits": 3,
+      "prerequisites": ["ETE357"],
+      "topics": [
+        "Sampling, aliasing, discrete-time LTI systems",
+        "Convolution and correlation, Z-transform, poles/zeros",
+        "DFT/FFT, DCT, signal flow graphs",
+        "IIR/FIR filter structures",
+        "Intro to speech and image processing"
+      ]
+    },
+    {
+      "code": "ETE452",
+      "title": "Digital Signal Processing Lab",
+      "credits": 1,
+      "prerequisites": ["ETE358"],
+      "topics": ["Associated lab work for DSP (per elective list)"]
+    },
+
+    {
+      "code": "ENG101",
+      "title": "Basic Composition",
+      "credits": 0,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Foundation English (reading/writing focus)",
+        "Grammar review and common issues",
+        "Communication practice, tasks/assignments (picture/story)",
+        "Formal applications and emails"
+      ]
+    },
+    {
+      "code": "ENG102",
+      "title": "Intermediate Composition",
+      "credits": 3,
+      "prerequisites": ["ENG101"],
+      "topics": [
+        "Tertiary-level reading and writing skills",
+        "Composition and grammar support for accuracy",
+        "Paragraph writing (cohesion/coherence) and strategies",
+        "Journal writing for creative/free writing"
+      ]
+    },
+
+    {
+      "code": "MAT141",
+      "title": "Differential and Integral Calculus",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Limits/continuity/differentiability, successive differentiation",
+        "Mean value theorems, Taylor expansion, L'Hospital",
+        "Partial differentiation; tangents/normals; maxima/minima; curve tracing",
+        "Integration techniques; definite/improper integrals; beta/gamma",
+        "Areas/arc length/volumes/surface of revolution; Jacobian; multiple integrals"
+      ]
+    },
+    {
+      "code": "MAT161",
+      "title": "Coordinate Geometry and Vector Analysis",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Coordinate transformations, straight lines",
+        "Intervals, inequalities, absolute value",
+        "Asymptotes/symmetry, matrix applications",
+        "Polynomial division and synthetic division"
+      ]
+    },
+    {
+      "code": "MAT241",
+      "title": "Complex Variables and Transforms (Laplace & Fourier)",
+      "credits": 3,
+      "prerequisites": ["MAT161", "MAT141"],
+      "topics": [
+        "Complex numbers, limits/continuity, differentiation, C-R equations, mappings",
+        "Complex integration, Cauchy theorems, Taylor/Laurent, residues, contour integration",
+        "Laplace transforms (existence, inverse, derivatives, step/periodic functions, DE solving)",
+        "Fourier series/transforms and boundary value problems"
+      ]
+    },
+    {
+      "code": "MAT261",
+      "title": "Linear Algebra and Matrices",
+      "credits": 3,
+      "prerequisites": ["MAT241"],
+      "topics": [
+        "Matrices: types, algebra, inverse, transformations, rank, canonical forms",
+        "Linear systems and applications",
+        "Vector spaces, basis/dimension, linear transformations (kernel/image)",
+        "Eigenvalues/eigenvectors, diagonalization, Cayley-Hamilton"
+      ]
+    },
+
+    {
+      "code": "MGT281",
+      "title": "Introduction to Business and Management",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Business concepts and classifications, national/international business",
+        "Group dynamics and leadership",
+        "Management components for control/decision support",
+        "Management in engineering"
+      ]
+    },
+
+    {
+      "code": "PHY161",
+      "title": "Physics I",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Mechanics (kinematics, Newton’s laws, energy, momentum, rotation, gravitation)",
+        "Waves & oscillations (SHM, damping/forced/resonance, wave properties)",
+        "Heat & thermodynamics (first/second law, kinetic theory, Carnot, entropy)"
+      ]
+    },
+    {
+      "code": "PHY181",
+      "title": "Physics II",
+      "credits": 3,
+      "prerequisites": ["PHY161"],
+      "topics": [
+        "Electricity & magnetism (fields, Gauss law, potential, capacitance, current, Ampere/Biot-Savart)",
+        "Optics (aberrations, interference, diffraction, polarization) with listed references"
+      ]
+    },
+    {
+      "code": "PHY182",
+      "title": "Physics Lab",
+      "credits": 1,
+      "prerequisites": ["PHY161"],
+      "topics": ["Laboratory work based on PHY161 and PHY 1031"]
+    },
+
+    {
+      "code": "SOC341",
+      "title": "Engineering Ethics",
+      "credits": 3,
+      "prerequisites": ["Completion of 80 Credits"],
+      "topics": [
+        "Ethics and professionalism; moral reasoning; codes of ethics",
+        "Rights/duties/virtue/utilitarian ethics",
+        "Engineering as social experimentation; workplace responsibilities",
+        "Whistleblowing; academic and research integrity",
+        "Computer ethics and internet crime",
+        "Environmental ethics; global justice; case studies"
+      ]
+    },
+
+    {
+      "code": "STA281",
+      "title": "Statistical Methods and Probability",
+      "credits": 3,
+      "prerequisites": ["Nil"],
+      "topics": [
+        "Descriptive statistics, probability, random variables and distributions",
+        "Expectation/MGF, joint & marginal distributions, independence, CLT",
+        "Sampling methods and survey methods (SRS, stratified, systematic, multistage)",
+        "ANOVA (one/two/three-way), design of experiments (CRD/RBD/LSD/factorial)",
+        "Estimation (MoM, LS, MLE, Bayes), confidence intervals",
+        "Hypothesis testing (large/small sample), non-parametric tests"
+      ]
+    },
+
+    {
+      "code": "ETE399",
+      "title": "Digital Communication",
+      "credits": 3,
+      "prerequisites": ["ETE281", "MAT261"],
+      "topics": ["(Detailed topics not listed in elective table)"]
+    },
+
+    {
+      "code": "CSE457",
+      "title": "Advanced Embedded Systems",
+      "credits": 3,
+      "prerequisites": ["CSE361", "CSE381"],
+      "topics": ["(Detailed topics provided in course description; ARM Cortex-M3/M4 oriented)"]
+    },
+    {
+      "code": "CSE458",
+      "title": "Advanced Embedded Systems Lab",
+      "credits": 1,
+      "prerequisites": ["CSE381"],
+      "topics": ["Associated lab work for CSE457 (per elective list)"]
+    },
+
+    {
+      "code": "CSE459",
+      "title": "Research Methodology",
+      "credits": 3,
+      "prerequisites": ["Completion of 110 credit hours"],
+      "topics": ["(Listed in semester plan; detailed topics not shown in the captured catalog snippet)"]
+    },
+    {
+      "code": "CSE489",
+      "title": "Project OR Internship",
+      "credits": 3,
+      "prerequisites": ["CSE459"],
+      "topics": ["Capstone project or internship (as per semester 12 plan)"]
+    }
+  ],
+
+  "electives": {
+    "group_A_without_lab": [
+      {"code": "CSE349", "title": "Mathematical Analysis for Computer Science (theory)", "credits": 3, "prerequisites": ["STA281", "CSE181"]},
+      {"code": "CSE469", "title": "Compiler Construction", "credits": 3, "prerequisites": ["CSE441"]},
+      {"code": "CSE467", "title": "E-Commerce & E-Governance", "credits": 3, "prerequisites": ["CSE383", "SOC341"]},
+      {"code": "CSE359", "title": "Graph Theory", "credits": 3, "prerequisites": ["CSE265"]},
+      {"code": "CSE355", "title": "Image Processing", "credits": 3, "prerequisites": ["CSE281", "CSE265"]},
+      {"code": "CSE479", "title": "Cryptography & Network Security", "credits": 3, "prerequisites": ["CSE341"]},
+      {"code": "CSE477", "title": "Cloud Computing", "credits": 3, "prerequisites": ["CSE361"]},
+      {"code": "CSE475", "title": "Management Information System", "credits": 3, "prerequisites": ["After completion of 110 credit hours"]},
+      {"code": "CSE445", "title": "Smart Device App Development", "credits": 3, "prerequisites": ["CSE281", "CSE341"]},
+      {"code": "CSE353", "title": "Introduction to Data Mining", "credits": 3, "prerequisites": ["CSE265"]},
+      {"code": "ETE399", "title": "Digital Communication", "credits": 3, "prerequisites": ["ETE281", "MAT261"]}
+    ],
+    "group_B_with_lab": [
+      {"code": "ETE357", "title": "Telecommunication Engineering", "credits": 3, "prerequisites": ["EEE241", "ETE281"]},
+      {"code": "ETE358", "title": "Telecommunication Engineering Lab", "credits": 1, "prerequisites": ["EEE242", "ETE282"]},
+      {"code": "ETE451", "title": "Digital Signal Processing", "credits": 3, "prerequisites": ["ETE357"]},
+      {"code": "ETE452", "title": "Digital Signal Processing Lab", "credits": 1, "prerequisites": ["ETE358"]},
+      {"code": "EEE425", "title": "VLSI Design", "credits": 3, "prerequisites": ["CSE263", "CSE264"]},
+      {"code": "EEE456", "title": "VLSI Design Lab", "credits": 1, "prerequisites": ["CSE263", "CSE264"]},
+      {"code": "CSE347", "title": "Advanced Networking", "credits": 3, "prerequisites": ["CSE341"]},
+      {"code": "CSE348", "title": "Advanced Networking Lab", "credits": 1, "prerequisites": ["CSE341", "CSE342"]},
+      {"code": "CSE375", "title": "Advanced Algorithm", "credits": 3, "prerequisites": ["CSE265"]},
+      {"code": "CSE376", "title": "Advanced Algorithm Lab", "credits": 1, "prerequisites": ["CSE266"]},
+      {"code": "CSE457", "title": "Advanced Embedded Systems", "credits": 3, "prerequisites": ["CSE381"]},
+      {"code": "CSE458", "title": "Advanced Embedded Systems Lab", "credits": 1, "prerequisites": ["CSE381"]},
+      {"code": "CSE471", "title": "Web and Internet Programming", "credits": 3, "prerequisites": ["CSE345"]},
+      {"code": "CSE472", "title": "Web and Internet Programming Lab", "credits": 1, "prerequisites": ["CSE345"]},
+      {"code": "CSE473", "title": "Software Development and Project Management", "credits": 3, "prerequisites": ["CSE345"]},
+      {"code": "CSE474", "title": "Software Development and Project Management Lab", "credits": 1, "prerequisites": ["CSE345"]},
+      {"code": "CSE465", "title": "Parallel and Distributed Computing", "credits": 3, "prerequisites": ["CSE361", "CSE381"]},
+      {"code": "CSE466", "title": "Parallel and Distributed Computing Lab", "credits": 1, "prerequisites": ["CSE361", "CSE381"]},
+      {"code": "CSE351", "title": "Advanced Java", "credits": 3, "prerequisites": ["CSE281"]},
+      {"code": "CSE352", "title": "Advanced Java Lab", "credits": 1, "prerequisites": ["CSE281"]}
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-import TuitionCalculator from '@/components/tuition-calculator';
+import TuitionCalculator from '@/app/tools/tuition-calculator/tuition-calculator';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

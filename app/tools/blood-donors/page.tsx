@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Container } from '@/components/ui/container';
-import Navbar from '@/components/navbar';
-import { Footer } from '@/components/footer/footer';
-import { BloodDonorList } from '@/components/blooddonation/BloodDonorList';
+import { Header } from '@/components/navbar/header';
+import { Footer } from '@/components/footer';
+import { BloodDonorList } from '@/components/blood-donation/donor-lists';
 import { BloodDonorResponse } from '@/lib/blood-donor-types';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,7 @@ export default function BloodDonorsPage() {
     if (loading) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <main className="pt-12 min-h-screen bg-white">
                     <Container className="py-16">
                         <div className="max-w-6xl mx-auto">
@@ -83,7 +83,7 @@ export default function BloodDonorsPage() {
     if (error) {
         return (
             <>
-                <Navbar />
+                <Header />
                 <main className="pt-12 min-h-screen bg-white">
                     <Container className="py-16">
                         <div className="max-w-6xl mx-auto">
@@ -128,7 +128,7 @@ export default function BloodDonorsPage() {
 
     return (
         <>
-            <Navbar />
+            <Header />
             <main className="pt-12 min-h-screen bg-white">
                 <Container className="py-16">
                     <div className="max-w-6xl mx-auto">

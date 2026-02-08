@@ -1,14 +1,14 @@
 'use client';
 
 import { Container } from '@/components/ui/container';
-import Navbar from '@/components/navbar';
-import { Footer } from '@/components/footer/footer';
+import { Header } from '@/components/navbar/header';
+import { Footer } from '@/components/footer';
 import Image from 'next/image';
 
 export default function QuestionBankPage() {
     return (
         <>
-            <Navbar />
+            <Header />
             <main className="min-h-screen bg-white pt-12">
                 <Container className="py-8 md:py-12 lg:py-16">
                     <div className="max-w-2xl mx-auto">
