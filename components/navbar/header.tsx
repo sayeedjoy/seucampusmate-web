@@ -35,9 +35,7 @@ export function Header() {
 		>
 			<nav className="flex h-14 md:h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
 				<div className="mx-auto flex h-full w-full max-w-[90rem] items-center justify-between">
-					<a className="rounded-lg py-2 pr-2 -ml-2 hover:bg-accent/50 transition-colors" href="#">
-						<Logo />
-					</a>
+					<Logo className="rounded-lg py-2 pr-2 -ml-2 hover:bg-accent/50 transition-colors" />
 					<div className="hidden items-center gap-0.5 md:flex">
 						{navLinks.map((link, i) => (
 							<a

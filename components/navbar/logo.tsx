@@ -3,8 +3,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
-export function Logo() {
+interface LogoProps {
+  className?: string;
+}
+
+export function Logo({ className }: LogoProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -21,7 +26,7 @@ export function Logo() {
     <Link
       href="/"
       onClick={handleLogoClick}
-      className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200 cursor-pointer"
+      className={cn("flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200 cursor-pointer", className)}
     >
       <div className="w-8 h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 relative">
         <Image
