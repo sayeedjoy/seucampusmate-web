@@ -1,6 +1,6 @@
 export default function StatsSection() {
     return (
-        <section className="py-12 md:py-20">
+        <section className="pt-12 pb-6 md:pt-20 md:pb-8">
             <div className="mx-auto max-w-5xl space-y-8 px-6 md:space-y-16">
                 <div className="relative z-10 mx-auto max-w-xl space-y-6 text-center">
                     <h2 className="text-5xl font-bold whitespace-nowrap">CampusMate in numbers</h2>

@@ -12,7 +12,7 @@ export default function Page() {
       <IntegrationsSection />
       <BentoGridSection />
       <StatsSection />
-      <section className="w-full py-16 md:py-24">
+      <section className="w-full pt-6 pb-16 md:pt-8 md:pb-24">
         <Container>
           <Testimonials/>
         </Container>
