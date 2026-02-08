@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Optimize crawl budget
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: *.json$
+
+# Sitemap
+Sitemap: https://campusmate.app/sitemap.xml
+
+# Crawl delay for better server performance
+Crawl-delay: 1
