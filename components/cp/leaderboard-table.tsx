@@ -74,10 +74,10 @@ function PodiumCard({ user, position, delay }: { user: CFUser; position: 1 | 2 |
               alt={user.handle}
               width={80}
               height={80}
-              className="w-full h-full rounded-full object-cover border-2 border-white"
+              className="w-full h-full rounded-full object-cover border-2 border-background"
             />
           ) : (
-            <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
+            <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
               <span className={`${ratingColor(user.maxRating)} font-bold text-lg`}>
                 {user.handle.charAt(0).toUpperCase()}
               </span>
@@ -131,7 +131,7 @@ function UserCard({ user, rank }: { user: CFUser; rank: number }) {
     >
       <div className="flex items-center gap-4">
         {/* Rank */}
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-gray-600 shadow-sm">
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center font-bold text-foreground shadow-sm">
           {rank}
         </div>
 
@@ -142,10 +142,10 @@ function UserCard({ user, rank }: { user: CFUser; rank: number }) {
             alt={user.handle}
             width={48}
             height={48}
-            className="w-12 h-12 rounded-full border-2 border-white shadow-sm flex-shrink-0"
+            className="w-12 h-12 rounded-full border-2 border-background shadow-sm flex-shrink-0"
           />
         ) : (
-          <div className={`w-12 h-12 rounded-full ${ratingColorBg(user.maxRating)} flex items-center justify-center flex-shrink-0 border-2 border-white shadow-sm`}>
+          <div className={`w-12 h-12 rounded-full ${ratingColorBg(user.maxRating)} flex items-center justify-center flex-shrink-0 border-2 border-background shadow-sm`}>
             <span className={`${ratingColor(user.maxRating)} font-bold text-lg`}>
               {user.handle.charAt(0).toUpperCase()}
             </span>
@@ -158,7 +158,7 @@ function UserCard({ user, rank }: { user: CFUser; rank: number }) {
             <span className={`font-bold ${ratingColor(user.currentRating)} truncate`}>
               {user.handle}
             </span>
-            <ExternalLink className="w-3 h-3 text-gray-400 flex-shrink-0" />
+            <ExternalLink className="w-3 h-3 text-muted-foreground flex-shrink-0" />
           </div>
           <div className="flex items-center gap-2 mt-1">
             <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${ratingColorBg(user.maxRating)} ${ratingColor(user.maxRating)}`}>
@@ -169,20 +169,20 @@ function UserCard({ user, rank }: { user: CFUser; rank: number }) {
 
         {/* Ratings */}
         <div className="flex-shrink-0 text-right">
-          <div className="font-mono font-bold text-lg text-gray-900">{user.maxRating}</div>
-          <div className="text-xs text-gray-500">max rating</div>
+          <div className="font-mono font-bold text-lg text-foreground">{user.maxRating}</div>
+          <div className="text-xs text-muted-foreground">max rating</div>
         </div>
       </div>
 
       {/* Activity bar */}
-      <div className="mt-3 pt-3 border-t border-white/50 flex items-center justify-between text-xs text-gray-600">
+      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
-          <Zap className={`w-3.5 h-3.5 ${(user.recentSolvedCount || 0) > 0 ? 'text-green-500' : 'text-gray-400'}`} />
+          <Zap className={`w-3.5 h-3.5 ${(user.recentSolvedCount || 0) > 0 ? 'text-green-500' : 'text-muted-foreground'}`} />
           <span>{user.recentSolvedCount || 0} problems (3 months)</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5 text-gray-400" />
-          <span className="text-gray-500">{user.registeredHuman}</span>
+          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+          <span className="text-muted-foreground">{user.registeredHuman}</span>
         </div>
       </div>
     </a>
@@ -359,22 +359,22 @@ export function LeaderboardTable() {
           <div className="flex justify-center items-end gap-4 pt-8">
             {[2, 1, 3].map((pos) => (
               <div key={pos} className="flex flex-col items-center animate-pulse">
-                <div className={`${pos === 1 ? 'w-20 h-20' : 'w-16 h-16'} rounded-full bg-gray-200`} />
-                <div className="mt-3 h-4 w-16 bg-gray-200 rounded" />
-                <div className={`mt-3 w-28 ${pos === 1 ? 'h-32' : pos === 2 ? 'h-24' : 'h-20'} rounded-t-xl bg-gray-200`} />
+                <div className={`${pos === 1 ? 'w-20 h-20' : 'w-16 h-16'} rounded-full bg-muted`} />
+                <div className="mt-3 h-4 w-16 bg-muted rounded" />
+                <div className={`mt-3 w-28 ${pos === 1 ? 'h-32' : pos === 2 ? 'h-24' : 'h-20'} rounded-t-xl bg-muted`} />
               </div>
             ))}
           </div>
 
           {/* Skeleton table */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+          <div className="bg-card rounded-2xl border border-border p-6">
             <div className="space-y-4">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="flex items-center gap-4 animate-pulse">
-                  <div className="w-8 h-8 rounded-full bg-gray-200" />
-                  <div className="w-10 h-10 rounded-full bg-gray-200" />
-                  <div className="flex-1 h-4 bg-gray-200 rounded" />
-                  <div className="w-16 h-6 bg-gray-200 rounded" />
+                  <div className="w-8 h-8 rounded-full bg-muted" />
+                  <div className="w-10 h-10 rounded-full bg-muted" />
+                  <div className="flex-1 h-4 bg-muted rounded" />
+                  <div className="w-16 h-6 bg-muted rounded" />
                 </div>
               ))}
             </div>
@@ -388,14 +388,14 @@ export function LeaderboardTable() {
   if (error && !data) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl border border-red-200 p-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-50 flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-card rounded-2xl border border-destructive/30 p-8 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
+            <svg className="w-8 h-8 text-destructive" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 15c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Error loading data</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <h3 className="text-lg font-semibold text-foreground mb-2">Error loading data</h3>
+          <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={() => fetchData()} variant="default">
             Try Again
           </Button>
@@ -408,12 +408,12 @@ export function LeaderboardTable() {
   if (!data || data.users.length === 0) {
     return (
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 flex items-center justify-center">
-            <Users className="w-10 h-10 text-gray-400" />
+        <div className="bg-card rounded-2xl border border-border p-12 text-center">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
+            <Users className="w-10 h-10 text-muted-foreground" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No users found</h3>
-          <p className="text-gray-600">Please add Codeforces usernames to see the leaderboard.</p>
+          <h3 className="text-xl font-semibold text-foreground mb-2">No users found</h3>
+          <p className="text-muted-foreground">Please add Codeforces usernames to see the leaderboard.</p>
         </div>
       </div>
     );
@@ -425,20 +425,20 @@ export function LeaderboardTable() {
       <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6">
         {/* Left: Title & Badge */}
         <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border border-gray-200">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted border border-border">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="code-forces" className="w-4 h-4">
               <path fill="#F44336" d="M24 19.5V12a1.5 1.5 0 0 0-1.5-1.5h-3A1.5 1.5 0 0 0 18 12v7.5a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5z"></path>
               <path fill="#2196F3" d="M13.5 21a1.5 1.5 0 0 0 1.5-1.5v-15A1.5 1.5 0 0 0 13.5 3h-3C9.673 3 9 3.672 9 4.5v15c0 .828.673 1.5 1.5 1.5h3z"></path>
               <path fill="#FFC107" d="M0 19.5c0 .828.673 1.5 1.5 1.5h3A1.5 1.5 0 0 0 6 19.5V9a1.5 1.5 0 0 0-1.5-1.5h-3C.673 7.5 0 8.172 0 9v10.5z"></path>
             </svg>
-            <span className="text-xs font-medium text-gray-600">Powered by Codeforces</span>
+            <span className="text-xs font-medium text-muted-foreground">Powered by Codeforces</span>
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
               CP Leaderboard
             </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Top competitive programmers from <span className="font-semibold text-gray-700">Southeast University</span>
+            <p className="text-sm text-muted-foreground mt-1">
+              Top competitive programmers from <span className="font-semibold text-foreground">Southeast University</span>
             </p>
           </div>
         </div>
@@ -447,24 +447,24 @@ export function LeaderboardTable() {
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           {/* Search */}
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search user..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm"
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary transition-all text-sm"
             />
           </div>
 
           <div className="flex items-center gap-2">
             {/* Filter Toggle */}
-            <div className="flex items-center bg-gray-100 rounded-lg p-1">
+            <div className="flex items-center bg-muted rounded-lg p-1">
               <button
                 onClick={() => setShowActiveOnly(true)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${showActiveOnly
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
                   }`}
               >
                 Active
@@ -472,8 +472,8 @@ export function LeaderboardTable() {
               <button
                 onClick={() => setShowActiveOnly(false)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${!showActiveOnly
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground'
                   }`}
               >
                 All
@@ -497,27 +497,27 @@ export function LeaderboardTable() {
 
       {/* Stats Bar */}
       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-        <Pill className="px-2 py-1 border-gray-100 text-gray-600 bg-gray-50/50 pointer-events-none" variant="secondary">
+        <Pill className="px-2 py-1 border-border text-muted-foreground bg-muted/50 pointer-events-none" variant="secondary">
           <PillIcon icon={Users} className="size-3" />
           <span className="text-[10px] sm:text-xs font-medium">
-            <strong className="text-gray-900">{filteredUsers.length}</strong> Users
+            <strong className="text-foreground">{filteredUsers.length}</strong> Users
           </span>
         </Pill>
 
         <Pill
           className={cn(
-            "px-2 py-1 border-gray-100 pointer-events-none",
-            showActiveOnly ? "text-green-600 bg-green-50/50 border-green-100" : "text-gray-600 bg-gray-50/50"
+            "px-2 py-1 border-border pointer-events-none",
+            showActiveOnly ? "text-green-600 dark:text-green-400 bg-green-500/10 dark:bg-green-500/20 border-green-500/30" : "text-muted-foreground bg-muted/50"
           )}
           variant="secondary"
         >
-          <PillIcon icon={Zap} className={cn("size-3", showActiveOnly ? "text-green-500" : "text-gray-400")} />
+          <PillIcon icon={Zap} className={cn("size-3", showActiveOnly ? "text-green-500" : "text-muted-foreground")} />
           <span className="text-[10px] sm:text-xs font-medium">
             {showActiveOnly ? 'Active' : 'All'}
           </span>
         </Pill>
 
-        <Pill className="px-2 py-1 border-gray-100 text-gray-600 bg-gray-50/50 pointer-events-none" variant="secondary">
+        <Pill className="px-2 py-1 border-border text-muted-foreground bg-muted/50 pointer-events-none" variant="secondary">
           <PillIndicator
             variant={data.isFallback ? "info" : data.stale ? "warning" : "success"}
             pulse={!!data.isFallback}
@@ -539,17 +539,17 @@ export function LeaderboardTable() {
 
       {/* Loading overlay */}
       {refreshing && (
-        <div className="fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4 p-8 bg-white rounded-2xl shadow-xl">
+        <div className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4 p-8 bg-card rounded-2xl shadow-xl border border-border">
             <div className="relative">
-              <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+              <div className="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-4 h-4 bg-blue-600 rounded-full animate-pulse" />
+                <div className="w-4 h-4 bg-primary rounded-full animate-pulse" />
               </div>
             </div>
             <div className="text-center">
-              <p className="font-semibold text-gray-900">Fetching live data</p>
-              <p className="text-sm text-gray-500">Please wait a moment...</p>
+              <p className="font-semibold text-foreground">Fetching live data</p>
+              <p className="text-sm text-muted-foreground">Please wait a moment...</p>
             </div>
           </div>
         </div>
@@ -563,30 +563,30 @@ export function LeaderboardTable() {
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden sm:block bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+      <div className="hidden sm:block bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Rank</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">User</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Max Rating</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Title</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Current</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Activity</th>
-                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Registered</th>
+              <tr className="bg-muted border-b border-border">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Rank</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Max Rating</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Title</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Current</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Activity</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Registered</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-border">
               {(searchQuery ? filteredUsers : restOfUsers).map((user, index) => {
                 const rank = searchQuery ? index + 1 : index + 4;
                 return (
                   <tr
                     key={user.handle}
-                    className="hover:bg-gray-50/50 transition-colors duration-150 group"
+                    className="hover:bg-muted/50 transition-colors duration-150 group"
                   >
                     <td className="px-6 py-4">
-                      <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-semibold text-gray-600 group-hover:bg-gray-200 transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-semibold text-foreground group-hover:bg-muted/80 transition-colors">
                         {rank}
                       </div>
                     </td>
@@ -603,7 +603,7 @@ export function LeaderboardTable() {
                             alt={user.handle}
                             width={40}
                             height={40}
-                            className="rounded-full border border-gray-200 group-hover/link:border-blue-300 transition-colors"
+                            className="rounded-full border border-border group-hover/link:border-primary/50 transition-colors"
                           />
                         ) : (
                           <div className={`w-10 h-10 ${ratingColorBg(user.currentRating)} rounded-full flex items-center justify-center`}>
@@ -616,12 +616,12 @@ export function LeaderboardTable() {
                           <span className={`font-semibold ${ratingColor(user.currentRating)} group-hover/link:underline`}>
                             {user.handle}
                           </span>
-                          <ExternalLink className="w-3 h-3 text-gray-400 opacity-0 group-hover/link:opacity-100 transition-opacity" />
+                          <ExternalLink className="w-3 h-3 text-muted-foreground opacity-0 group-hover/link:opacity-100 transition-opacity" />
                         </div>
                       </a>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="font-mono font-bold text-lg text-gray-900">{user.maxRating}</span>
+                      <span className="font-mono font-bold text-lg text-foreground">{user.maxRating}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${ratingColorBg(user.maxRating)} ${ratingColor(user.maxRating)} ${ratingColorBorder(user.maxRating)} border`}>
@@ -629,18 +629,18 @@ export function LeaderboardTable() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="font-mono font-semibold text-gray-700">{user.currentRating}</span>
+                      <span className="font-mono font-semibold text-foreground">{user.currentRating}</span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <Zap className={`w-4 h-4 ${(user.recentSolvedCount || 0) > 0 ? 'text-green-500' : 'text-gray-300'}`} />
-                        <span className={`font-medium ${(user.recentSolvedCount || 0) > 0 ? 'text-green-600' : 'text-gray-400'}`}>
+                        <Zap className={`w-4 h-4 ${(user.recentSolvedCount || 0) > 0 ? 'text-green-500' : 'text-muted-foreground'}`} />
+                        <span className={`font-medium ${(user.recentSolvedCount || 0) > 0 ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
                           {user.recentSolvedCount || 0} solved
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 hidden lg:table-cell">
-                      <span className="text-sm text-gray-500">{user.registeredHuman}</span>
+                      <span className="text-sm text-muted-foreground">{user.registeredHuman}</span>
                     </td>
                   </tr>
                 );
@@ -652,19 +652,19 @@ export function LeaderboardTable() {
         {/* Empty search results */}
         {filteredUsers.length === 0 && (
           <div className="p-12 text-center">
-            <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h3 className="font-semibold text-gray-900 mb-1">No users found</h3>
-            <p className="text-gray-500 text-sm">Try a different search term</p>
+            <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="font-semibold text-foreground mb-1">No users found</h3>
+            <p className="text-muted-foreground text-sm">Try a different search term</p>
           </div>
         )}
       </div>
 
       {/* Mobile empty state */}
       {filteredUsers.length === 0 && (
-        <div className="sm:hidden p-8 text-center bg-white rounded-2xl border border-gray-200">
-          <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-          <h3 className="font-semibold text-gray-900 mb-1">No users found</h3>
-          <p className="text-gray-500 text-sm">Try a different search term</p>
+        <div className="sm:hidden p-8 text-center bg-card rounded-2xl border border-border">
+          <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+          <h3 className="font-semibold text-foreground mb-1">No users found</h3>
+          <p className="text-muted-foreground text-sm">Try a different search term</p>
         </div>
       )}
     </div>

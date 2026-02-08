@@ -36,7 +36,7 @@ export default function CPPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white font-inter">
+      <main className="min-h-screen bg-background font-inter">
         <Container className="pt-16 md:pt-20 lg:pt-24 pb-16">
           <LeaderboardTable />
         </Container>
