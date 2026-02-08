@@ -1,68 +1,20 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import React, { useState, useEffect, useCallback, useId } from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Field, FieldLabel, FieldContent, FieldError } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 
-// InputField component defined outside to prevent re-renders
-const InputField: React.FC<{
-    label: string;
-    value: string;
-    onChange: (value: string) => void;
-    placeholder: string;
-    required?: boolean;
-    error?: string;
-}> = React.memo(({ label, value, onChange, placeholder, required = false, error }) => {
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-
-        // Allow empty string
-        if (newValue === '') {
-            onChange(newValue);
-            return;
-        }
-
-        // Allow valid decimal numbers: digits, optional decimal point, more digits
-        // This regex matches: "123", "123.", "123.45", ".5", etc.
-        if (/^\d*\.?\d*$/.test(newValue)) {
-            onChange(newValue);
-        }
-        // If regex doesn't match, don't update the value (ignore the input)
-    };
-
-    return (
-        <div className="space-y-2">
-            <label className="block text-sm font-medium text-muted-foreground">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-            </label>
-            <input
-                type="text" // Keep as text to allow decimal point typing
-                inputMode="decimal" // Hint for mobile keyboards
-                value={value}
-                onChange={handleChange}
-                placeholder={placeholder}
-                autoComplete="off"
-                spellCheck="false"
-                className={cn(
-                    "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors",
-                    error ? "border-red-300 bg-red-50 dark:bg-red-950/30" : "border-input bg-background"
-                )}
-            />
-            {error && (
-                <p className="text-sm text-red-600 flex items-center">
-                    <span className="mr-1">⚠</span>
-                    {error}
-                </p>
-            )}
-        </div>
-    );
-});
-
-// Add display name for debugging
-InputField.displayName = 'InputField';
+// Decimal-only input change handler
+function handleDecimalChange(value: string, onChange: (v: string) => void) {
+    if (value === '') {
+        onChange(value);
+        return;
+    }
+    if (/^\d*\.?\d*$/.test(value)) onChange(value);
+}
 
 interface CalculationResult {
     totalFee: number;
@@ -79,9 +31,10 @@ interface ValidationErrors {
 }
 
 const TuitionCalculator: React.FC = () => {
+    const idScope = useId();
     const [perCreditFee, setPerCreditFee] = useState<string>('');
     const [totalCredits, setTotalCredits] = useState<string>('');
-    const [laboratoryFee, setLaboratoryFee] = useState<string>('0'); // Default to '0' string
+    const [laboratoryFee, setLaboratoryFee] = useState<string>('0');
     const [waiverPercentage, setWaiverPercentage] = useState<string>('');
     const [result, setResult] = useState<CalculationResult | null>(null);
     const [errors, setErrors] = useState<ValidationErrors>({});
@@ -160,67 +113,47 @@ const TuitionCalculator: React.FC = () => {
         };
     }, []);
 
-    // Validation effect (runs on input change for immediate feedback)
+    // Validation and real-time calculation (single effect to avoid stale errors)
     useEffect(() => {
         const newErrors: ValidationErrors = {};
         newErrors.perCreditFee = validateField('perCreditFee', perCreditFee);
         newErrors.totalCredits = validateField('totalCredits', totalCredits);
-        // Validate lab fee if it has content or was changed from default '0'
         if (laboratoryFee !== '' && laboratoryFee !== '0') {
             newErrors.laboratoryFee = validateField('laboratoryFee', laboratoryFee);
         } else {
-            // Clear error if it's effectively empty/default
             newErrors.laboratoryFee = undefined;
         }
         newErrors.waiverPercentage = validateField('waiverPercentage', waiverPercentage);
         setErrors(newErrors);
-    }, [perCreditFee, totalCredits, laboratoryFee, waiverPercentage]); // Removed result from dependency array
 
-    // Handle calculate button click (or could be triggered by useEffect if auto-calc desired)
-    const handleCalculate = () => {
-        const hasRequiredValues = perCreditFee.trim() && totalCredits.trim() && waiverPercentage.trim();
-        if (hasRequiredValues) {
-            const perCreditNum = parseFloat(perCreditFee);
-            const creditsNum = parseFloat(totalCredits);
-            // Parse lab fee, defaulting to 0 if empty or invalid after trimming
-            const labFeeNum = laboratoryFee.trim() === '' ? 0 : parseFloat(laboratoryFee) || 0;
-            const waiverNum = parseFloat(waiverPercentage);
+        const hasRequired = perCreditFee.trim() && totalCredits.trim() && waiverPercentage.trim();
+        const noErrors =
+            !newErrors.perCreditFee &&
+            !newErrors.totalCredits &&
+            !newErrors.waiverPercentage &&
+            (laboratoryFee === '' || laboratoryFee === '0' || !newErrors.laboratoryFee);
 
-            const isPerCreditValid = !isNaN(perCreditNum) && perCreditNum >= 0;
-            const isCreditsValid = !isNaN(creditsNum) && creditsNum >= 0;
-            const isLabFeeValid = !isNaN(labFeeNum) && labFeeNum >= 0; // Should always be true now due to defaulting
-            const isWaiverValid = !isNaN(waiverNum) && waiverNum >= 0 && waiverNum <= 100;
-
-            if (isPerCreditValid && isCreditsValid && isLabFeeValid && isWaiverValid) {
-                const calculationResult = calculateFees(perCreditNum, creditsNum, labFeeNum, waiverNum);
-                setResult(calculationResult);
-            } else {
-                // Should ideally not happen due to validation, but good fallback
-                console.error("Calculation triggered with invalid numbers despite validation.");
-            }
-        } else {
-            // Trigger validation errors if required fields are missing on button click
-            const newErrors: ValidationErrors = {};
-            if (!perCreditFee.trim()) newErrors.perCreditFee = 'This field is required';
-            if (!totalCredits.trim()) newErrors.totalCredits = 'This field is required';
-            if (!waiverPercentage.trim()) newErrors.waiverPercentage = 'This field is required';
-            // Lab fee is optional, no need to error here if empty
-            setErrors(prev => ({ ...prev, ...newErrors })); // Merge with existing potential errors
+        if (!hasRequired || !noErrors) {
+            setResult(null);
+            return;
         }
-    };
 
-    // Check if calculate button should be enabled
-    const canCalculate = () => {
-        const hasRequiredValues = perCreditFee.trim() && totalCredits.trim() && waiverPercentage.trim();
-        // Check for absence of errors on required fields (and lab fee if it has content)
-        const noCriticalErrors =
-            !errors.perCreditFee &&
-            !errors.totalCredits &&
-            !errors.waiverPercentage &&
-            (laboratoryFee === '' || laboratoryFee === '0' || !errors.laboratoryFee); // Allow default/empty lab fee
+        const perCreditNum = parseFloat(perCreditFee);
+        const creditsNum = parseFloat(totalCredits);
+        const labFeeNum = laboratoryFee.trim() === '' ? 0 : parseFloat(laboratoryFee) || 0;
+        const waiverNum = parseFloat(waiverPercentage);
 
-        return hasRequiredValues && noCriticalErrors;
-    };
+        if (
+            !isNaN(perCreditNum) && perCreditNum >= 0 &&
+            !isNaN(creditsNum) && creditsNum >= 0 &&
+            !isNaN(labFeeNum) && labFeeNum >= 0 &&
+            !isNaN(waiverNum) && waiverNum >= 0 && waiverNum <= 100
+        ) {
+            setResult(calculateFees(perCreditNum, creditsNum, labFeeNum, waiverNum));
+        } else {
+            setResult(null);
+        }
+    }, [perCreditFee, totalCredits, laboratoryFee, waiverPercentage, calculateFees]);
 
 
 
@@ -230,56 +163,105 @@ const TuitionCalculator: React.FC = () => {
             <Card>
                 <CardHeader>
                     <CardTitle>Fee Calculation Inputs</CardTitle>
+                    <CardDescription>
+                        Enter your per-credit fee, total credits, optional lab fee, and waiver to estimate semester tuition and installments.
+                    </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <InputField
-                            label="Per Credit Tuition Fee"
-                            value={perCreditFee}
-                            onChange={setPerCreditFee}
-                            placeholder="Enter fee per credit"
-                            required
-                            error={errors.perCreditFee}
-                        />
-                        <InputField
-                            label="Total Credits"
-                            value={totalCredits}
-                            onChange={setTotalCredits}
-                            placeholder="Enter total credits"
-                            required
-                            error={errors.totalCredits}
-                        />
-                        <InputField
-                            label="Laboratory Fee"
-                            value={laboratoryFee} // This will be '0' by default
-                            onChange={setLaboratoryFee}
-                            placeholder="Enter lab fee (optional)"
-                            error={errors.laboratoryFee} // Show error only if user entered invalid data
-                        />
-                        <InputField
-                            label="Waiver Percentage"
-                            value={waiverPercentage}
-                            onChange={setWaiverPercentage}
-                            placeholder="Enter waiver % (0-100)"
-                            required
-                            error={errors.waiverPercentage}
-                        />
+                        <Field>
+                            <FieldLabel htmlFor={`${idScope}-perCredit`}>
+                                Per Credit Tuition Fee <span className="text-destructive">*</span>
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id={`${idScope}-perCredit`}
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={perCreditFee}
+                                    onChange={(e) => handleDecimalChange(e.target.value, setPerCreditFee)}
+                                    placeholder="Enter fee per credit"
+                                    autoComplete="off"
+                                    aria-invalid={!!errors.perCreditFee}
+                                    aria-describedby={errors.perCreditFee ? `${idScope}-perCredit-error` : undefined}
+                                    className="h-9"
+                                />
+                            </FieldContent>
+                            {errors.perCreditFee && (
+                                <FieldError id={`${idScope}-perCredit-error`}>{errors.perCreditFee}</FieldError>
+                            )}
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor={`${idScope}-credits`}>
+                                Total Credits <span className="text-destructive">*</span>
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id={`${idScope}-credits`}
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={totalCredits}
+                                    onChange={(e) => handleDecimalChange(e.target.value, setTotalCredits)}
+                                    placeholder="Enter total credits"
+                                    autoComplete="off"
+                                    aria-invalid={!!errors.totalCredits}
+                                    aria-describedby={errors.totalCredits ? `${idScope}-credits-error` : undefined}
+                                    className="h-9"
+                                />
+                            </FieldContent>
+                            {errors.totalCredits && (
+                                <FieldError id={`${idScope}-credits-error`}>{errors.totalCredits}</FieldError>
+                            )}
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor={`${idScope}-lab`}>Laboratory Fee (optional)</FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id={`${idScope}-lab`}
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={laboratoryFee}
+                                    onChange={(e) => handleDecimalChange(e.target.value, setLaboratoryFee)}
+                                    placeholder="Enter lab fee (optional)"
+                                    autoComplete="off"
+                                    aria-invalid={!!errors.laboratoryFee}
+                                    aria-describedby={errors.laboratoryFee ? `${idScope}-lab-error` : undefined}
+                                    className="h-9"
+                                />
+                            </FieldContent>
+                            {errors.laboratoryFee && (
+                                <FieldError id={`${idScope}-lab-error`}>{errors.laboratoryFee}</FieldError>
+                            )}
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor={`${idScope}-waiver`}>
+                                Waiver Percentage <span className="text-destructive">*</span>
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id={`${idScope}-waiver`}
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={waiverPercentage}
+                                    onChange={(e) => handleDecimalChange(e.target.value, setWaiverPercentage)}
+                                    placeholder="Enter waiver % (0-100)"
+                                    autoComplete="off"
+                                    aria-invalid={!!errors.waiverPercentage}
+                                    aria-describedby={errors.waiverPercentage ? `${idScope}-waiver-error` : undefined}
+                                    className="h-9"
+                                />
+                            </FieldContent>
+                            {errors.waiverPercentage && (
+                                <FieldError id={`${idScope}-waiver-error`}>{errors.waiverPercentage}</FieldError>
+                            )}
+                        </Field>
                     </div>
-                    <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                        <p className="text-sm text-blue-800">
-                            <span className="font-medium">Note:</span> 12 credits required to keep waiver active. This calculation is an estimate.
-                        </p>
-                    </div>
-                    <div className="mt-8 flex justify-center">
-                        <Button
-                            onClick={handleCalculate}
-                            disabled={!canCalculate()}
-                            size="lg"
-                            className="px-12 py-4 text-lg font-semibold"
-                        >
-                            Calculate Tuition Fees
-                        </Button>
-                    </div>
+                    <Alert className="mt-6">
+                        <AlertTitle>Note</AlertTitle>
+                        <AlertDescription>
+                            12 credits required to keep waiver active. This calculation is an estimate.
+                        </AlertDescription>
+                    </Alert>
                 </CardContent>
             </Card>
 
@@ -287,47 +269,41 @@ const TuitionCalculator: React.FC = () => {
             {result && (
                 <Card>
                     <CardHeader>
-                        <CardTitle className="text-green-700">Calculation Results</CardTitle>
+                        <CardTitle>Calculation Results</CardTitle>
+                        <CardDescription>Your estimated semester fee and installment breakdown.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-6">
-                            {/* Total Fee */}
-                            <div className="bg-gradient-to-r from-violet-50 to-purple-50 p-6 rounded-lg border border-violet-200">
-                                <h3 className="text-lg font-semibold text-violet-900 mb-2">Total Semester Fee</h3>
-                                <p className="text-3xl font-bold text-violet-700">
+                            <div className="rounded-xl border border-border bg-muted/50 p-6">
+                                <h3 className="text-sm font-medium text-muted-foreground mb-1">Total Semester Fee</h3>
+                                <p className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
                                     ৳ {formatCurrency(result.totalFee)}
                                 </p>
                             </div>
-                            {/* Installment Plan */}
+                            <Separator />
                             <div>
-                                <h3 className="text-lg font-semibold text-foreground mb-4">Installment Payment Plan</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                                        <h4 className="font-medium text-green-800 mb-1">1st Installment (40%)</h4>
-                                        <p className="text-xl font-semibold text-green-700">
+                                <h3 className="text-sm font-medium text-muted-foreground mb-4">Installment Payment Plan</h3>
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                                    <div className="rounded-lg border border-border bg-card p-4">
+                                        <h4 className="text-sm font-medium text-muted-foreground mb-1">1st Installment (40%)</h4>
+                                        <p className="text-xl font-semibold text-foreground">
                                             ৳ {formatCurrency(result.firstInstallment)}
                                         </p>
                                     </div>
-                                    {(result.secondInstallment > 0 || result.thirdInstallment > 0) && ( // Show 2nd if 3rd might exist or 2nd > 0
-                                        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                                            <h4 className="font-medium text-yellow-800 mb-1">2nd Installment (30%)</h4>
-                                            <p className="text-xl font-semibold text-yellow-700">
+                                    {(result.secondInstallment > 0 || result.thirdInstallment > 0) && (
+                                        <div className="rounded-lg border border-border bg-card p-4">
+                                            <h4 className="text-sm font-medium text-muted-foreground mb-1">2nd Installment (30%)</h4>
+                                            <p className="text-xl font-semibold text-foreground">
                                                 ৳ {formatCurrency(result.secondInstallment)}
                                             </p>
                                         </div>
                                     )}
                                     {result.thirdInstallment > 0 && (
-                                        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                                            <h4 className="font-medium text-blue-800 mb-1">3rd Installment (Remaining)</h4>
-                                            <p className="text-xl font-semibold text-blue-700">
+                                        <div className="rounded-lg border border-border bg-card p-4">
+                                            <h4 className="text-sm font-medium text-muted-foreground mb-1">3rd Installment (Remaining)</h4>
+                                            <p className="text-xl font-semibold text-foreground">
                                                 ৳ {formatCurrency(result.thirdInstallment)}
                                             </p>
-                                        </div>
-                                    )}
-                                    {/* If 2nd is 0 but 3rd exists (edge case, maybe not possible), ensure layout */}
-                                    {result.secondInstallment === 0 && result.thirdInstallment > 0 && (
-                                        <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 opacity-0">
-                                            {/* Spacer/placeholder to maintain grid if needed */}
                                         </div>
                                     )}
                                 </div>

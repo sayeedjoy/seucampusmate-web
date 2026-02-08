@@ -5,21 +5,15 @@ import { Logo } from "@/components/navbar/logo";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/navbar/mobile-nav";
+import { GitHubStars } from "@/components/github-stars";
 import { MoonIcon, SunIcon } from "lucide-react";
 
 export const navLinks = [
-	{
-		label: "Features",
-		href: "#",
-	},
-	{
-		label: "Pricing",
-		href: "#",
-	},
-	{
-		label: "About",
-		href: "#",
-	},
+	{ label: "Home", href: "/" },
+	{ label: "Features", href: "/#features" },
+	{ label: "CP Leaderboard", href: "/cp" },
+	{ label: "About", href: "/about" },
+	{ label: "Contact", href: "/contact" },
 ];
 
 export function Header() {
@@ -34,9 +28,9 @@ export function Header() {
 			)}
 		>
 			<nav className="flex h-14 md:h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
-				<div className="mx-auto flex h-full w-full max-w-[90rem] items-center justify-between">
+				<div className="relative mx-auto flex h-full w-full max-w-[90rem] items-center justify-between">
 					<Logo className="rounded-lg py-2 pr-2 -ml-2 hover:bg-accent/50 transition-colors" />
-					<div className="hidden items-center gap-0.5 md:flex">
+					<div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-0.5 md:flex">
 						{navLinks.map((link, i) => (
 							<a
 								className={buttonVariants({ variant: "ghost", className: "text-sm font-medium text-muted-foreground hover:text-foreground" })}
@@ -46,7 +40,13 @@ export function Header() {
 								{link.label}
 							</a>
 						))}
-						<div className="ml-2 flex items-center gap-2">
+					</div>
+					<div className="flex items-center gap-2">
+						<div className="hidden md:flex md:items-center md:gap-2">
+							<GitHubStars
+								repo={process.env.NEXT_PUBLIC_GITHUB_REPO ?? "owner/repo"}
+								stargazersCount={Number(process.env.NEXT_PUBLIC_GITHUB_STARS) || 0}
+							/>
 							<Button
 								variant="ghost"
 								size="icon"
@@ -57,13 +57,9 @@ export function Header() {
 								<SunIcon className="size-4.5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
 								<MoonIcon className="absolute size-4.5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
 							</Button>
-							<Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-								Sign In
-							</Button>
-							<Button>Get Started</Button>
 						</div>
+						<MobileNav />
 					</div>
-					<MobileNav />
 				</div>
 			</nav>
 		</header>

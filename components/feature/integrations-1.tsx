@@ -18,7 +18,7 @@ export default function IntegrationsSection() {
     const hasMore = features.length > INITIAL_VISIBLE
 
     return (
-        <section>
+        <section id="features">
             <div className="py-32">
                 <Container className="py-0">
                     <div className="text-center">

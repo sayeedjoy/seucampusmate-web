@@ -132,7 +132,7 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
     <Card
       size={size === "small" ? "sm" : "default"}
       className={cn(
-        "flex h-full flex-col overflow-hidden border shadow-sm transition-colors hover:shadow-md",
+        "flex h-full flex-col overflow-hidden transition-colors",
         className
       )}
       {...props}
