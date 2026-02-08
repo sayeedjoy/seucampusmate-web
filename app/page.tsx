@@ -4,6 +4,9 @@ import StatsSection from "@/components/stats";
 import { BentoGridSection } from "@/components/bento";
 import { Container } from "@/components/ui/container";
 import Testimonials from "@/components/testimonials";
+import { createPageMetadata } from "@/lib/metadata";
+
+export const metadata = createPageMetadata("home");
 
 export default function Page() {
   return (

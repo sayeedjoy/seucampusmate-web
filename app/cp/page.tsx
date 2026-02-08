@@ -1,16 +1,9 @@
 import { Container } from '@/components/ui/container';
 import { LeaderboardTable } from '@/components/cp/leaderboard-table';
-import type { Metadata } from 'next';
+import { createPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'CP Leaderboard',
-  description: 'View the top Codeforces users from Southeast University. Real-time competitive programming leaderboard for SEU students.',
-  keywords: ['CP leaderboard', 'Codeforces', 'competitive programming', 'SEU', 'Southeast University', 'programming contest'],
+export const metadata = createPageMetadata('cp', {
   openGraph: {
-    title: 'CP Leaderboard - SEU CampusMate',
-    description: 'View the top Codeforces users from Southeast University. Real-time competitive programming leaderboard for SEU students.',
-    type: 'website',
-    url: 'https://campusmate.app/cp',
     images: [
       {
         url: '/cf.webp',
@@ -20,13 +13,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'CP Leaderboard - SEU CampusMate',
-    description: 'View the top Codeforces users from Southeast University. Real-time competitive programming leaderboard for SEU students.',
-    images: ['/cf.webp'],
-  },
-};
+});
 
 export const dynamic = 'force-dynamic';
 

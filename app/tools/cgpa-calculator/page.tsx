@@ -1,10 +1,7 @@
 import CgpaCalculator from './CgpaCalculator';
-import type { Metadata } from 'next';
+import { createPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-    title: 'CGPA Calculator - CampusMate',
-    description: 'Calculate your Cumulative Grade Point Average (CGPA) with our easy-to-use calculator. Track your academic performance and plan your studies effectively.',
-};
+export const metadata = createPageMetadata('cgpaCalculator');
 
 export default function CGPACalculatorPage() {
     return (

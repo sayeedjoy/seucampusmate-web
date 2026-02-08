@@ -1,33 +1,8 @@
 import { Container } from "@/components/ui/container";
 import BusRouteMap from "./bus";
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
-    title: "Bus Routes",
-    description:
-        "View SEU bus routes and stops. Interactive map showing all university bus routes with detailed stop information.",
-    keywords: [
-        "SEU bus",
-        "university bus",
-        "bus routes",
-        "Southeast University",
-        "campus transport",
-        "bus schedule",
-    ],
-    openGraph: {
-        title: "Bus Routes - SEU CampusMate",
-        description:
-            "View SEU bus routes and stops. Interactive map showing all university bus routes with detailed stop information.",
-        type: "website",
-        url: "https://campusmate.app/bus",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Bus Routes - SEU CampusMate",
-        description:
-            "View SEU bus routes and stops. Interactive map showing all university bus routes with detailed stop information.",
-    },
-};
+export const metadata = createPageMetadata("bus");
 
 export default function BusPage() {
     return (

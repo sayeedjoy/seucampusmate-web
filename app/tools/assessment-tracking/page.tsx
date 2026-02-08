@@ -1,5 +1,8 @@
 import { Container } from '@/components/ui/container';
 import { MarksTracker } from '@/components/marks-tracker';
+import { createPageMetadata } from '@/lib/metadata';
+
+export const metadata = createPageMetadata('assessmentTracking');
 
 export default function AssessmentTrackingPage() {
     return (

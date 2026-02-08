@@ -1,10 +1,7 @@
-import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { createPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-    title: 'Attendance Calculator - CampusMate',
-    description: 'Track your class attendance and ensure you meet the 75% requirement at Southeast University.',
-};
+export const metadata = createPageMetadata('attendanceCalculator');
 
 export default function AttendanceCalculatorPage() {
     return (

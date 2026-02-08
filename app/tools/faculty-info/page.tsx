@@ -1,5 +1,8 @@
 import { Container } from '@/components/ui/container';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { createPageMetadata } from '@/lib/metadata';
+
+export const metadata = createPageMetadata('facultyInfo');
 
 export default function FacultyInfoPage() {
     return (

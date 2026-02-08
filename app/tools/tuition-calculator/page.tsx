@@ -1,10 +1,7 @@
 import TuitionCalculator from '@/app/tools/tuition-calculator/tuition-calculator';
-import type { Metadata } from 'next';
+import { createPageMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-    title: 'Tuition Fees Calculator - CampusMate',
-    description: 'Calculate your semester fees, payment schedules, and track financial obligations at Southeast University.',
-};
+export const metadata = createPageMetadata('tuitionCalculator');
 
 export default function TuitionCalculatorPage() {
     return (
