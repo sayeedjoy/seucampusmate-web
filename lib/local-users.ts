@@ -15,6 +15,9 @@ export interface LocalUsersData {
 
 const DATA_FILE_PATH = path.join(process.cwd(), 'data', 'usernames.json');
 
+const CP_USERNAMES_API_URL =
+  process.env.CP_USERNAMES_API_URL || 'https://cp.campusmate.app/api.php?endpoint=usernames';
+
 // Ensure data directory exists
 async function ensureDataDirectory() {
   const dataDir = path.dirname(DATA_FILE_PATH);
@@ -30,7 +33,7 @@ export async function fetchAndSaveUsernamesFromAPI(): Promise<LocalUsersData> {
   try {
     console.log('Fetching usernames from API and saving to local file...');
     
-    const response = await fetch('https://cp.campusmate.app/api.php?endpoint=usernames', {
+    const response = await fetch(CP_USERNAMES_API_URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

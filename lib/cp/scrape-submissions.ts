@@ -3,7 +3,7 @@ import { getManualInclude, getExcludeList } from '@/data/cp/overrides';
 import { CFUser } from './types';
 
 // Codeforces API endpoints
-const API_BASE = 'https://codeforces.com/api';
+const API_BASE = process.env.CODEFORCES_API_BASE || 'https://codeforces.com/api';
 const USER_INFO_API = `${API_BASE}/user.info`;
 const USER_STATUS_API = `${API_BASE}/user.status`;
 

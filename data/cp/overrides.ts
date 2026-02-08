@@ -1,5 +1,8 @@
 import { fetchAndSaveUsernamesFromAPI, readLocalUsernames, getLocalFileStats } from '@/lib/local-users';
 
+const CP_USERNAMES_API_URL =
+  process.env.CP_USERNAMES_API_URL || 'https://cp.campusmate.app/api.php?endpoint=usernames';
+
 interface UserEntry {
   username: string;
   exclude: boolean;
@@ -8,7 +11,7 @@ interface UserEntry {
 // Function to fetch users from the API endpoint
 async function getUsersFromAPI(): Promise<UserEntry[]> {
   try {
-    const response = await fetch('https://cp.campusmate.app/api.php?endpoint=usernames', {
+    const response = await fetch(CP_USERNAMES_API_URL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

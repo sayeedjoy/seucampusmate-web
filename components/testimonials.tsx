@@ -59,10 +59,10 @@ const Testimonials = () => (
   <div className="flex min-h-screen items-center justify-center py-12">
     <div className="h-full w-full">
       <h2 className="text-pretty px-6 text-center font-semibold text-5xl tracking-[-0.03em]">
-        Success Stories
+        What our users say
       </h2>
       <p className="mt-3 text-center text-muted-foreground text-xl">
-        Real stories from people who use and love our product every day
+        See what our users have to say about CampusMate
       </p>
       <div className="relative mt-14">
         <div className="absolute inset-y-0 left-0 z-10 w-[15%] bg-linear-to-r from-background to-transparent" />

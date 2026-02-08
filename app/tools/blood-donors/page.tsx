@@ -18,7 +18,8 @@ export default function BloodDonorsPage() {
             setLoading(true);
             setError(null);
 
-            const response = await fetch('https://apppulse.dev/backend/api/blood_donors_list.php');
+            const apiUrl = process.env.NEXT_PUBLIC_BLOOD_DONORS_API_URL || 'https://apppulse.dev/backend/api/blood_donors_list.php';
+            const response = await fetch(apiUrl);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
