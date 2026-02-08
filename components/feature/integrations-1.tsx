@@ -22,7 +22,7 @@ export default function IntegrationsSection() {
             <div className="py-32">
                 <Container className="py-0">
                     <div className="text-center">
-                        <h2 className="text-balance text-3xl font-semibold md:text-4xl">Everything You Need as an <AuroraText>SEU Student</AuroraText></h2>
+                        <h2 className="text-balance text-5xl font-bold">Everything You Need as an <AuroraText>SEU Student</AuroraText></h2>
                         <p className="text-muted-foreground mt-6">Essential tools and resources to enhance your academic journey at Southeast University.</p>
                     </div>
 

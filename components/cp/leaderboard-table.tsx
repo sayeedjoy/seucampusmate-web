@@ -6,6 +6,7 @@ import { ratingColor, ratingColorBg, ratingColorBorder } from '@/lib/cp/colors';
 import { getMaxRankTitle } from '@/lib/cp/ranks';
 import { getCachedData, setCachedData, clearCachedData } from '@/lib/cp/cache';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Image from 'next/image';
 import { Search, RefreshCw, Trophy, Medal, Award, Users, Zap, Clock, ExternalLink } from 'lucide-react';
 import { Pill, PillIcon, PillIndicator } from "@/components/kibo-ui/pill";
@@ -458,27 +459,20 @@ export function LeaderboardTable() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Filter Toggle */}
-            <div className="flex items-center bg-muted rounded-lg p-1">
-              <button
-                onClick={() => setShowActiveOnly(true)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${showActiveOnly
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-                  }`}
-              >
-                Active
-              </button>
-              <button
-                onClick={() => setShowActiveOnly(false)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${!showActiveOnly
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-                  }`}
-              >
-                All
-              </button>
-            </div>
+            {/* Filter Tabs: All / Active */}
+            <Tabs
+              value={showActiveOnly ? 'active' : 'all'}
+              onValueChange={(value) => setShowActiveOnly(value === 'active')}
+            >
+              <TabsList className="h-9 p-1">
+                <TabsTrigger value="all" className="px-3 py-1.5 text-xs font-medium">
+                  All
+                </TabsTrigger>
+                <TabsTrigger value="active" className="px-3 py-1.5 text-xs font-medium">
+                  Active
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
 
             {/* Refresh Button */}
             <Button

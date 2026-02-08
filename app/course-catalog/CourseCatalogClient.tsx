@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import {
     InputGroup,
@@ -9,6 +10,7 @@ import {
     InputGroupAddon,
 } from "@/components/ui/input-group";
 import { Kbd } from "@/components/ui/kbd";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, X, Filter } from "lucide-react";
 import { CourseSection } from "@/components/course-catalog/course-section";
 import { type Course, type CatalogData } from "./types";
@@ -63,7 +65,7 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
                         {/* Hero Header */}
                         <div className="text-center space-y-5 max-w-3xl mx-auto px-4">
 
-                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-zinc-900">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
                                 Course Catalog
                             </h1>
 
@@ -98,21 +100,16 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
 
                         {/* Filter Tabs */}
                         <div className="flex justify-center px-4">
-                            <div className="inline-flex items-center gap-1 p-1 bg-muted rounded-xl shadow-inner">
-                                <Filter className="h-4 w-4 text-muted-foreground mx-2 hidden sm:block" />
-                                {TABS.map((tab) => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => setActiveTab(tab.id)}
-                                        className={`px-3 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all duration-200 ${activeTab === tab.id
-                                            ? "bg-card text-primary shadow-md"
-                                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                                            }`}
-                                    >
-                                        {tab.label}
-                                    </button>
-                                ))}
-                            </div>
+                            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-full sm:w-auto">
+                                <TabsList className="inline-flex h-auto w-full flex-wrap justify-center gap-0 p-1 sm:w-auto sm:flex-nowrap">
+                                    <Filter className="h-4 w-4 shrink-0 text-muted-foreground mx-1.5 self-center hidden sm:block" aria-hidden />
+                                    {TABS.map((tab) => (
+                                        <TabsTrigger key={tab.id} value={tab.id} className="px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold">
+                                            {tab.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                            </Tabs>
                         </div>
 
                         {/* Content Sections */}
@@ -148,13 +145,13 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
                                     <p className="text-muted-foreground mt-1 text-sm">
                                         No results for "{searchQuery}"
                                     </p>
-                                    <button
+                                    <Button
                                         onClick={() => setSearchQuery("")}
-                                        className="mt-5 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-sm transition-colors"
+                                        className="mt-5 inline-flex items-center gap-2"
                                     >
                                         <X className="h-4 w-4" />
                                         Clear search
-                                    </button>
+                                    </Button>
                                 </div>
                             )}
                         </div>
