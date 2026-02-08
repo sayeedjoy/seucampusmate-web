@@ -1,4 +1,3 @@
-import { ToolPageLayout } from '@/components/layouts';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,10 +7,7 @@ export const metadata: Metadata = {
 
 export default function AttendanceCalculatorPage() {
     return (
-        <ToolPageLayout
-            title="Attendance Calculator"
-            description="Track your class attendance and ensure you meet the 75% requirement."
-        >
+        <div className="mx-auto max-w-6xl px-4 py-6">
             <div className="bg-white rounded-xl shadow-lg p-8">
                 <h2 className="text-2xl font-semibold text-gray-900 mb-6">
                     Track Your Attendance
@@ -25,6 +21,6 @@ export default function AttendanceCalculatorPage() {
                     <p className="text-gray-500">Attendance Calculator component coming soon...</p>
                 </div>
             </div>
-        </ToolPageLayout>
+        </div>
     );
 }

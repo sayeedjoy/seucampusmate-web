@@ -1,4 +1,3 @@
-import { ToolPageLayout } from '@/components/layouts';
 import CgpaCalculator from './CgpaCalculator';
 import type { Metadata } from 'next';
 
@@ -9,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function CGPACalculatorPage() {
     return (
-        <ToolPageLayout maxWidth="6xl">
+        <div className="mx-auto max-w-6xl px-4 py-6">
             <CgpaCalculator />
-        </ToolPageLayout>
+        </div>
     );
 }

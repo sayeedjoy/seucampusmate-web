@@ -2,14 +2,17 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback, startTransition } from 'react';
 import { Container } from '@/components/ui/container';
-import Navbar from '@/components/navbar';
-import { Footer } from '@/components/footer/footer';
+import { Header } from '@/components/navbar/header';
+import { Footer } from '@/components/footer';
 import { ExamApiResponse, ExamResult } from '@/lib/exam-utils';
-import { ArrowPathIcon, DocumentIcon, PhotoIcon } from '@heroicons/react/24/outline';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { toast } from 'sonner';
+import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
+import RoutineSearch from '@/components/exam-routine/routine-search';
+import type { ValidationVariant } from '@/components/exam-routine/routine-search';
+import ExamRoutineResults from '@/components/exam-routine/routine-result-card';
+import ExamRoutineDownload from '@/components/exam-routine/routine-download';
 
 interface MultipleExamResults {
     [courseCode: string]: {
@@ -26,25 +29,10 @@ export default function ExamRoutinePageClient() {
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [validationError, setValidationError] = useState<string | null>(null);
-    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+    const [validationVariant, setValidationVariant] = useState<ValidationVariant>('error');
     const [showWarning, setShowWarning] = useState(true);
     const [downloading, setDownloading] = useState(false);
     const scheduleRef = useRef<HTMLDivElement>(null);
-
-    // Toast notification function
-    const showToast = useCallback((message: string, type: 'success' | 'error') => {
-        setToast({ message, type });
-    }, []);
-
-    // Auto-hide toast after 4 seconds
-    useEffect(() => {
-        if (toast) {
-            const timer = setTimeout(() => {
-                setToast(null);
-            }, 4000);
-            return () => clearTimeout(timer);
-        }
-    }, [toast]);
 
     // Auto-refresh when page becomes visible (user comes back to tab)
     useEffect(() => {
@@ -141,12 +129,14 @@ export default function ExamRoutinePageClient() {
 
         // Validate format
         if (!isValidFormat(trimmedCode)) {
+            setValidationVariant('error');
             setValidationError(`Invalid format: "${trimmedCode}". Please use format like CSE123.2 (with section number)`);
             return;
         }
 
         // Check if already exists
         if (courseCodes.includes(trimmedCode)) {
+            setValidationVariant('error');
             setValidationError(`Course "${trimmedCode}" is already added`);
             return;
         }
@@ -256,20 +246,17 @@ export default function ExamRoutinePageClient() {
                 }
 
                 // Show success toast with updated results
-                showToast('Data refreshed and results updated!', 'success');
+                toast.success('Data refreshed and results updated!');
             } else {
-                // Show success toast for general refresh
-                showToast('Data refreshed successfully!', 'success');
+                toast.success('Data refreshed successfully!');
             }
 
         } catch (err) {
             console.error('Refresh error:', err);
             const errorMessage = err instanceof Error ? err.message : 'Refresh failed';
             setError(errorMessage);
-
-            // Use shorter error message for toast
             const toastMessage = errorMessage.length > 50 ? 'Failed to refresh data' : errorMessage;
-            showToast(toastMessage, 'error');
+            toast.error(toastMessage);
         } finally {
             setRefreshing(false);
         }
@@ -294,6 +281,7 @@ export default function ExamRoutinePageClient() {
 
             // Validate the current input
             if (!isValidFormat(trimmedCode)) {
+                setValidationVariant('error');
                 setValidationError(`Invalid format: "${trimmedCode}". Please use format like CSE123.2 (with section number)`);
                 return;
             }
@@ -308,11 +296,13 @@ export default function ExamRoutinePageClient() {
         // Validate all codes before processing
         const invalidCodes = codesToSearch.filter(code => !isValidFormat(code));
         if (invalidCodes.length > 0) {
+            setValidationVariant('error');
             setValidationError(`Invalid course code(s): ${invalidCodes.join(', ')}. Please use format like CSE123.2 (with section number)`);
             return;
         }
 
         if (codesToSearch.length === 0) {
+            setValidationVariant('error');
             setValidationError('Please enter at least one course code');
             return;
         }
@@ -329,6 +319,7 @@ export default function ExamRoutinePageClient() {
 
                 if (!response.ok) {
                     if (response.status === 404) {
+                        setValidationVariant('error');
                         setValidationError(`Course section "${codesToSearch[0]}" not found. Please check the course code and section number.`);
                     } else {
                         throw new Error(`Failed to fetch data for ${codesToSearch[0]}`);
@@ -340,6 +331,7 @@ export default function ExamRoutinePageClient() {
 
                 // Check if the API returned empty results (course exists but no exams)
                 if (data.count === 0) {
+                    setValidationVariant('error');
                     setValidationError(`No exam data found for "${codesToSearch[0]}". This section may not exist or have no scheduled exams.`);
                     return;
                 }
@@ -378,11 +370,13 @@ export default function ExamRoutinePageClient() {
                 if (nonExistentCodes.length > 0) {
                     if (Object.keys(validResults).length === 0) {
                         // All codes are invalid
+                        setValidationVariant('error');
                         setValidationError(`Course section(s) not found: ${nonExistentCodes.join(', ')}. Please check the course codes and section numbers.`);
                         return;
                     } else {
                         // Some codes are valid, show partial results with warning
-                        setValidationError(`Warning: Some course sections not found: ${nonExistentCodes.join(', ')}. Showing results for available sections.`);
+                        setValidationVariant('warning');
+                        setValidationError(`Some course sections not found: ${nonExistentCodes.join(', ')}. Showing results for available sections.`);
                         // Clear old results and set new ones
                         setResults(validResults);
                     }
@@ -403,111 +397,60 @@ export default function ExamRoutinePageClient() {
         return `${startTime} - ${endTime}`;
     }, []);
 
+    // Shared parser: same logic as formatDate so days-remaining matches displayed date
+    const parseExamDate = useCallback((dateString: string): Date | null => {
+        if (!dateString || !dateString.trim()) return null;
+        const clean = dateString.trim();
+        let date: Date | null = null;
+
+        const parts = clean.split(/[\/\-\.]/);
+        if (parts.length === 3) {
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const year = parseInt(parts[2], 10);
+            if (!isNaN(day) && !isNaN(month) && !isNaN(year) && day >= 1 && day <= 31 && month >= 0 && month <= 11 && year >= 1900) {
+                date = new Date(year, month, day);
+                if (date.getDate() !== day || date.getMonth() !== month || date.getFullYear() !== year) date = null;
+            }
+        }
+        if (!date || isNaN(date.getTime())) {
+            const isoMatch = clean.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+            if (isoMatch) {
+                const y = parseInt(isoMatch[1], 10);
+                const m = parseInt(isoMatch[2], 10) - 1;
+                const d = parseInt(isoMatch[3], 10);
+                date = new Date(y, m, d);
+            }
+        }
+        if (!date || isNaN(date.getTime())) {
+            const usMatch = clean.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (usMatch) {
+                const m = parseInt(usMatch[1], 10) - 1;
+                const d = parseInt(usMatch[2], 10);
+                const y = parseInt(usMatch[3], 10);
+                if (m >= 0 && m <= 11 && d >= 1 && d <= 31) date = new Date(y, m, d);
+            }
+        }
+        if (!date || isNaN(date.getTime())) date = new Date(clean);
+        return date && !isNaN(date.getTime()) ? date : null;
+    }, []);
+
     const formatDate = useCallback((dateString: string) => {
-        // Handle different date formats that might come from CSV
-        if (!dateString || dateString.trim() === '') {
-            return 'Date TBD';
-        }
+        if (!dateString || dateString.trim() === '') return 'Date TBD';
+        const date = parseExamDate(dateString);
+        if (!date) return dateString.trim();
+        return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+    }, [parseExamDate]);
 
-        try {
-            let date: Date | null = null;
-            const cleanDateString = dateString.trim();
-
-            // Try multiple date parsing strategies
-
-            // Strategy 1: Try DD/MM/YYYY or DD-MM-YYYY format first (most common in many regions)
-            const parts = cleanDateString.split(/[\/\-\.]/);
-            if (parts.length === 3) {
-                const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
-                const year = parseInt(parts[2], 10);
-
-                // Validate the parsed values
-                if (!isNaN(day) && !isNaN(month) && !isNaN(year) &&
-                    day >= 1 && day <= 31 && month >= 0 && month <= 11 && year >= 1900) {
-                    date = new Date(year, month, day);
-
-                    // Double check if the date is valid
-                    if (date.getDate() === day && date.getMonth() === month && date.getFullYear() === year) {
-                        // Valid date, use it
-                    } else {
-                        date = null; // Invalid date (e.g., Feb 30)
-                    }
-                }
-            }
-
-            // Strategy 2: Try YYYY-MM-DD format
-            if (!date || isNaN(date.getTime())) {
-                const isoMatch = cleanDateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-                if (isoMatch) {
-                    const year = parseInt(isoMatch[1], 10);
-                    const month = parseInt(isoMatch[2], 10) - 1;
-                    const day = parseInt(isoMatch[3], 10);
-                    date = new Date(year, month, day);
-                }
-            }
-
-            // Strategy 3: Try MM/DD/YYYY format (US format)
-            if (!date || isNaN(date.getTime())) {
-                const usMatch = cleanDateString.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-                if (usMatch) {
-                    const month = parseInt(usMatch[1], 10) - 1;
-                    const day = parseInt(usMatch[2], 10);
-                    const year = parseInt(usMatch[3], 10);
-                    if (month >= 0 && month <= 11 && day >= 1 && day <= 31) {
-                        date = new Date(year, month, day);
-                    }
-                }
-            }
-
-            // Strategy 4: Try parsing the date string directly as last resort
-            if (!date || isNaN(date.getTime())) {
-                date = new Date(cleanDateString);
-            }
-
-            // If still invalid, return the original string
-            if (!date || isNaN(date.getTime())) {
-                return cleanDateString;
-            }
-
-            // Return formatted date with day name
-            return date.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-        } catch (error) {
-            console.warn('Date parsing error for:', dateString, error);
-            return dateString;
-        }
-    }, []);
-
-    // Calculate days remaining until exam
-    const getDaysRemaining = useCallback((dateString: string) => {
-        try {
-            const cleanDateString = dateString.trim();
-            const parts = cleanDateString.split(/[\/\-\.]/);
-
-            if (parts.length === 3) {
-                const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1;
-                const year = parseInt(parts[2], 10);
-                const examDate = new Date(year, month, day);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                if (!isNaN(examDate.getTime())) {
-                    const diffTime = examDate.getTime() - today.getTime();
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    return diffDays;
-                }
-            }
-        } catch (error) {
-            console.error('Error calculating days remaining:', error);
-        }
-        return null;
-    }, []);
+    const getDaysRemaining = useCallback((dateString: string): number | null => {
+        const examDate = parseExamDate(dateString);
+        if (!examDate) return null;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        examDate.setHours(0, 0, 0, 0);
+        const diffMs = examDate.getTime() - today.getTime();
+        return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    }, [parseExamDate]);
 
     // Memoize getTotalResults to avoid recalculation on every render
     const getTotalResults = useMemo(() => {
@@ -652,11 +595,11 @@ export default function ExamRoutinePageClient() {
 
         } catch (error) {
             console.error('Error generating PDF:', error);
-            showToast('Error generating PDF', 'error');
+            toast.error('Error generating PDF');
         } finally {
             setDownloading(false);
         }
-    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime, showToast]);
+    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
 
     // Download as PNG
     const downloadAsPNG = useCallback(async () => {
@@ -766,410 +709,87 @@ export default function ExamRoutinePageClient() {
 
         } catch (error) {
             console.error('Error generating PNG:', error);
-            showToast('Error generating PNG', 'error');
+            toast.error('Error generating PNG');
         } finally {
             setDownloading(false);
         }
-    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime, showToast]);
+    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
 
     return (
         <>
-            <Navbar />
+            <Header />
             <main className="pt-12 md:pt-16">
                 <Container className="py-6 md:py-8">
                     <div className="max-w-4xl mx-auto">
                         {/* Header Section */}
                         <div className="text-center mb-8 px-4">
-                            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 leading-tight">
                                 Exam Routine Finder
                             </h1>
-                            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                                 Find your exam schedules by entering course codes.
                             </p>
                         </div>
 
-                        {/* Warning Section */}
+                        {/* Important Notice */}
                         {showWarning && (
                             <div className="mb-6 px-4">
-                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="flex-shrink-0 mt-0.5">
-                                            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                            </svg>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="text-sm font-semibold text-red-900 mb-1">
-                                                Important Notice
-                                            </h3>
-                                            <p className="text-sm text-red-800 leading-relaxed">
-                                                The CSE exam routine may change without notice. Please verify with the official Google Sheet or department announcements from the CSE Department Office for updates.
-                                            </p>
-                                        </div>
-                                        <button
+                                <Alert variant="warning" className="relative">
+                                    <AlertTitle>Important Notice</AlertTitle>
+                                    <AlertDescription>
+                                        The CSE exam routine may change without notice. Please verify with the official Google Sheet or department announcements from the CSE Department Office for updates.
+                                    </AlertDescription>
+                                    <AlertAction>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon-sm"
                                             onClick={() => setShowWarning(false)}
-                                            className="flex-shrink-0 -mr-1 -mt-1 rounded-lg p-1.5 inline-flex h-8 w-8 transition-colors text-red-500 hover:bg-red-100 hover:text-red-700"
-                                            title="Close notice"
+                                            className="absolute top-2 right-2 cursor-pointer"
+                                            aria-label="Close notice"
                                         >
-                                            <span className="sr-only">Close notice</span>
-                                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
+                                            <X className="size-4" />
+                                        </Button>
+                                    </AlertAction>
+                                </Alert>
                             </div>
                         )}
 
-                        {/* Toast Notification */}
-                        {toast && (
-                            <div className={`fixed top-4 md:top-20 right-2 md:right-4 z-50 max-w-xs md:max-w-sm w-auto md:w-full p-3 md:p-4 rounded-lg shadow-lg border transition-all duration-500 ease-out transform animate-in slide-in-from-right-full ${toast.type === 'success'
-                                    ? 'bg-green-50 border-green-200 text-green-800'
-                                    : 'bg-red-50 border-red-200 text-red-800'
-                                }`}>
-                                <div className="flex items-start gap-2 md:gap-3">
-                                    <div className={`flex-shrink-0 w-4 h-4 md:w-5 md:h-5 mt-0.5 ${toast.type === 'success' ? 'text-green-400' : 'text-red-400'
-                                        }`}>
-                                        {toast.type === 'success' ? (
-                                            <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                            </svg>
-                                        ) : (
-                                            <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <div className="text-xs md:text-sm font-medium flex-1 leading-relaxed">
-                                        {toast.message}
-                                    </div>
-                                    <button
-                                        onClick={() => setToast(null)}
-                                        className={`flex-shrink-0 -mr-1 -mt-1 rounded-lg p-1 md:p-1.5 inline-flex h-6 w-6 md:h-8 md:w-8 transition-colors ${toast.type === 'success'
-                                                ? 'text-green-500 hover:bg-green-100'
-                                                : 'text-red-500 hover:bg-red-100'
-                                            }`}
-                                    >
-                                        <span className="sr-only">Close</span>
-                                        <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
+                        <RoutineSearch
+                            courseCode={courseCode}
+                            courseCodes={courseCodes}
+                            loading={loading}
+                            refreshing={refreshing}
+                            validationError={validationError}
+                            validationVariant={validationVariant}
+                            onCourseCodeChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
+                            onRemoveCode={removeCourseCode}
+                            onSubmit={handleSubmit}
+                            onRefresh={refreshExamData}
+                            onClearAll={clearAllCodes}
+                        />
 
-                        {/* Search Section */}
-                        <div className="max-w-5xl mx-auto mb-10">
-
-                            <Card className="border-gray-200 shadow-sm">
-                                <CardContent className="p-6">
-                                    <form onSubmit={handleSubmit} className="space-y-5">
-                                        {/* Search Input */}
-                                        <div className="space-y-2">
-                                            <label htmlFor="course-code-input" className="text-sm font-medium text-gray-700">
-                                                Course Code
-                                            </label>
-                                            <input
-                                                id="course-code-input"
-                                                type="text"
-                                                value={courseCode}
-                                                onChange={handleInputChange}
-                                                onKeyPress={handleKeyPress}
-                                                placeholder="e.g., CSE181.5, CSE361.2"
-                                                className={cn(
-                                                    "flex h-11 w-full rounded-lg border bg-white px-4 py-2 text-sm text-gray-900",
-                                                    "placeholder:text-gray-400",
-                                                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/20 focus-visible:border-blue-500",
-                                                    "disabled:cursor-not-allowed disabled:opacity-50",
-                                                    "transition-all duration-200",
-                                                    validationError ? "border-red-300 ring-2 ring-red-500/20" : "border-gray-300"
-                                                )}
-                                                disabled={loading || refreshing}
-                                                autoComplete="off"
-                                            />
-                                            <p className="text-xs text-gray-500">
-                                                Separate multiple codes with commas or press Enter after each
-                                            </p>
-                                        </div>
-
-                                        {/* Selected Courses */}
-                                        {courseCodes.length > 0 && (
-                                            <div className="space-y-2.5">
-                                                <p className="text-xs font-medium text-gray-600">
-                                                    Selected ({courseCodes.length})
-                                                </p>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {courseCodes.map((code, index) => (
-                                                        <Badge
-                                                            key={index}
-                                                            variant="secondary"
-                                                            className="pl-3 pr-2 py-1.5 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors"
-                                                        >
-                                                            {code.toUpperCase()}
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => removeCourseCode(code)}
-                                                                className="ml-1.5 rounded-sm hover:bg-blue-200 p-0.5 transition-colors"
-                                                                disabled={loading}
-                                                            >
-                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                                                </svg>
-                                                            </button>
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Action Buttons */}
-                                        <div className="flex flex-wrap gap-2 pt-2">
-                                            <Button
-                                                type="submit"
-                                                disabled={loading || refreshing || (courseCodes.length === 0 && !courseCode.trim())}
-                                                size="default"
-                                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                                            >
-                                                {loading ? (
-                                                    <>
-                                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                        Searching...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                                        </svg>
-                                                        Search Exams
-                                                    </>
-                                                )}
-                                            </Button>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                onClick={refreshExamData}
-                                                disabled={loading || refreshing}
-                                                className="border-gray-300 hover:bg-gray-50"
-                                            >
-                                                {refreshing ? (
-                                                    <>
-                                                        <div className="w-4 h-4 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
-                                                        <span className="hidden sm:inline">Refreshing...</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <ArrowPathIcon className="w-4 h-4" />
-                                                        <span className="hidden sm:inline">Refresh Data</span>
-                                                        <span className="sm:hidden">Refresh</span>
-                                                    </>
-                                                )}
-                                            </Button>
-                                            {courseCodes.length > 0 && (
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    onClick={clearAllCodes}
-                                                    disabled={loading}
-                                                    className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                                                >
-                                                    Clear All
-                                                </Button>
-                                            )}
-                                        </div>
-
-                                        {/* Validation Error */}
-                                        {validationError && (
-                                            <div className="rounded-lg border border-red-200 bg-red-50 p-3.5">
-                                                <div className="flex gap-2">
-                                                    <svg className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                                    </svg>
-                                                    <p className="text-sm text-red-800">{validationError}</p>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </form>
-                                </CardContent>
-                            </Card>
-                        </div>
-
-                        {/* Content Area with Minimum Height */}
+                        {/* Content Area */}
                         <div className="min-h-[400px]">
-                            {/* Loading State */}
-                            {loading && (
-                                <div className="text-center py-12">
-                                    <div className="inline-flex items-center justify-center w-8 h-8 mb-4">
-                                        <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-                                    </div>
-                                    <h3 className="text-lg font-medium text-gray-900 mb-2">Searching Your Exams...</h3>
-                                    <p className="text-gray-600 text-sm">
-                                        Looking up exam schedules for your courses.
-                                    </p>
-                                </div>
-                            )}
-
-                            {/* Error State */}
-                            {!loading && error && (
-                                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                                    <h3 className="text-sm font-medium text-red-900 mb-1">Search Error</h3>
-                                    <p className="text-red-800 text-sm">{error}</p>
-                                </div>
-                            )}
-
-                            {/* Results Section with Loading Overlay */}
-                            {!loading && Object.keys(results).length > 0 && (
-                                <div className="space-y-6 transition-opacity duration-300">
-
-                                    {/* Exam Schedule */}
-                                    {getTotalResults > 0 && (
-                                        <div className="max-w-5xl mx-auto">
-                                            {/* Header with Export Buttons */}
-                                            <div className="mb-6 flex items-start justify-between gap-4">
-                                                <div>
-                                                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                                                        Exam Schedule
-                                                    </h2>
-                                                    <p className="text-sm text-gray-600">
-                                                        {getTotalResults} {getTotalResults === 1 ? 'exam' : 'exams'} • {Object.keys(results).length} {Object.keys(results).length === 1 ? 'course' : 'courses'}
-                                                    </p>
-                                                </div>
-                                                {/* Export Buttons */}
-                                                <div className="flex gap-2 flex-shrink-0">
-                                                    <button
-                                                        onClick={downloadAsPDF}
-                                                        disabled={downloading}
-                                                        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 rounded transition-colors"
-                                                    >
-                                                        <DocumentIcon className="w-4 h-4" />
-                                                        PDF
-                                                    </button>
-                                                    <button
-                                                        onClick={downloadAsPNG}
-                                                        disabled={downloading}
-                                                        className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 rounded transition-colors"
-                                                    >
-                                                        <PhotoIcon className="w-4 h-4" />
-                                                        PNG
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            {/* Exam Cards */}
-                                            <div ref={scheduleRef} className="space-y-4">
-                                                {getAllExams.map((exam, index) => {
-                                                    const daysRemaining = getDaysRemaining(exam.date);
-                                                    const isPast = daysRemaining !== null && daysRemaining < 0;
-                                                    const isToday = daysRemaining === 0;
-
-                                                    return (
-                                                        <Card
-                                                            key={`${exam.courseCode}-${index}`}
-                                                            className={cn(
-                                                                "border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200",
-                                                                isPast && "opacity-60"
-                                                            )}
-                                                            style={{ contentVisibility: 'auto', containIntrinsicSize: '0 200px' }}
-                                                        >
-                                                            <CardHeader className="pb-4">
-                                                                <div className="flex items-start justify-between gap-4">
-                                                                    <div className="flex-1 space-y-3">
-                                                                        {/* Status Badge */}
-                                                                        {daysRemaining !== null && (
-                                                                            <Badge
-                                                                                className={cn(
-                                                                                    "font-medium",
-                                                                                    isToday ? "bg-blue-600 text-white hover:bg-blue-700" :
-                                                                                        isPast ? "bg-gray-100 text-gray-600" :
-                                                                                            "bg-blue-50 text-blue-700 border border-blue-200"
-                                                                                )}
-                                                                            >
-                                                                                {isPast ? (
-                                                                                    <>
-                                                                                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                                                        </svg>
-                                                                                        Completed
-                                                                                    </>
-                                                                                ) : isToday ? (
-                                                                                    <>
-                                                                                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                                                                        </svg>
-                                                                                        Today
-                                                                                    </>
-                                                                                ) : (
-                                                                                    <>
-                                                                                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                                                        </svg>
-                                                                                        {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'} left
-                                                                                    </>
-                                                                                )}
-                                                                            </Badge>
-                                                                        )}
-
-                                                                        {/* Course Title */}
-                                                                        <CardTitle className="text-lg md:text-xl font-semibold text-gray-900 leading-tight">
-                                                                            {exam.courseTitle}
-                                                                        </CardTitle>
-                                                                    </div>
-
-                                                                    {/* Course Code Badge */}
-                                                                    <Badge className="text-xs font-semibold bg-gray-900 text-white hover:bg-gray-800 shrink-0">
-                                                                        {exam.courseCode}
-                                                                    </Badge>
-                                                                </div>
-                                                            </CardHeader>
-
-                                                            <CardContent className="pt-0">
-                                                                {/* Details Grid */}
-                                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                                    <div className="space-y-1.5">
-                                                                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                                                                            Date
-                                                                        </p>
-                                                                        <p className="text-sm font-medium text-gray-900">
-                                                                            {formatDate(exam.date)}
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="space-y-1.5">
-                                                                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                                                                            Time
-                                                                        </p>
-                                                                        <p className="text-sm font-medium text-gray-900">
-                                                                            {formatTime(exam.startTime, exam.endTime)}
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="space-y-1.5">
-                                                                        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                                                                            Faculty
-                                                                        </p>
-                                                                        <p className="text-sm font-medium text-gray-900">
-                                                                            {exam.faculty}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </CardContent>
-                                                        </Card>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Empty State */}
-                            {!loading && Object.keys(results).length === 0 && !error && (
-                                <div className="text-center py-12">
-                                    <h3 className="text-xl font-medium text-gray-900 mb-2">
-                                        Ready to search exam schedules
-                                    </h3>
-                                    <p className="text-gray-600 max-w-md mx-auto">
-                                        Enter one or more course codes above to view exam dates, times, and faculty information.
-                                    </p>
-                                </div>
+                            <ExamRoutineResults
+                                loading={loading}
+                                error={error}
+                                totalResults={getTotalResults}
+                                resultsCount={Object.keys(results).length}
+                                allExams={getAllExams}
+                                formatDate={formatDate}
+                                formatTime={formatTime}
+                                getDaysRemaining={getDaysRemaining}
+                                scheduleRef={scheduleRef}
+                            />
+                            {getTotalResults > 0 && (
+                                <ExamRoutineDownload
+                                    totalResults={getTotalResults}
+                                    downloading={downloading}
+                                    onDownloadPDF={downloadAsPDF}
+                                    onDownloadPNG={downloadAsPNG}
+                                />
                             )}
                         </div>
                     </div>
