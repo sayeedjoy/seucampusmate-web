@@ -3,8 +3,28 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Container } from '@/components/ui/container';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Calendar } from '@/components/ui/calendar';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from 'sonner';
-import { ChevronLeft, ChevronRight, Calendar, BookOpen, Clock, RefreshCw } from 'lucide-react';
+import { Calendar as CalendarIcon, BookOpen, Clock, RefreshCw } from 'lucide-react';
+
+const ACADEMIC_CALENDAR_API_URL =
+    process.env.NEXT_PUBLIC_ACADEMIC_CALENDAR_URL || 'https://proxy.rsbmr.com/data.json';
 
 interface AcademicEvent {
     Semester: string;
@@ -174,7 +194,7 @@ export default function AcademicCalendarPage() {
                     try {
                         if (attempt === 0) {
                             // First attempt: Standard fetch
-                            response = await fetch('https://proxy.rsbmr.com/data.json', {
+                            response = await fetch(ACADEMIC_CALENDAR_API_URL, {
                                 method: 'GET',
                                 headers: {
                                     'Accept': 'application/json',
@@ -183,7 +203,7 @@ export default function AcademicCalendarPage() {
                             });
                         } else {
                             // Retry attempts: More basic fetch
-                            response = await fetch('https://proxy.rsbmr.com/data.json', {
+                            response = await fetch(ACADEMIC_CALENDAR_API_URL, {
                                 signal: controller.signal,
                             });
                         }
@@ -485,29 +505,6 @@ export default function AcademicCalendarPage() {
         }
     };
 
-    const getDaysInMonth = (date: Date) => {
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-        const daysInMonth = lastDay.getDate();
-        const startingDayOfWeek = firstDay.getDay();
-
-        const days = [];
-        
-        // Add empty cells for days before the first day of the month
-        for (let i = 0; i < startingDayOfWeek; i++) {
-            days.push(null);
-        }
-
-        // Add all days of the month
-        for (let i = 1; i <= daysInMonth; i++) {
-            days.push(new Date(year, month, i));
-        }
-
-        return days;
-    };
-
     const isImportantEvent = (eventDetails: string) => {
         const details = eventDetails.toLowerCase();
         return details.includes('payment') || 
@@ -556,15 +553,9 @@ export default function AcademicCalendarPage() {
         });
     };
 
-    const monthNames = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const handleDateClick = (date: Date) => {
-        const eventsForDate = getEventsForDate(date);
-        if (eventsForDate.length > 0) {
-            setSelectedDate(date);
+    const handleDateSelect = (date: Date | undefined) => {
+        setSelectedDate(date ?? null);
+        if (date && getEventsForDate(date).length > 0) {
             setShowEventPopup(true);
         }
     };
@@ -576,11 +567,11 @@ export default function AcademicCalendarPage() {
 
         if (loading) {
         return (
-            <div className="pt-12">
+            <div className="pt-12" aria-busy="true" aria-live="polite">
                 <Container className="py-16">
                     <div className="max-w-6xl mx-auto">
                         <div className="text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" aria-hidden />
                             <p className="mt-4 text-muted-foreground">Loading academic calendar...</p>
                         </div>
                     </div>
@@ -597,20 +588,20 @@ export default function AcademicCalendarPage() {
                     <div className="max-w-6xl mx-auto">
                         <div className="text-center">
                             <div className="w-16 h-16 bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-8 h-8 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                             <h2 className="text-2xl font-bold text-foreground mb-2">Unable to Load Academic Calendar</h2>
                             <p className="text-muted-foreground mb-6">There was an issue connecting to the server. Please try refreshing the page.</p>
-                            <button
+                            <Button
                                 onClick={handleRefresh}
                                 disabled={refreshing}
-                                className="flex items-center gap-2 px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed mx-auto"
+                                className="mx-auto"
                             >
                                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                                 <span>{refreshing ? 'Retrying...' : 'Retry'}</span>
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </Container>
@@ -626,7 +617,7 @@ export default function AcademicCalendarPage() {
                         {/* Hero Section with Refresh Button */}
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 lg:mb-6 gap-4">
                             <div className="text-center sm:text-left">
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-foreground via-violet-700 to-purple-700 bg-clip-text text-transparent leading-tight">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-foreground via-primary to-primary bg-clip-text text-transparent leading-tight">
                                     Academic Calendar
                                 </h1>
                                 <p className="text-sm sm:text-base lg:text-base xl:text-lg text-muted-foreground max-w-2xl leading-relaxed">
@@ -636,171 +627,97 @@ export default function AcademicCalendarPage() {
                             
                             {/* Refresh Button - Top right on desktop, below title on mobile */}
                             <div className="flex justify-center sm:justify-end sm:flex-shrink-0">
-                                <button
+                                <Button
+                                    variant="outline"
                                     onClick={handleRefresh}
                                     disabled={refreshing || loading}
                                     title="Refresh calendar data (Ctrl+R)"
-                                    className={`
-                                        flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-all duration-200 shadow-sm
-                                        ${refreshing || loading 
-                                            ? 'bg-violet-100 border border-violet-200 cursor-not-allowed' 
-                                            : 'bg-card border border-border hover:border-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950/30 hover:shadow-md active:scale-95'
-                                        }
-                                    `}
+                                    aria-label={refreshing ? 'Refreshing calendar' : 'Refresh calendar data'}
                                 >
-                                    <RefreshCw className={`w-4 h-4 ${refreshing || loading ? 'animate-spin text-violet-700' : 'text-violet-600'}`} />
-                                    <span className={`text-xs sm:text-sm font-medium ${refreshing || loading ? 'text-violet-700' : 'text-muted-foreground'}`}>
+                                    <RefreshCw className={`w-4 h-4 ${refreshing || loading ? 'animate-spin' : ''}`} />
+                                    <span className="sr-only sm:not-sr-only sm:inline">
                                         {refreshing ? 'Refreshing...' : loading ? 'Loading...' : 'Refresh'}
                                     </span>
-                                </button>
+                                </Button>
                             </div>
                         </div>
 
                         {/* Fallback Data Notice */}
                         {usingFallbackData && (
-                            <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                                <div className="flex items-start gap-2">
-                                    <svg className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.732 15.5c-.77.833.192 2.5 1.732 2.5z" />
-                                    </svg>
-                                    <div>
-                                        <p className="text-sm text-amber-800 font-medium mb-1">
-                                            Connection Issue Detected
-                                        </p>
-                                        <p className="text-xs text-amber-700">
-                                            Unable to load the latest academic calendar data. Showing sample events for reference. 
-                                            Please check your internet connection and click refresh to try again.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <Alert variant="warning" className="mb-4">
+                                <AlertTitle>Connection Issue Detected</AlertTitle>
+                                <AlertDescription>
+                                    Unable to load the latest academic calendar data. Showing sample events for reference.
+                                    Please check your internet connection and click refresh to try again.
+                                </AlertDescription>
+                            </Alert>
                         )}
 
-                        {/* Semester Filter - Only affects Events sidebar */}
-                        <div className="mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                                <h3 className="text-sm lg:text-base font-semibold text-muted-foreground">Filter Events by Semester:</h3>
-                            </div>
-                            <div className="flex flex-wrap gap-1.5 justify-center lg:justify-start">
-                                <Badge 
-                                    variant={selectedSemester === 'All' ? 'default' : 'secondary'}
-                                    className="cursor-pointer px-3 py-1 text-xs font-medium hover:scale-105 transition-all duration-200 rounded-full"
-                                    onClick={() => setSelectedSemester('All')}
-                                >
-                                    All
-                                </Badge>
-                                {getSemesters().map(semester => (
-                                    <Badge 
-                                        key={semester}
-                                        variant={selectedSemester === semester ? 'default' : 'secondary'}
-                                        className="cursor-pointer px-3 py-1 text-xs font-medium hover:scale-105 transition-all duration-200 rounded-full"
-                                        onClick={() => setSelectedSemester(semester)}
-                                    >
-                                        {semester}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </div>
-
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
-                            {/* Calendar View - Full width on mobile, 2/3 on desktop */}
-                            <div className="lg:col-span-2 bg-card border border-border rounded-xl p-4 lg:p-5 hover:border-violet-200 transition-colors duration-200 shadow-sm">
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 lg:mb-4 gap-2">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 bg-violet-50 rounded-lg flex items-center justify-center">
-                                            <Calendar className="w-4 h-4 text-violet-600" />
+                            {/* Calendar Card - Full width on mobile, 2/3 on desktop; large cell size for visibility */}
+                            <Card className="lg:col-span-2 hover:border-primary/30 transition-colors duration-200 shadow-sm [--cell-size:3rem] min-[640px]:[--cell-size:3.25rem] lg:[--cell-size:3.5rem]">
+                                <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
+                                    <CardTitle className="flex items-center gap-2 text-lg lg:text-xl">
+                                        <div className="w-8 h-8 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
+                                            <CalendarIcon className="w-4 h-4 text-primary" />
                                         </div>
-                                        <h2 className="text-lg lg:text-xl font-bold text-foreground">Calendar</h2>
-                                    </div>
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))}
-                                            className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors duration-200 border border-border"
-                                        >
-                                            <ChevronLeft className="w-4 h-4 text-muted-foreground" />
-                                        </button>
-                                        <span className="font-semibold text-foreground min-w-[120px] lg:min-w-[140px] text-center text-sm lg:text-base px-3">
-                                            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                                        </span>
-                                        <button
-                                            onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1))}
-                                            className="p-2 hover:bg-violet-50 dark:hover:bg-violet-950/30 rounded-lg transition-colors duration-200 border border-border"
-                                        >
-                                            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                                        </button>
-                                    </div>
-                                </div>
+                                        Calendar
+                                    </CardTitle>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentDate(new Date())}
+                                        aria-label="Go to today"
+                                    >
+                                        Today
+                                    </Button>
+                                </CardHeader>
+                                <CardContent className="flex justify-center py-4 sm:py-6">
+                                    <Calendar
+                                        mode="single"
+                                        month={currentDate}
+                                        onMonthChange={setCurrentDate}
+                                        selected={selectedDate ?? undefined}
+                                        onSelect={handleDateSelect}
+                                        modifiers={{
+                                            hasEvents: (d) => getEventsForDate(d).length > 0,
+                                        }}
+                                        modifiersClassNames={{
+                                            hasEvents: 'bg-primary/10 dark:bg-primary/20 border-primary/30 relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:size-1 after:rounded-full after:bg-primary',
+                                        }}
+                                        className="rounded-lg border-0"
+                                    />
+                                </CardContent>
+                            </Card>
 
-                                <div className="grid grid-cols-7 gap-1 lg:gap-2 mb-2 lg:mb-3">
-                                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
-                                        <div key={index} className="text-center text-xs lg:text-sm font-semibold text-muted-foreground py-1.5">
-                                            {day}
+                            {/* Events Card */}
+                            <Card className="lg:col-span-1 hover:border-primary/30 transition-colors duration-200 shadow-sm">
+                                <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-2">
+                                    <CardTitle className="flex items-center gap-2 text-base">
+                                        <div className="w-6 h-6 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
+                                            <BookOpen className="w-3 h-3 text-primary" />
                                         </div>
-                                    ))}
-                                </div>
-
-                                <div className="grid grid-cols-7 gap-1 lg:gap-2">
-                                    {getDaysInMonth(currentDate).map((date, index) => (
-                                        <div
-                                            key={index}
-                                            className={`
-                                                min-h-[50px] lg:min-h-[65px] p-1.5 lg:p-2 border border-border relative rounded-lg cursor-pointer transition-all duration-200
-                                                ${date ? 'hover:bg-violet-50 hover:border-violet-200' : 'bg-muted/50 cursor-default'}
-                                                ${isToday(date!) ? 'bg-violet-100 border-violet-300' : ''}
-                                                ${date && getEventsForDate(date).length > 0 ? 'border-violet-200 bg-violet-50/50' : ''}
-                                            `}
-                                            onClick={() => date && handleDateClick(date)}
-                                        >
-                                            {date && (
-                                                <>
-                                                    <div className={`text-xs lg:text-sm font-semibold mb-1 ${
-                                                        isToday(date) ? 'text-violet-700' : 'text-foreground'
-                                                    }`}>
-                                                        {date.getDate()}
-                                                    </div>
-                                                    {getEventsForDate(date).slice(0, 2).map((event, eventIndex) => {
-                                                        const isImportant = isImportantEvent(event.Details);
-                                                        return (
-                                                            <div
-                                                                key={eventIndex}
-                                                                className={`text-[10px] lg:text-xs px-1 py-0.5 rounded mb-0.5 truncate font-medium ${
-                                                                    isImportant 
-                                                                        ? 'bg-red-100 text-red-700 border border-red-200' 
-                                                                        : 'bg-violet-100 text-violet-700'
-                                                                }`}
-                                                                title={event.Details}
-                                                            >
-                                                                {event.Details.length > 6
-                                                                    ? event.Details.substring(0, 6) + '..' 
-                                                                    : event.Details
-                                                                }
-                                                            </div>
-                                                        );
-                                                    })}
-                                                    {getEventsForDate(date).length > 2 && (
-                                                        <div className="text-[10px] lg:text-xs bg-violet-200 text-violet-800 px-1 py-0.5 rounded font-medium">
-                                                            +{getEventsForDate(date).length - 2}
-                                                        </div>
-                                                    )}
-                                                </>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Events Sidebar */}
-                            <div className="lg:col-span-1 bg-card border border-border rounded-xl p-4 hover:border-violet-200 transition-colors duration-200 shadow-sm">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <div className="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center">
-                                        <BookOpen className="w-3 h-3 text-blue-600" />
-                                    </div>
-                                    <h2 className="text-sm lg:text-base font-bold text-foreground">
-                                        Events {selectedSemester !== 'All' && `(${selectedSemester})`}
-                                    </h2>
-                                </div>
-
-                                <div className="space-y-2 max-h-[400px] lg:max-h-[500px] overflow-y-auto">
+                                        Events
+                                    </CardTitle>
+                                    <Select
+                                        value={selectedSemester}
+                                        onValueChange={setSelectedSemester}
+                                    >
+                                        <SelectTrigger className="w-[140px] h-8" aria-label="Filter events by semester">
+                                            <SelectValue placeholder="Semester" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="All">All</SelectItem>
+                                            {getSemesters().map((semester) => (
+                                                <SelectItem key={semester} value={semester}>
+                                                    {semester}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </CardHeader>
+                                <CardContent>
+                                <div className="space-y-2 max-h-[400px] lg:max-h-[500px] overflow-y-auto pr-1">
                                     {filteredEvents.map((event, index) => {
                                         const isImportant = isImportantEvent(event.Details);
                                         return (
@@ -808,8 +725,8 @@ export default function AcademicCalendarPage() {
                                                 key={index} 
                                                 className={`border-l-3 pl-3 py-2 rounded-r-lg hover:bg-opacity-80 transition-all duration-200 ${
                                                     isImportant 
-                                                        ? 'border-red-400 bg-gradient-to-r from-red-50/70 to-transparent hover:from-red-100/70' 
-                                                        : 'border-violet-400 bg-gradient-to-r from-violet-50/70 to-transparent hover:from-violet-100/70'
+                                                        ? 'border-red-400 dark:border-red-600 bg-gradient-to-r from-red-50/70 to-transparent dark:from-red-950/40 hover:from-red-100/70 dark:hover:from-red-900/40' 
+                                                        : 'border-primary/50 bg-gradient-to-r from-primary/10 to-transparent dark:from-primary/20 hover:from-primary/20 dark:hover:from-primary/30'
                                                 }`}
                                             >
                                                 <div className="flex-1 min-w-0">
@@ -820,15 +737,15 @@ export default function AcademicCalendarPage() {
                                                     </h3>
                                                     <div className="flex flex-col gap-1.5">
                                                         <div className="flex items-center gap-1.5 bg-card border border-border px-2 py-1 rounded-full w-fit">
-                                                            <Clock className={`w-3 h-3 ${isImportant ? 'text-red-600' : 'text-violet-600'}`} />
+                                                            <Clock className={`w-3 h-3 ${isImportant ? 'text-red-600 dark:text-red-400' : 'text-primary'}`} />
                                                             <span className="font-medium text-[10px] lg:text-xs">{event.Date}</span>
                                                         </div>
                                                         <Badge 
                                                             variant="outline" 
                                                             className={`text-[10px] lg:text-xs font-medium w-fit ${
                                                                 isImportant 
-                                                                    ? 'border-red-200 text-red-700' 
-                                                                    : 'border-violet-200 text-violet-700'
+                                                                    ? 'border-red-200 dark:border-red-800 text-red-700 dark:text-red-300' 
+                                                                    : 'border-primary/50 text-primary'
                                                             }`}
                                                         >
                                                             {event.Semester}
@@ -843,17 +760,18 @@ export default function AcademicCalendarPage() {
                                 {filteredEvents.length === 0 && (
                                     <div className="text-center py-8 text-muted-foreground">
                                         <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center mx-auto mb-3">
-                                            <Calendar className="w-6 h-6 text-muted-foreground" />
+                                            <CalendarIcon className="w-6 h-6 text-muted-foreground" />
                                         </div>
                                         <p className="text-sm font-medium">No events found for the selected semester.</p>
                                     </div>
                                 )}
-                            </div>
+                                </CardContent>
+                            </Card>
                         </div>
 
                         {/* Additional Info */}
                         <div className="mt-6 lg:mt-8 text-center">
-                            <div className="bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-100 rounded-xl p-4 lg:p-6 shadow-sm">
+                            <div className="bg-gradient-to-r from-muted/50 to-muted/30 dark:from-muted/30 dark:to-muted/20 border border-border rounded-xl p-4 lg:p-6 shadow-sm">
                                 <h3 className="text-base lg:text-lg font-bold text-foreground mb-2 lg:mb-3">
                                     Stay Organized with CampusMate
                                 </h3>
@@ -867,51 +785,51 @@ export default function AcademicCalendarPage() {
                 </Container>
         </div>
 
-        {/* Event Popup */}
-            {showEventPopup && selectedDate && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-card rounded-2xl border border-border max-w-md w-full max-h-[80vh] overflow-hidden animate-in zoom-in-95 duration-200">
-                        <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-4 text-white">
-                            <div className="flex items-center justify-between mb-2">
-                                <h3 className="text-lg font-bold">Events</h3>
-                                <button
-                                    onClick={closeEventPopup}
-                                    className="p-1.5 hover:bg-white/20 dark:hover:bg-white/10 rounded-lg transition-colors duration-200"
-                                >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <p className="text-violet-100 font-medium text-sm">{formatFullDate(selectedDate)}</p>
-                        </div>
-                        
-                        <div className="p-4 max-h-[60vh] overflow-y-auto">
-                            {getEventsForDate(selectedDate).map((event, index) => {
+        {/* Event detail Dialog */}
+            <Dialog open={showEventPopup} onOpenChange={(open) => { if (!open) closeEventPopup(); }}>
+                <DialogContent
+                    className="max-w-md w-[calc(100%-2rem)] sm:max-w-md max-h-[85vh] overflow-hidden flex flex-col rounded-t-2xl sm:rounded-2xl data-[state=open]:slide-in-from-bottom-[20%] sm:data-[state=open]:slide-in-from-bottom-0"
+                    aria-describedby={undefined}
+                >
+                    <DialogHeader>
+                        <DialogTitle>Events</DialogTitle>
+                        {selectedDate && (
+                            <p className="text-sm text-muted-foreground font-medium">
+                                {formatFullDate(selectedDate)}
+                            </p>
+                        )}
+                    </DialogHeader>
+                    <div className="overflow-y-auto -mx-4 px-4 max-h-[60vh]">
+                        {selectedDate &&
+                            getEventsForDate(selectedDate).map((event, index) => {
                                 const isImportant = isImportantEvent(event.Details);
                                 return (
                                     <div key={index} className="mb-3 last:mb-0">
-                                        <div className={`border-l-3 pl-3 py-2 rounded-r-lg ${
-                                            isImportant 
-                                                ? 'border-red-400 bg-gradient-to-r from-red-50 to-transparent' 
-                                                : 'border-violet-400 bg-gradient-to-r from-violet-50 to-transparent'
-                                        }`}>
-                                            <h4 className={`font-semibold mb-2 leading-relaxed text-sm ${
-                                                isImportant ? 'text-red-900 dark:text-red-200' : 'text-foreground'
-                                            }`}>
+                                        <div
+                                            className={`border-l-4 pl-3 py-2 rounded-r-lg ${
+                                                isImportant
+                                                    ? 'border-red-400 dark:border-red-600 bg-gradient-to-r from-red-50 to-transparent dark:from-red-950/40'
+                                                    : 'border-primary/50 bg-gradient-to-r from-primary/10 to-transparent dark:from-primary/20'
+                                            }`}
+                                        >
+                                            <h4
+                                                className={`font-semibold mb-2 leading-relaxed text-sm ${
+                                                    isImportant ? 'text-red-900 dark:text-red-200' : 'text-foreground'
+                                                }`}
+                                            >
                                                 {event.Details}
                                             </h4>
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <div className="flex items-center gap-1 bg-card border border-border px-2 py-1 rounded-full">
-                                                    <Clock className={`w-3 h-3 ${isImportant ? 'text-red-600' : 'text-violet-600'}`} />
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+                                                <div className="flex items-center gap-1 bg-background border border-border px-2 py-1 rounded-full">
+                                                    <Clock className={`w-3 h-3 ${isImportant ? 'text-red-600 dark:text-red-400' : 'text-primary'}`} />
                                                     <span className="font-medium text-xs">{event.Date}</span>
                                                 </div>
-                                                <Badge 
-                                                    variant="outline" 
+                                                <Badge
+                                                    variant="outline"
                                                     className={`text-xs font-medium ${
-                                                        isImportant 
-                                                            ? 'border-red-200 text-red-700' 
-                                                            : 'border-violet-200 text-violet-700'
+                                                        isImportant
+                                                            ? 'border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+                                                            : 'border-primary/50 text-primary'
                                                     }`}
                                                 >
                                                     {event.Semester}
@@ -921,10 +839,9 @@ export default function AcademicCalendarPage() {
                                     </div>
                                 );
                             })}
-                        </div>
                     </div>
-                </div>
-            )}
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
