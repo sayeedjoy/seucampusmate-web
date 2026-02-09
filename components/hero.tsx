@@ -10,8 +10,9 @@ import {
   AvatarImage,
 } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Star, ArrowUpRightIcon } from 'lucide-react';
-import { Announcement, AnnouncementTag, AnnouncementTitle } from '@/components/kibo-ui/announcement';
+import { Star } from 'lucide-react';
+import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
+import { cn } from '@/lib/utils';
 
 export function Hero() {
   const [count, setCount] = useState(0);
@@ -63,10 +64,17 @@ export function Hero() {
       <div className="relative z-20 mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-8 sm:gap-10 md:gap-12 lg:gap-16 xl:gap-20 items-center">
           <div className="order-1 lg:order-1 space-y-5 sm:space-y-6 md:space-y-7 text-center lg:text-left px-4 sm:px-6 md:px-0">
-            <Announcement className="bg-card border-border shadow-sm">
-              <AnnouncementTag className="bg-muted">Latest update</AnnouncementTag>
-              <AnnouncementTitle>v12 released<ArrowUpRightIcon className="shrink-0 text-muted-foreground" size={16} /></AnnouncementTitle>
-            </Announcement>
+            <div className="flex justify-center lg:justify-start">
+              <div
+                className={cn(
+                  "group rounded-full border border-black/5 bg-neutral-100 text-base transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                )}
+              >
+                <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-1 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+                  <span>✨ v12 released</span>
+                </AnimatedShinyText>
+              </div>
+            </div>
             <div className="space-y-4 sm:space-y-5 md:space-y-6">
               <h1 className="text-[32px] leading-[38px] sm:text-[40px] sm:leading-[48px] md:text-[48px] md:leading-[56px] lg:text-[52px] lg:leading-[60px] lg:whitespace-nowrap xl:text-[60px] xl:leading-[68px] 2xl:text-[64px] 2xl:leading-[72px] font-bold tracking-[-0.02em] text-foreground">Your Academic Companion</h1>
               <p className="text-[16px] leading-[24px] sm:text-[18px] sm:leading-[28px] md:text-[20px] md:leading-[30px] text-muted-foreground max-w-2xl mx-auto lg:mx-0">Track attendance, calculate CGPA, manage routines, and stay connected with your SEU community. Everything you need for academic success in one place.</p>
