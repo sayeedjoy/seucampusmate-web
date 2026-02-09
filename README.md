@@ -74,15 +74,18 @@ Some features work without all variables; academic calendar, blood donors, and C
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
 
-## Tech Stack
+## Docker
 
-- **Framework:** Next.js 16 (App Router)
-- **UI:** React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Radix UI
-- **Maps:** MapLibre GL
-- **PDF:** jsPDF, pdf-lib, html2canvas
-- **Data:** Axios, CSV parse, date-fns
-- **Caching:** Upstash Redis (for CP leaderboard and exams)
-- **Theming:** next-themes (light/dark mode)
+Build and run with Docker (uses Next.js standalone output):
+
+```bash
+docker build -t seucampusmate-web .
+docker run -p 3000:3000 --env-file .env.local seucampusmate-web
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000). Pass environment variables via `--env-file`, `-e`, or your platform’s env/secrets; see [Environment Variables](#environment-variables) for required keys.
+
+
 
 ## Project Structure
 
