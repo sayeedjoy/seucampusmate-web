@@ -1,7 +1,7 @@
 import { Hero } from "@/components/hero";
 import IntegrationsSection from "@/components/feature/integrations-1";
 import StatsSection from "@/components/stats";
-import { BentoGridSection } from "@/components/bento";
+import { BentoGridSection } from "@/components/bento-grid/bento";
 import { Container } from "@/components/ui/container";
 import Testimonials from "@/components/testimonials";
 import { createPageMetadata } from "@/lib/metadata";
