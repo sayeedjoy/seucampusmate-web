@@ -1,0 +1,44 @@
+# Dependencies and build artifacts
+node_modules
+.next
+out
+build
+.pnp
+.pnp.*
+.yarn
+.yarn/*
+
+# Git and env (do not bake secrets into image)
+.git
+.gitignore
+.env
+.env.*
+
+# IDE and agent tooling
+.cursor
+.claude
+.agents
+.agent
+.vscode
+.idea
+
+# Docs and misc
+docs
+*.md
+.DS_Store
+*.pem
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs and caches
+*.log
+.vercel
+coverage
+.eslintcache
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Plans (optional; remove if you want plans in image)
+.cursor/plans
