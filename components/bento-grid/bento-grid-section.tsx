@@ -30,6 +30,7 @@ const BentoGridSection = React.forwardRef<HTMLElement, BentoGridSectionProps>(
               key={item.title}
               size={item.size}
               imagePlaceholder={item.imagePlaceholder}
+              image={item.image}
               title={item.title}
               description={item.description}
               icon={item.icon}

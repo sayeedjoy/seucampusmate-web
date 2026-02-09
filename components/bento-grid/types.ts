@@ -6,6 +6,8 @@ export interface BentoItem {
   description: string
   imagePlaceholder: string
   size: "large" | "small"
+  /** Optional image path (e.g. /bento/routine.png). When set, shown in the card header area. */
+  image?: string
   icon?: LucideIcon | React.ComponentType<{ className?: string }>
   badge?: string
   /** Tailwind class for icon color (e.g. text-blue-600). Ignored when iconVariant is "custom". */
@@ -21,6 +23,8 @@ export interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: "large" | "small"
   /** Text rendered inside the image placeholder area */
   imagePlaceholder?: string
+  /** Optional image path for the card header area */
+  image?: string
   /** Card title */
   title?: string
   /** Card description */

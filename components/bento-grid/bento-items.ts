@@ -9,11 +9,12 @@ import type { BentoItem } from "./types"
 
 export const BENTO_ITEMS: BentoItem[] = [
   {
-    title: "Smart Campus Navigation",
+    title: "Class Routine",
     description:
-      "Find your way across campus with our interactive map featuring real-time building availability, shortest routes between classes, and accessibility paths.",
+      "View your class schedule, room locations",
     imagePlaceholder: "Campus Map Preview",
     size: "large",
+    image: "/bento/routine.png",
     icon: Map,
     badge: "Navigation",
     iconColorClass: "text-blue-600 dark:text-blue-400",
@@ -25,6 +26,7 @@ export const BENTO_ITEMS: BentoItem[] = [
       "Track your GPA, course progress, and credit completion at a glance. Visualize your academic journey with intuitive charts and milestone tracking.",
     imagePlaceholder: "Dashboard Preview",
     size: "large",
+    image: "/bento/assesment.png",
     icon: BarChart3,
     badge: "Analytics",
     iconColorClass: "text-emerald-600 dark:text-emerald-400",
@@ -36,6 +38,7 @@ export const BENTO_ITEMS: BentoItem[] = [
       "Never miss a shuttle again. Real-time bus tracking with live ETAs, route maps, and push notifications for your saved routes.",
     imagePlaceholder: "Bus Tracker",
     size: "small",
+    image: "/bento/todo.png",
     icon: Bus,
     badge: "Transport",
     iconColorClass: "text-violet-600 dark:text-violet-400",
@@ -47,6 +50,7 @@ export const BENTO_ITEMS: BentoItem[] = [
       "Stay prepared with a consolidated exam schedule, countdown timers, and personalized study-plan suggestions based on your courses.",
     imagePlaceholder: "Exam Planner",
     size: "small",
+    image: "/bento/exam-routine.png",
     icon: CalendarDays,
     badge: "Planning",
     iconColorClass: "text-amber-600 dark:text-amber-400",
@@ -58,6 +62,7 @@ export const BENTO_ITEMS: BentoItem[] = [
       "Instantly calculate your current and projected CGPA. Simulate future grades to plan your path towards academic goals.",
     imagePlaceholder: "CGPA Calculator",
     size: "small",
+    image: "/bento/fee.png",
     icon: Calculator,
     badge: "Tools",
     iconColorClass: "text-rose-600 dark:text-rose-400",

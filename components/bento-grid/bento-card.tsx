@@ -1,4 +1,5 @@
 import * as React from "react"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import {
   Card,
@@ -16,6 +17,7 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
       className,
       size = "small",
       imagePlaceholder,
+      image,
       title,
       description,
       icon: Icon,
@@ -57,13 +59,21 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
           {/* Image / icon placeholder area */}
           <div
             className={cn(
-              "flex items-center justify-center bg-muted/50 text-muted-foreground",
+              "relative flex items-center justify-center overflow-hidden bg-muted/50 text-muted-foreground",
               size === "large"
                 ? "aspect-[16/9] text-base font-medium"
                 : "aspect-[4/3] text-sm font-medium"
             )}
           >
-            {Icon ? (
+            {image ? (
+              <Image
+                src={image}
+                alt=""
+                fill
+                className="object-cover"
+                sizes={size === "large" ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 33vw, 100vw"}
+              />
+            ) : Icon ? (
               iconWrapperClassName ? (
                 <div className={iconWrapperClassName}>
                   <Icon className={iconClassName} aria-hidden />
