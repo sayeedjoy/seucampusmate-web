@@ -6,7 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { MobileNav } from "@/components/navbar/mobile-nav";
 import { GitHubStars } from "@/components/github-stars";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 export const navLinks = [
 	{ label: "Home", href: "/" },
@@ -18,12 +18,12 @@ export const navLinks = [
 
 export function Header() {
 	const scrolled = useScroll(10);
-	const { resolvedTheme, setTheme } = useTheme();
+	const { setTheme } = useTheme();
 
 	return (
 		<header
 			className={cn(
-				"sticky top-0 z-50 w-full border-b border-transparent bg-background/90 backdrop-blur-sm transition-all duration-200 ease-out supports-[backdrop-filter]:bg-background/80",
+				"fixed inset-x-0 top-0 z-50 w-full border-b border-transparent bg-background/90 backdrop-blur-sm transition-all duration-200 ease-out supports-[backdrop-filter]:bg-background/80",
 				scrolled && "border-border bg-background/95 shadow-sm backdrop-blur-md"
 			)}
 		>
@@ -46,16 +46,12 @@ export function Header() {
 							<GitHubStars
 								repo={process.env.NEXT_PUBLIC_GITHUB_REPO ?? "sayeedjoy/seucampusmate-web"}
 							/>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="relative text-muted-foreground hover:text-foreground"
-								onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-								aria-label="Toggle theme"
-							>
-								<SunIcon className="size-4.5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-								<MoonIcon className="absolute size-4.5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-							</Button>
+							<AnimatedThemeToggler
+								className={cn(
+									"inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:text-foreground"
+								)}
+								onThemeChange={setTheme}
+							/>
 						</div>
 						<MobileNav />
 					</div>

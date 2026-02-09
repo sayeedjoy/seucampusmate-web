@@ -50,7 +50,7 @@ export default function RootLayout({
           <TooltipProvider>
             <div className="min-h-screen flex flex-col">
               <Header />
-              <main className="flex-1">{children}</main>
+              <main className="flex-1 pt-14 md:pt-16">{children}</main>
               <Footer />
             </div>
             <Toaster richColors position="top-right" />

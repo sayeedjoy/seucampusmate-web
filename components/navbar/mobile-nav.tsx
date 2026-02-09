@@ -4,11 +4,15 @@ import { cn } from "@/lib/utils";
 import { MenuIcon, XIcon } from "lucide-react";
 import React from "react";
 import { createPortal } from "react-dom";
+import { useTheme } from "next-themes";
 import { navLinks } from "@/components/navbar/header";
+import { GitHubStars } from "@/components/github-stars";
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 export function MobileNav() {
 	const [open, setOpen] = React.useState(false);
 	const { isMobile } = useMediaQuery();
+	const { setTheme } = useTheme();
 
 	// 🚫 Disable body scroll when open
 	React.useEffect(() => {
@@ -52,7 +56,7 @@ export function MobileNav() {
 						<div
 							className={cn(
 								"data-[slot=open]:zoom-in-97 ease-out data-[slot=open]:animate-in",
-								"size-full p-4"
+								"size-full flex flex-col gap-4 p-4"
 							)}
 							data-slot={open ? "open" : "closed"}
 						>
@@ -65,10 +69,28 @@ export function MobileNav() {
 										})}
 										href={link.href}
 										key={link.label}
+										onClick={() => setOpen(false)}
 									>
 										{link.label}
 									</a>
 								))}
+							</div>
+							<div className="border-t pt-4 flex flex-col gap-2" onClick={() => setOpen(false)}>
+								<GitHubStars
+									repo={process.env.NEXT_PUBLIC_GITHUB_REPO ?? "sayeedjoy/seucampusmate-web"}
+								/>
+								<div className="flex items-center gap-2">
+									<AnimatedThemeToggler
+										className={cn(
+											"inline-flex size-9 items-center justify-center rounded-md text-muted-foreground hover:text-foreground shrink-0"
+										)}
+										onThemeChange={(theme) => {
+											setTheme(theme);
+											setOpen(false);
+										}}
+									/>
+									<span className="text-sm text-muted-foreground">Theme</span>
+								</div>
 							</div>
 						</div>
 					</div>,
