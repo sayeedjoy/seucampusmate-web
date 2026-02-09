@@ -8,7 +8,7 @@ const BentoGrid = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6",
+      "grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-6 lg:gap-6",
       className
     )}
     {...props}

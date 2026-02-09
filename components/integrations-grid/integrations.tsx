@@ -20,7 +20,7 @@ export function IntegrationsSection2() {
       <Container>
         {/* Header */}
         <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
-          <h2 className="text-2xl font-bold sm:text-4xl md:whitespace-nowrap md:text-5xl">
+          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:whitespace-nowrap md:text-6xl lg:text-7xl">
             The Ultimate <AuroraText>SEU</AuroraText> Student Toolkit
           </h2>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">

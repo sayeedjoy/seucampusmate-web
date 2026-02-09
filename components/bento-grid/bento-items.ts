@@ -21,7 +21,7 @@ export const BENTO_ITEMS: BentoItem[] = [
     iconBgClass: "bg-blue-100 dark:bg-blue-950/50",
   },
   {
-    title: "Academic Performance Dashboard",
+    title: "Semester Marks Tracker",
     description:
       "Track your GPA, course progress, and credit completion at a glance. Visualize your academic journey with intuitive charts and milestone tracking.",
     imagePlaceholder: "Dashboard Preview",
@@ -33,9 +33,9 @@ export const BENTO_ITEMS: BentoItem[] = [
     iconBgClass: "bg-emerald-100 dark:bg-emerald-950/50",
   },
   {
-    title: "Bus Schedule Tracker",
+    title: "Todo List",
     description:
-      "Never miss a shuttle again. Real-time bus tracking with live ETAs, route maps, and push notifications for your saved routes.",
+      "Create a todo list to keep track of your tasks and deadlines.",
     imagePlaceholder: "Bus Tracker",
     size: "small",
     image: "/bento/todo.png",
@@ -45,9 +45,9 @@ export const BENTO_ITEMS: BentoItem[] = [
     iconBgClass: "bg-violet-100 dark:bg-violet-950/50",
   },
   {
-    title: "Exam Routine Planner",
+    title: "Exam Schedule",
     description:
-      "Stay prepared with a consolidated exam schedule, countdown timers, and personalized study-plan suggestions based on your courses.",
+      "View your exam schedule, room locations and exam dates.",
     imagePlaceholder: "Exam Planner",
     size: "small",
     image: "/bento/exam-routine.png",
@@ -57,9 +57,9 @@ export const BENTO_ITEMS: BentoItem[] = [
     iconBgClass: "bg-amber-100 dark:bg-amber-950/50",
   },
   {
-    title: "CGPA Calculator",
+    title: "Semester Fee Calculator",
     description:
-      "Instantly calculate your current and projected CGPA. Simulate future grades to plan your path towards academic goals.",
+      "Calculate your semester fees, payment schedules and financial obligations.",
     imagePlaceholder: "CGPA Calculator",
     size: "small",
     image: "/bento/fee.png",

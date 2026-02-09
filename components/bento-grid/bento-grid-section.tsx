@@ -14,8 +14,8 @@ const BentoGridSection = React.forwardRef<HTMLElement, BentoGridSectionProps>(
       {...props}
     >
       <Container>
-        <div className="mb-10 text-center">
-          <h2 className="text-balance text-3xl sm:text-4xl md:text-5xl font-bold">
+        <div className="mb-8 text-center md:mb-12">
+          <h2 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             Features for Your Campus Life
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">

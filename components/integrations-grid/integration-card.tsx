@@ -3,7 +3,7 @@ import type { Integration } from "./types"
 
 export function IntegrationCard({ integration }: { integration: Integration }) {
   return (
-    <div className="group relative flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6 transition-shadow hover:shadow-md">
+    <div className="group relative flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
       {/* Icon */}
       <div className="mb-4 shrink-0">{integration.icon}</div>
 
