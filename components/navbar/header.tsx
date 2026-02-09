@@ -44,8 +44,7 @@ export function Header() {
 					<div className="flex items-center gap-2">
 						<div className="hidden md:flex md:items-center md:gap-2">
 							<GitHubStars
-								repo={process.env.NEXT_PUBLIC_GITHUB_REPO ?? "owner/repo"}
-								stargazersCount={Number(process.env.NEXT_PUBLIC_GITHUB_STARS) || 0}
+								repo={process.env.NEXT_PUBLIC_GITHUB_REPO ?? "sayeedjoy/seucampusmate-web"}
 							/>
 							<Button
 								variant="ghost"

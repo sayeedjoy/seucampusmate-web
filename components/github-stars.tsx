@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button"
 import {
   Tooltip,
@@ -7,10 +10,26 @@ import {
 
 type GitHubStarsProps = {
   repo: string
-  stargazersCount: number
 }
 
-export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
+export function GitHubStars({ repo }: GitHubStarsProps) {
+  const [stargazersCount, setStargazersCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/github/stars?repo=${encodeURIComponent(repo)}`, {
+      signal: controller.signal,
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data: { stargazersCount: number }) =>
+        setStargazersCount(data.stargazersCount)
+      )
+      .catch(() => setStargazersCount(0));
+    return () => controller.abort();
+  }, [repo]);
+
+  const count = stargazersCount ?? 0;
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -27,19 +46,23 @@ export function GitHubStars({ repo, stargazersCount }: GitHubStarsProps) {
               />
             </svg>
             <span className="text-[13px] text-muted-foreground tabular-nums">
-              {new Intl.NumberFormat("en-US", {
-                notation: "compact",
-                compactDisplay: "short",
-              })
-                .format(stargazersCount)
-                .toLowerCase()}
+              {stargazersCount === null
+                ? "…"
+                : new Intl.NumberFormat("en-US", {
+                    notation: "compact",
+                    compactDisplay: "short",
+                  })
+                    .format(count)
+                    .toLowerCase()}
             </span>
           </a>
         </Button>
       </TooltipTrigger>
 
       <TooltipContent className="font-sans">
-        {new Intl.NumberFormat("en-US").format(stargazersCount)} stars
+        {stargazersCount === null
+          ? "Loading…"
+          : `${new Intl.NumberFormat("en-US").format(count)} stars`}
       </TooltipContent>
     </Tooltip>
   )

@@ -60,8 +60,6 @@ Copy `.env.example` to `.env.local` and fill in the values:
 | `EXAMS_CSV_URL` | Exams data CSV URL |
 | `NEXT_PUBLIC_ACADEMIC_CALENDAR_URL` | Academic calendar JSON/data URL |
 | `NEXT_PUBLIC_BLOOD_DONORS_API_URL` | Blood donors API endpoint |
-| `NEXT_PUBLIC_MAP_STYLE_DARK` | MapLibre dark style URL |
-| `NEXT_PUBLIC_MAP_STYLE_LIGHT` | MapLibre light style URL |
 | `CP_USERNAMES_API_URL` | Codeforces usernames API |
 | `CODEFORCES_API_BASE` | Codeforces API base URL |
 
