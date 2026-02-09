@@ -24,6 +24,7 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
       iconColorClass,
       iconBgClass,
       iconVariant = "default",
+      priority = false,
       children,
       ...props
     },
@@ -74,6 +75,7 @@ const BentoCard = React.forwardRef<HTMLDivElement, BentoCardProps>(
                 fill
                 className="object-contain"
                 sizes={size === "large" ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 33vw, 100vw"}
+                priority={priority}
               />
             ) : Icon ? (
               iconWrapperClassName ? (

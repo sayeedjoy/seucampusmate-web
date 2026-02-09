@@ -1,4 +1,5 @@
 import * as React from "react"
+import Image from "next/image"
 import {
   FaCalculator,
   FaClipboardList,
@@ -40,9 +41,11 @@ function IconWrap({
 
 // CodeShare icon (PNG) – do not change style
 const CodeIcon = () => (
-  <img
+  <Image
     src="/codeicon.png"
     alt="Code icon"
+    width={40}
+    height={40}
     className="!size-10 !shrink-0 object-contain block"
   />
 )

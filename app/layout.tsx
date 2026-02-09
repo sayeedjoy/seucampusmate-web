@@ -8,16 +8,25 @@ import { Header } from "@/components/navbar/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+  adjustFontFallback: true,
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap',
+  adjustFontFallback: true,
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap',
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {

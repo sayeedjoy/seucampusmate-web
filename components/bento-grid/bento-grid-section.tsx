@@ -25,7 +25,7 @@ const BentoGridSection = React.forwardRef<HTMLElement, BentoGridSectionProps>(
         </div>
 
         <BentoGrid>
-          {items.map((item) => (
+          {items.map((item, index) => (
             <BentoCard
               key={item.title}
               size={item.size}
@@ -38,6 +38,7 @@ const BentoGridSection = React.forwardRef<HTMLElement, BentoGridSectionProps>(
               iconColorClass={item.iconColorClass}
               iconBgClass={item.iconBgClass}
               iconVariant={item.iconVariant}
+              priority={index < 3}
             />
           ))}
         </BentoGrid>

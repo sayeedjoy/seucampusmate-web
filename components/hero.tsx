@@ -20,19 +20,35 @@ export function Hero() {
 
   useEffect(() => {
     const duration = 2000;
-    const steps = 60;
-    const increment = targetCount / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= targetCount) {
-        setCount(targetCount);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
+    let startTime: number | null = null;
+    let animationFrameId: number;
+
+    const animate = (currentTime: number) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutQuad = (t: number) => t * (2 - t);
+      const easedProgress = easeOutQuad(progress);
+      
+      const currentCount = Math.floor(easedProgress * targetCount);
+      setCount(currentCount);
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
       }
-    }, duration / steps);
-    return () => clearInterval(timer);
+    };
+
+    // Defer animation start slightly to prioritize initial render
+    const timeoutId = setTimeout(() => {
+      animationFrameId = requestAnimationFrame(animate);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   const formatCount = (num: number) => {
@@ -81,7 +97,7 @@ export function Hero() {
             </div>
             <div className="flex justify-center lg:justify-start pt-1 sm:pt-2">
               <a href="https://play.google.com/store/apps/details?id=com.apppulse.seu&hl=en" target="_blank" rel="noopener noreferrer" className="group inline-block transition-all duration-300 transform hover:scale-105 hover:shadow-lg min-h-[44px] min-w-[152px]" aria-label="Download CampusMate on Google Play">
-                <Image src="/google-play.webp" alt="Get it on Google Play" width={180} height={54} className="h-11 sm:h-12 md:h-14 lg:h-16 w-auto object-contain" priority />
+                <Image src="/google-play.webp" alt="Get it on Google Play" width={180} height={54} className="h-11 sm:h-12 md:h-14 lg:h-16 w-auto object-contain" priority fetchPriority="high" />
               </a>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-5 md:gap-6 pt-3 sm:pt-4 md:pt-5">

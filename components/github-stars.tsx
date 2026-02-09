@@ -17,15 +17,33 @@ export function GitHubStars({ repo }: GitHubStarsProps) {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`/api/github/stars?repo=${encodeURIComponent(repo)}`, {
-      signal: controller.signal,
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
-      .then((data: { stargazersCount: number }) =>
-        setStargazersCount(data.stargazersCount)
-      )
-      .catch(() => setStargazersCount(0));
-    return () => controller.abort();
+    
+    // Defer fetch using requestIdleCallback to avoid blocking initial render
+    const fetchStars = () => {
+      fetch(`/api/github/stars?repo=${encodeURIComponent(repo)}`, {
+        signal: controller.signal,
+      })
+        .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+        .then((data: { stargazersCount: number }) =>
+          setStargazersCount(data.stargazersCount)
+        )
+        .catch(() => setStargazersCount(0));
+    };
+
+    // Use requestIdleCallback if available, otherwise setTimeout as fallback
+    if ('requestIdleCallback' in window) {
+      const idleId = requestIdleCallback(fetchStars, { timeout: 2000 });
+      return () => {
+        cancelIdleCallback(idleId);
+        controller.abort();
+      };
+    } else {
+      const timeoutId = setTimeout(fetchStars, 100);
+      return () => {
+        clearTimeout(timeoutId);
+        controller.abort();
+      };
+    }
   }, [repo]);
 
   const count = stargazersCount ?? 0;
@@ -46,7 +64,7 @@ export function GitHubStars({ repo }: GitHubStarsProps) {
                 fill="currentColor"
               />
             </svg>
-            <span className="text-[13px] text-muted-foreground tabular-nums">
+            <span className="text-[13px] text-muted-foreground tabular-nums inline-block min-w-[2ch]">
               {stargazersCount === null
                 ? "…"
                 : new Intl.NumberFormat("en-US", {

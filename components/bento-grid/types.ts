@@ -39,6 +39,8 @@ export interface BentoCardProps extends React.HTMLAttributes<HTMLDivElement> {
   iconBgClass?: string
   /** When "custom", icon is rendered without color/size overrides */
   iconVariant?: "default" | "custom"
+  /** Priority loading for above-the-fold images */
+  priority?: boolean
 }
 
 export interface BentoGridSectionProps extends React.HTMLAttributes<HTMLElement> {
