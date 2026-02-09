@@ -23,8 +23,8 @@ export function Header() {
 	return (
 		<header
 			className={cn(
-				"sticky top-0 z-50 w-full border-b border-transparent transition-all duration-200 ease-out",
-				scrolled && "border-border bg-background/95 shadow-sm supports-[backdrop-filter]:bg-background/80 backdrop-blur-md"
+				"sticky top-0 z-50 w-full border-b border-transparent bg-background/90 backdrop-blur-sm transition-all duration-200 ease-out supports-[backdrop-filter]:bg-background/80",
+				scrolled && "border-border bg-background/95 shadow-sm backdrop-blur-md"
 			)}
 		>
 			<nav className="flex h-14 md:h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">

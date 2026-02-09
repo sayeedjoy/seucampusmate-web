@@ -19,7 +19,7 @@ export function IntegrationsSection2() {
     <section className="py-16 sm:py-20 lg:py-24">
       <Container>
         {/* Header */}
-        <div className="mx-auto mb-12 max-w-2xl text-center sm:mb-16">
+        <div className="mx-auto mb-12 w-full max-w-2xl text-center sm:mb-16 lg:flex lg:flex-col lg:items-center">
           <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:whitespace-nowrap md:text-6xl lg:text-7xl">
             The Ultimate <AuroraText>SEU</AuroraText> Student Toolkit
           </h2>
