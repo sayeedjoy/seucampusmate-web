@@ -87,14 +87,12 @@ const TestimonialList = () =>
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Avatar className="size-10">
+          <Avatar className="size-10 overflow-hidden">
             <div className="relative w-full h-full">
-              <Image 
-                src={testimonial.avatar.trim()} 
-                alt={testimonial.name}
-                width={40}
-                height={40}
-                className="rounded-full object-cover"
+              <AvatarImage
+                  src={testimonial.avatar.trim()}
+                  alt={testimonial.name}
+                  className="object-cover size-full text-transparent"
               />
             </div>
             <AvatarFallback className="bg-primary font-medium text-primary-foreground text-xl">
