@@ -60,7 +60,7 @@ export function PodiumCard({ user, position, index }: PodiumCardProps) {
         transition: { 
           duration: 0.4,
           delay: index * 0.1,
-          ease: [0.25, 0.1, 0.25, 1]
+          ease: [0.25, 0.1, 0.25, 1] as const
         }
       };
 

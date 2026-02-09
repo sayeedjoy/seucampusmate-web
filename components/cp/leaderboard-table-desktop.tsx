@@ -53,7 +53,7 @@ export function LeaderboardTableDesktop({ users, startRank = 1 }: LeaderboardTab
                     transition: { 
                       duration: 0.3,
                       delay: index * 0.03,
-                      ease: [0.25, 0.1, 0.25, 1]
+                      ease: [0.25, 0.1, 0.25, 1] as const
                     }
                   };
 

@@ -26,7 +26,7 @@ export function UserCard({ user, rank, index }: UserCardProps) {
         transition: { 
           duration: 0.3,
           delay: index * 0.05,
-          ease: [0.25, 0.1, 0.25, 1]
+          ease: [0.25, 0.1, 0.25, 1] as const
         }
       };
 
