@@ -335,10 +335,9 @@ export default function ResumeBuilder() {
               size="sm"
               onClick={downloadPDF}
               disabled={isGenerating}
-              className="min-w-0 flex-1 sm:min-w-40 sm:flex-none"
             >
               <Download className="mr-1.5 h-4 w-4" />
-              {isGenerating ? "Processing…" : "Download PDF"}
+              {isGenerating ? "Processing…" : "Save PDF"}
             </Button>
           </div>
         </div>
