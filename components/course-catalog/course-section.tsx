@@ -10,24 +10,29 @@ interface CourseSectionProps {
 
 export function CourseSection({ title, subtitle, courses }: CourseSectionProps) {
     return (
-        <section className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <section className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {/* Section Header */}
-            <div className="flex flex-col gap-2 pb-4 border-b border-border">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-foreground flex items-center gap-2 sm:gap-3 flex-wrap">
+            <div className="flex flex-col gap-1.5 sm:gap-2 pb-3 sm:pb-4 border-b border-border">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold tracking-tight text-foreground">
                         {title}
-                        <Badge variant="secondary" className="rounded-md bg-primary/10 text-primary border-none px-2.5 py-0.5 sm:px-3 sm:py-1 font-bold text-xs sm:text-sm shadow-none">
-                            {courses.length} {courses.length === 1 ? 'course' : 'courses'}
-                        </Badge>
                     </h2>
+                    <Badge
+                        variant="secondary"
+                        className="rounded-md bg-primary/10 text-primary border-none px-2 py-0.5 sm:px-2.5 font-bold text-[11px] sm:text-xs shadow-none"
+                    >
+                        {courses.length} {courses.length === 1 ? "course" : "courses"}
+                    </Badge>
                 </div>
                 {subtitle && (
-                    <p className="text-sm text-muted-foreground font-medium max-w-2xl">{subtitle}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium max-w-2xl">
+                        {subtitle}
+                    </p>
                 )}
             </div>
 
-            {/* Course Grid - Responsive */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 items-stretch">
+            {/* Course Grid - Mobile: single column, Tablet: 2 cols, Desktop: 3 cols */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 lg:gap-5 items-stretch">
                 {courses.map((course) => (
                     <CourseCard key={course.code} course={course} />
                 ))}
