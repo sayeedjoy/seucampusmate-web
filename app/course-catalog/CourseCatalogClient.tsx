@@ -99,16 +99,18 @@ export function CourseCatalogClient({ data }: CourseCatalogClientProps) {
                         </div>
 
                         {/* Filter Tabs */}
-                        <div className="flex justify-center px-4">
+                        <div className="flex justify-center px-4 w-full max-w-full">
                             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-full sm:w-auto">
-                                <TabsList className="inline-flex h-auto w-full flex-wrap justify-center gap-0 p-1 sm:w-auto sm:flex-nowrap">
-                                    <Filter className="h-4 w-4 shrink-0 text-muted-foreground mx-1.5 self-center hidden sm:block" aria-hidden />
-                                    {TABS.map((tab) => (
-                                        <TabsTrigger key={tab.id} value={tab.id} className="px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold">
-                                            {tab.label}
-                                        </TabsTrigger>
-                                    ))}
-                                </TabsList>
+                                <div className="w-full overflow-x-auto overflow-y-hidden sm:overflow-visible [-webkit-overflow-scrolling:touch]">
+                                    <TabsList className="inline-flex h-auto w-full min-w-0 flex-nowrap justify-center gap-0 p-1 sm:w-auto">
+                                        <Filter className="h-4 w-4 shrink-0 text-muted-foreground mx-1.5 self-center hidden sm:block" aria-hidden />
+                                        {TABS.map((tab) => (
+                                            <TabsTrigger key={tab.id} value={tab.id} className="flex-none min-h-[44px] px-3 sm:px-5 py-2 text-xs sm:text-sm font-semibold sm:flex-1">
+                                                {tab.label}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                </div>
                             </Tabs>
                         </div>
 
