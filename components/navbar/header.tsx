@@ -8,9 +8,16 @@ import { MobileNav } from "@/components/navbar/mobile-nav";
 import { GitHubStars } from "@/components/github-stars";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
+
+interface NavLink {
+	label: string;
+	href: string;
+	isNew?: boolean;
+}
 export const navLinks = [
 	{ label: "Home", href: "/" },
 	{ label: "Features", href: "/#features" },
+	{ label: "Resume Builder", href: "/tools/resume-builder", isNew: true },
 	{ label: "CP Leaderboard", href: "/cp" },
 	{ label: "About", href: "/about" },
 	{ label: "Contact", href: "/contact" },
@@ -38,6 +45,13 @@ export function Header() {
 								key={i}
 							>
 								{link.label}
+
+								{link.isNew && (
+									<span className="ml-2 rounded bg-green-500/15 px-1.5 py-0.5 text-[10px] font-bold text-green-600 animate-pulse border border-green-500/20">
+                                      NEW
+                                    </span>
+								)}
+
 							</a>
 						))}
 					</div>
