@@ -605,7 +605,7 @@ export default function ExamRoutinePageClient() {
 
         setDownloading(true);
         try {
-            const html2canvas = (await import('html2canvas')).default;
+            const html2canvas = (await import('html2canvas-pro')).default;
 
             const wrapper = document.createElement('div');
             wrapper.style.width = '800px';

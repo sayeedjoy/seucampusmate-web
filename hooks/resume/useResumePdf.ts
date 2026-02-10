@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import type { RefObject } from "react";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
 import type { ResumeData } from "@/lib/resume/types";
 function nextFrame(): Promise<void> {
