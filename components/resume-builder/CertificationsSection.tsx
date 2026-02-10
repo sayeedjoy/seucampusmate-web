@@ -28,7 +28,7 @@ export function CertificationsSection({ certifications, onAdd, onUpdate, onRemov
           <TooltipContent>Add certification</TooltipContent>
         </Tooltip>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2.5">
         {certifications.map((c) => (
           <div key={c.id} className="flex items-center gap-2">
             <Input

@@ -52,7 +52,7 @@ export function ExperienceSection({ experience, onAdd, onUpdate, onRemove }: Exp
               value={exp.org}
               onChange={(e) => onUpdate(exp.id, { org: e.target.value })}
             />
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <Input placeholder="Role" value={exp.role} onChange={(e) => onUpdate(exp.id, { role: e.target.value })} />
               <Input placeholder="Duration" value={exp.duration} onChange={(e) => onUpdate(exp.id, { duration: e.target.value })} />
             </div>

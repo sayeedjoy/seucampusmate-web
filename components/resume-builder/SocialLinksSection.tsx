@@ -30,27 +30,29 @@ export function SocialLinksSection({ links, onAdd, onUpdate, onRemove }: SocialL
       </CardHeader>
       <CardContent className="space-y-3">
         {links.map((link) => (
-          <div key={link.id} className="flex items-center gap-2">
+          <div key={link.id} className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Input
               placeholder="LinkedIn / Portfolio"
               value={link.platform}
               onChange={(e) => onUpdate(link.id, { platform: e.target.value })}
-              className="w-[34%] shrink-0"
+              className="w-full sm:w-1/3 sm:shrink-0"
             />
-            <Input
-              placeholder="URL"
-              value={link.url}
-              onChange={(e) => onUpdate(link.id, { url: e.target.value })}
-              className="min-w-0 flex-1"
-            />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="shrink-0 text-destructive hover:text-destructive" onClick={() => onRemove(link.id)} aria-label="Remove link">
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Remove link</TooltipContent>
-            </Tooltip>
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              <Input
+                placeholder="URL"
+                value={link.url}
+                onChange={(e) => onUpdate(link.id, { url: e.target.value })}
+                className="min-w-0 flex-1"
+              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="shrink-0 text-destructive hover:text-destructive" onClick={() => onRemove(link.id)} aria-label="Remove link">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Remove link</TooltipContent>
+              </Tooltip>
+            </div>
           </div>
         ))}
       </CardContent>

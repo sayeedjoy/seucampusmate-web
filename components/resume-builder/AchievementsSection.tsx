@@ -28,7 +28,7 @@ export function AchievementsSection({ achievements, onAdd, onUpdate, onRemove }:
           <TooltipContent>Add achievement</TooltipContent>
         </Tooltip>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2.5">
         {achievements.map((a) => (
           <div key={a.id} className="flex items-center gap-2">
             <Input

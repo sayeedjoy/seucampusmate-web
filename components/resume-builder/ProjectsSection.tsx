@@ -46,25 +46,26 @@ export function ProjectsSection({ projects, onAdd, onUpdate, onRemove }: Project
               </TooltipTrigger>
               <TooltipContent>Remove project</TooltipContent>
             </Tooltip>
-            <Input
-              className="mb-2 font-semibold"
-              placeholder="Title"
-              value={proj.name}
-              onChange={(e) => onUpdate(proj.id, { name: e.target.value })}
-            />
-            <Input
-              className="mb-2"
-              placeholder="Tools / Methods (optional)"
-              value={proj.tools}
-              onChange={(e) => onUpdate(proj.id, { tools: e.target.value })}
-            />
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <Input
+                className="font-semibold"
+                placeholder="Title"
+                value={proj.name}
+                onChange={(e) => onUpdate(proj.id, { name: e.target.value })}
+              />
+              <Input
+                placeholder="Tools / Methods (optional)"
+                value={proj.tools}
+                onChange={(e) => onUpdate(proj.id, { tools: e.target.value })}
+              />
+            </div>
             <Textarea
-              className="mb-2 min-h-20"
+              className="mt-2 min-h-20"
               placeholder="Description (what you did + outcome)"
               value={proj.description}
               onChange={(e) => onUpdate(proj.id, { description: e.target.value })}
             />
-            <Input placeholder="Link (optional)" value={proj.link} onChange={(e) => onUpdate(proj.id, { link: e.target.value })} />
+            <Input className="mt-2" placeholder="Link (optional)" value={proj.link} onChange={(e) => onUpdate(proj.id, { link: e.target.value })} />
           </div>
         ))}
       </CardContent>

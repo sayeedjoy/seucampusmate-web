@@ -22,18 +22,20 @@ export function SkillsSection({
       <CardHeader>
         <CardTitle>Skills</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="resume-technical">Technical Skills</Label>
-          <Input id="resume-technical" value={technicalSkills} onChange={onField("technicalSkills")} placeholder="Excel, PowerPoint, Python, MATLAB..." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="resume-soft">Soft Skills</Label>
-          <Input id="resume-soft" value={softSkills} onChange={onField("softSkills")} placeholder="Communication, Teamwork..." />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="resume-languages">Languages</Label>
-          <Input id="resume-languages" value={languages} onChange={onField("languages")} placeholder="Bangla (Native), English (Professional)" />
+      <CardContent>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 sm:gap-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="resume-technical">Technical Skills</Label>
+            <Input id="resume-technical" value={technicalSkills} onChange={onField("technicalSkills")} placeholder="Excel, PowerPoint, Python, MATLAB..." />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="resume-soft">Soft Skills</Label>
+            <Input id="resume-soft" value={softSkills} onChange={onField("softSkills")} placeholder="Communication, Teamwork..." />
+          </div>
+          <div className="space-y-1.5 sm:col-span-2 lg:col-span-1">
+            <Label htmlFor="resume-languages">Languages</Label>
+            <Input id="resume-languages" value={languages} onChange={onField("languages")} placeholder="Bangla (Native), English (Professional)" />
+          </div>
         </div>
       </CardContent>
     </Card>

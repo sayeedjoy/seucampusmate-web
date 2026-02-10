@@ -51,7 +51,7 @@ export function EducationSection({ education, onAdd, onUpdate, onRemove }: Educa
               value={edu.institute}
               onChange={(e) => onUpdate(edu.id, { institute: e.target.value })}
             />
-            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <Input placeholder="Degree / Program" value={edu.degree} onChange={(e) => onUpdate(edu.id, { degree: e.target.value })} />
               <Input placeholder="Year / Duration" value={edu.year} onChange={(e) => onUpdate(edu.id, { year: e.target.value })} />
             </div>
