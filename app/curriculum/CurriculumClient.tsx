@@ -392,12 +392,12 @@ function SemesterCard({ semester }: { semester: Semester }) {
                             className="border-b border-border last:border-b-0"
                         >
                             <AccordionTrigger className="min-h-[44px] py-2 hover:no-underline touch-manipulation">
-                                <div className="flex flex-1 items-center justify-between gap-2 pr-1 text-left">
+                                <div className="flex flex-1 items-center justify-between gap-2 pr-1 text-left overflow-hidden">
                                     <div className="flex items-center gap-2 min-w-0">
-                                        <Badge className="shrink-0 text-[9px] sm:text-[10px] font-bold tracking-wide bg-primary text-primary-foreground border-none px-1.5 py-0 sm:px-2 rounded uppercase">
+                                        <Badge className="shrink-0 max-w-[100px] sm:max-w-[120px] truncate text-[9px] sm:text-[10px] font-bold tracking-wide bg-primary text-primary-foreground border-none px-1.5 py-0 sm:px-2 rounded uppercase">
                                             {course.code}
                                         </Badge>
-                                        <span className="text-[11px] sm:text-xs font-medium text-foreground truncate">
+                                        <span className="text-[11px] sm:text-xs font-medium text-foreground line-clamp-2">
                                             {course.title}
                                         </span>
                                     </div>
@@ -436,7 +436,7 @@ function SemesterCard({ semester }: { semester: Semester }) {
                                                         None
                                                     </span>
                                                 ) : (
-                                                    <span className="font-medium text-foreground">
+                                                    <span className="font-medium text-foreground break-all">
                                                         {course.prerequisite}
                                                     </span>
                                                 )}
