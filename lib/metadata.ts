@@ -132,6 +132,12 @@ export const pageMetadata = {
       "Generate professional cover pages for your assignments with our easy-to-use cover page generator. Customizable fields and instant PDF download for SEU students.",
     path: "/tools/coverpage",
   },
+  resumeBuilder: {
+    title: "Resume Builder",
+    description:
+      "Build a professional, ATS-friendly resume instantly. Add personal info, education, experience, projects, skills, and download as PDF.",
+    path: "/tools/resume-builder",
+  },
   privacy: {
     title: "Privacy Policy",
     description:
