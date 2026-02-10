@@ -10,6 +10,7 @@ import {
   FaHeartbeat,
   FaBook,
   FaListAlt,
+  FaUserEdit,
 } from "react-icons/fa"
 import type { Integration } from "./types"
 
@@ -65,6 +66,20 @@ const CPIcon = () => (
 )
 
 export const integrations: Integration[] = [
+
+  {
+    id: 0, // Unique ID
+    name: "Resume Builder",
+    description:
+        "Build a professional resume instantly. Live preview...",
+    icon: (
+        <IconWrap iconClass={`${iconBase} text-cyan-600 dark:text-cyan-400`} bgClass="bg-cyan-100 dark:bg-cyan-950/50">
+          <FaUserEdit />
+        </IconWrap>
+    ),
+    href: "/tools/resume-builder",
+  },
+
   {
     id: 1,
     name: "CGPA Calculator",

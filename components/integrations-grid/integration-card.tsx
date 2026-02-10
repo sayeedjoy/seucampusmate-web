@@ -2,9 +2,17 @@ import { ArrowUpRight } from "lucide-react"
 import type { Integration } from "./types"
 
 export function IntegrationCard({ integration }: { integration: Integration }) {
+    const isNew = integration.id === 0;
   return (
     <div className="group relative flex flex-col rounded-2xl border border-border bg-card p-5 sm:p-6">
-      {/* Icon */}
+
+        {isNew && (
+            <span className="absolute top-4 right-4 inline-flex animate-pulse items-center rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-600 border border-green-200 dark:bg-green-900/30 dark:text-green-400">
+          NEW
+        </span>
+        )}
+
+        {/* Icon */}
       <div className="mb-4 shrink-0">{integration.icon}</div>
 
       {/* Name */}
