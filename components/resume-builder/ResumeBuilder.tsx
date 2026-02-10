@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Download,
   RotateCcw,
@@ -80,8 +80,62 @@ export default function ResumeBuilder() {
   const printRootRef = useRef<HTMLDivElement>(null);
   const { downloadPDF, isGenerating } = useResumePdf(printRootRef, data);
 
+  const tabsScrollRef = useRef<HTMLDivElement>(null);
+
   const [scale, setScale] = useState(1);
   const [isWide, setIsWide] = useState(false);
+
+  /* Horizontal scroll on tabs via mouse wheel + click-drag */
+  useEffect(() => {
+    const el = tabsScrollRef.current;
+    if (!el) return;
+
+    // Convert vertical wheel to horizontal scroll
+    const onWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY || e.deltaX;
+    };
+
+    // Click-and-drag scrolling
+    let isDragging = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    const onPointerDown = (e: PointerEvent) => {
+      // Only handle primary button on the scroll container itself (not on tab buttons)
+      if (e.button !== 0) return;
+      isDragging = true;
+      startX = e.clientX;
+      scrollStart = el.scrollLeft;
+      el.setPointerCapture(e.pointerId);
+      el.style.cursor = "grabbing";
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      el.scrollLeft = scrollStart - (e.clientX - startX);
+    };
+    const onPointerUp = (e: PointerEvent) => {
+      if (!isDragging) return;
+      isDragging = false;
+      el.releasePointerCapture(e.pointerId);
+      el.style.cursor = "";
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("pointerdown", onPointerDown);
+    el.addEventListener("pointermove", onPointerMove);
+    el.addEventListener("pointerup", onPointerUp);
+    el.addEventListener("pointercancel", onPointerUp);
+
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("pointerdown", onPointerDown);
+      el.removeEventListener("pointermove", onPointerMove);
+      el.removeEventListener("pointerup", onPointerUp);
+      el.removeEventListener("pointercancel", onPointerUp);
+    };
+  }, [isWide]);
 
   /* Switch layout at lg (1024px) instead of xl */
   useEffect(() => {
@@ -303,19 +357,19 @@ export default function ResumeBuilder() {
                   defaultValue="personal"
                   className="flex h-full flex-col gap-0"
                 >
-                  <div className="shrink-0 border-b bg-muted/30 px-2 pt-2">
+                  <div ref={tabsScrollRef} className="shrink-0 cursor-grab overflow-x-auto border-b bg-muted/30 px-2 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                     <TabsList
                       variant="line"
-                      className="h-auto w-full flex-wrap justify-start gap-0"
+                      className="inline-flex h-auto w-max min-w-full justify-start gap-0"
                     >
                       {SECTIONS.map((s) => (
                         <TabsTrigger
                           key={s.value}
                           value={s.value}
-                          className="gap-1.5 px-3 py-2 text-xs xl:text-sm"
+                          className="shrink-0 gap-1.5 px-3 py-2 text-xs xl:text-sm"
                         >
                           <s.icon className="h-3.5 w-3.5" />
-                          <span className="hidden sm:inline">{s.label}</span>
+                          {s.label}
                         </TabsTrigger>
                       ))}
                     </TabsList>
