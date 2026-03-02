@@ -36,6 +36,10 @@ const TuitionCalculator: React.FC = () => {
     const [totalCredits, setTotalCredits] = useState<string>('');
     const [laboratoryFee, setLaboratoryFee] = useState<string>('0');
     const [waiverPercentage, setWaiverPercentage] = useState<string>('');
+
+    // Bus Fee Toggle State
+    const [isBusFeeEnabled, setIsBusFeeEnabled] = useState<boolean>(false);
+
     const [result, setResult] = useState<CalculationResult | null>(null);
     const [errors, setErrors] = useState<ValidationErrors>({});
 
@@ -80,14 +84,15 @@ const TuitionCalculator: React.FC = () => {
         perCredit: number,
         credits: number,
         labFee: number,
-        waiver: number
+        waiver: number,
+        busFee: number
     ): CalculationResult => {
         // Base calculation
         const baseTuition = perCredit * credits;
-        const totalFee = ((100 - waiver) / 100) * baseTuition + labFee;
+        const totalFee = ((100 - waiver) / 100) * baseTuition + labFee + busFee;
 
         // Installment calculation
-        const fullAmount = baseTuition + labFee;
+        const fullAmount = baseTuition + labFee + busFee;
         const threshold40 = 0.4 * fullAmount;
         const threshold30 = 0.3 * fullAmount;
 
@@ -143,19 +148,20 @@ const TuitionCalculator: React.FC = () => {
         const labFeeNum = laboratoryFee.trim() === '' ? 0 : parseFloat(laboratoryFee) || 0;
         const waiverNum = parseFloat(waiverPercentage);
 
+        // Bus Fee logic: Add total 3600 if enabled
+        const busNum = isBusFeeEnabled ? 3600 : 0;
+
         if (
             !isNaN(perCreditNum) && perCreditNum >= 0 &&
             !isNaN(creditsNum) && creditsNum >= 0 &&
             !isNaN(labFeeNum) && labFeeNum >= 0 &&
             !isNaN(waiverNum) && waiverNum >= 0 && waiverNum <= 100
         ) {
-            setResult(calculateFees(perCreditNum, creditsNum, labFeeNum, waiverNum));
+            setResult(calculateFees(perCreditNum, creditsNum, labFeeNum, waiverNum, busNum));
         } else {
             setResult(null);
         }
-    }, [perCreditFee, totalCredits, laboratoryFee, waiverPercentage, calculateFees]);
-
-
+    }, [perCreditFee, totalCredits, laboratoryFee, waiverPercentage, isBusFeeEnabled, calculateFees]);
 
     return (
         <div className="space-y-8">
@@ -255,7 +261,31 @@ const TuitionCalculator: React.FC = () => {
                                 <FieldError id={`${idScope}-waiver-error`}>{errors.waiverPercentage}</FieldError>
                             )}
                         </Field>
+
+                        {/* Bus Fee Toggle Section */}
+                        <div className="md:col-span-2">
+                            <div className="flex flex-col space-y-4 rounded-xl border border-border p-5 bg-card shadow-sm transition-all">
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-0.5 pr-4">
+                                        <h4 className="text-sm font-semibold text-foreground">Include Total Bus Fee</h4>
+                                        <p className="text-xs text-muted-foreground">
+                                            Add the full bus fee ৳300 for Tri-semester or ৳450 for Bi-semester.
+                                        </p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        role="switch"
+                                        aria-checked={isBusFeeEnabled}
+                                        onClick={() => setIsBusFeeEnabled(!isBusFeeEnabled)}
+                                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${isBusFeeEnabled ? 'bg-green-500' : 'bg-muted-foreground/30'}`}
+                                    >
+                                        <span className={`pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform duration-200 ease-in-out ${isBusFeeEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <Alert className="mt-6">
                         <AlertTitle>Note</AlertTitle>
                         <AlertDescription>
