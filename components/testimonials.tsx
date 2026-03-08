@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Marquee } from "@/components/ui/marquee";
@@ -86,8 +87,14 @@ const TestimonialList = () =>
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Avatar className="size-10">
-            <AvatarImage src={testimonial.avatar.trim()} alt={testimonial.name} />
+          <Avatar className="size-10 overflow-hidden">
+            <div className="relative w-full h-full">
+              <AvatarImage
+                  src={testimonial.avatar.trim()}
+                  alt={testimonial.name}
+                  className="object-cover size-full text-transparent"
+              />
+            </div>
             <AvatarFallback className="bg-primary font-medium text-primary-foreground text-xl">
               {testimonial.name.charAt(0)}
             </AvatarFallback>

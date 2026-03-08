@@ -34,6 +34,7 @@ export function Logo({ className }: LogoProps) {
           alt="CampusMate Logo"
           fill
           className="object-contain"
+          priority
         />
       </div>
       <span className="font-semibold text-lg sm:text-xl md:text-2xl lg:text-2xl text-foreground">
