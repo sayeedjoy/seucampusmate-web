@@ -138,3 +138,17 @@ lib/
 ## Contributing
 
 Want to contribute? See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Contributors
+
+Built with support from an amazing open-source community. Every contribution, big or small, helps SEU CampusMate grow.
+
+<p align="center">
+  <a href="https://github.com/sayeedjoy/seucampusmate-web/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=sayeedjoy/seucampusmate-web" alt="Project contributors" />
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/sayeedjoy/seucampusmate-web/graphs/contributors"><strong>View all contributors on GitHub</strong></a>
+</p>
