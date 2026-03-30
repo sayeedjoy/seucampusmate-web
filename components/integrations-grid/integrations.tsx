@@ -16,7 +16,7 @@ export function IntegrationsSection2() {
   const hasMore = integrations.length > INITIAL_VISIBLE
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24">
+    <section id="features" className="scroll-mt-20 py-16 sm:py-20 lg:py-24">
       <Container>
         {/* Header */}
         <div className="mx-auto mb-12 w-full max-w-2xl text-center sm:mb-16 lg:flex lg:flex-col lg:items-center">
