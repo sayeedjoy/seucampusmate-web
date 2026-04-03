@@ -1,5 +1,5 @@
 "use client";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/theme-provider";
 import { useScroll } from "@/hooks/use-scroll";
 import { Logo } from "@/components/navbar/logo";
 import { Button, buttonVariants } from "@/components/ui/button";

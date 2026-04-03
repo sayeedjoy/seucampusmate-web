@@ -6,7 +6,8 @@ import { ExamApiResponse, ExamResult } from '@/lib/exam-utils';
 import { toast } from 'sonner';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Eye, Loader2, X } from 'lucide-react';
 import RoutineSearch from '@/components/exam-routine/routine-search';
 import type { ValidationVariant } from '@/components/exam-routine/routine-search';
 import ExamRoutineResults from '@/components/exam-routine/routine-result-card';
@@ -19,6 +20,36 @@ interface MultipleExamResults {
     };
 }
 
+interface PreviewRow {
+    program: string;
+    slot: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    courseCode: string;
+    courseTitle: string;
+    students: string;
+    faculty: string;
+}
+
+interface PreviewResponse {
+    totalRows: number;
+    previewCount: number;
+    rows: PreviewRow[];
+}
+
+const PREVIEW_COLUMNS: Array<{ key: keyof PreviewRow; label: string }> = [
+    { key: 'program', label: 'Program' },
+    { key: 'slot', label: 'Slot' },
+    { key: 'date', label: 'Date' },
+    { key: 'startTime', label: 'Start Time' },
+    { key: 'endTime', label: 'End Time' },
+    { key: 'courseCode', label: 'Course Code' },
+    { key: 'courseTitle', label: 'Course Title' },
+    { key: 'students', label: 'Students' },
+    { key: 'faculty', label: 'Faculty' },
+];
+
 export default function ExamRoutinePageClient() {
     const [courseCode, setCourseCode] = useState('');
     const [courseCodes, setCourseCodes] = useState<string[]>([]);
@@ -30,6 +61,10 @@ export default function ExamRoutinePageClient() {
     const [validationVariant, setValidationVariant] = useState<ValidationVariant>('error');
     const [showWarning, setShowWarning] = useState(true);
     const [downloading, setDownloading] = useState(false);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewLoading, setPreviewLoading] = useState(false);
+    const [previewError, setPreviewError] = useState<string | null>(null);
+    const [previewData, setPreviewData] = useState<PreviewResponse | null>(null);
     const scheduleRef = useRef<HTMLDivElement>(null);
 
     // Auto-refresh when page becomes visible (user comes back to tab)
@@ -713,6 +748,32 @@ export default function ExamRoutinePageClient() {
         }
     }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
 
+    const fetchRoutinePreview = useCallback(async () => {
+        try {
+            setPreviewLoading(true);
+            setPreviewError(null);
+            const response = await fetch('/api/exams/preview?limit=20', { cache: 'no-store' });
+            if (!response.ok) {
+                throw new Error('Failed to fetch preview data');
+            }
+            const data = (await response.json()) as PreviewResponse;
+            setPreviewData(data);
+        } catch (err) {
+            const message = err instanceof Error ? err.message : 'Failed to fetch preview data';
+            setPreviewError(message);
+            setPreviewData(null);
+        } finally {
+            setPreviewLoading(false);
+        }
+    }, []);
+
+    const handlePreviewOpenChange = useCallback((open: boolean) => {
+        setPreviewOpen(open);
+        if (open) {
+            void fetchRoutinePreview();
+        }
+    }, [fetchRoutinePreview]);
+
     return (
         <div className="pt-12 md:pt-16">
             <Container className="py-6 md:py-8">
@@ -725,6 +786,62 @@ export default function ExamRoutinePageClient() {
                             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                                 Find your exam schedules by entering course codes.
                             </p>
+                            <div className="mt-4 flex justify-center">
+                                <Dialog open={previewOpen} onOpenChange={handlePreviewOpenChange}>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline">
+                                            <Eye className="size-4" />
+                                            Preview Current Routine
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-[95vw] w-[1100px]">
+                                        <DialogHeader>
+                                            <DialogTitle>Current Exam Routine Preview</DialogTitle>
+                                            <DialogDescription>
+                                                Showing first {previewData?.previewCount ?? 0} rows
+                                                {previewData ? ` of ${previewData.totalRows.toLocaleString()} total` : ''}.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        {previewLoading ? (
+                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <Loader2 className="size-4 animate-spin" />
+                                                Loading preview...
+                                            </div>
+                                        ) : previewError ? (
+                                            <Alert variant="destructive">
+                                                <AlertDescription>{previewError}</AlertDescription>
+                                            </Alert>
+                                        ) : previewData && previewData.rows.length > 0 ? (
+                                            <div className="max-h-[65vh] overflow-auto rounded-md border">
+                                                <table className="w-full text-xs">
+                                                    <thead className="bg-muted/50">
+                                                        <tr>
+                                                            {PREVIEW_COLUMNS.map(col => (
+                                                                <th key={col.key} className="px-3 py-2 text-left font-medium whitespace-nowrap">
+                                                                    {col.label}
+                                                                </th>
+                                                            ))}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y">
+                                                        {previewData.rows.map((row, i) => (
+                                                            <tr key={i} className="hover:bg-muted/30">
+                                                                {PREVIEW_COLUMNS.map(col => (
+                                                                    <td key={col.key} className="px-3 py-2 whitespace-nowrap max-w-[220px] truncate">
+                                                                        {row[col.key]}
+                                                                    </td>
+                                                                ))}
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        ) : (
+                                            <p className="text-sm text-muted-foreground">No exam routine data found.</p>
+                                        )}
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
                         </div>
 
                         {/* Important Notice */}

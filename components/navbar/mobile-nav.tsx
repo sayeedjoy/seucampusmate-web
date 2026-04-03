@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { MenuIcon, XIcon } from "lucide-react";
 import React from "react";
 import { createPortal } from "react-dom";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/theme-provider";
 import { navLinks } from "@/components/navbar/header";
 import { GitHubStars } from "@/components/github-stars";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
