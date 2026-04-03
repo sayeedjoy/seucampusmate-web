@@ -5,6 +5,7 @@ import { db } from '@/lib/db';
 import { adminUsers } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { verifyPassword } from '@/lib/auth-utils';
+import { isSuperAdminEmail } from '@/lib/superadmin';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -37,12 +38,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
   callbacks: {
     jwt({ token, user }) {
-      if (user) token.id = user.id;
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+      token.isSuperAdmin = isSuperAdminEmail((user?.email ?? token.email) as string | undefined);
       return token;
     },
     session({ session, token }) {
       if (token.id && session.user) {
         session.user.id = token.id as string;
+        session.user.isSuperAdmin = Boolean(token.isSuperAdmin);
       }
       return session;
     },

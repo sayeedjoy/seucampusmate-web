@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import { db } from '@/lib/db';
 import { examSchedules, uploadHistory } from '@/lib/db/schema';
+import { clearExamCache, populateExamCache } from '@/lib/exam-cache';
 
 const REQUIRED_COLUMNS = [
   'Program', 'Slot', 'Date', 'Start Time', 'End Time',
@@ -121,6 +122,10 @@ export async function POST(request: NextRequest) {
           status: 'success',
         });
       });
+
+      // Warm the cache immediately so the first read after upload is instant
+      await clearExamCache();
+      await populateExamCache();
 
       return NextResponse.json({ success: true, rowsInserted: rows.length });
     } catch (error) {

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { baseMetadata } from "@/lib/metadata";
-import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,27 +7,6 @@ import { Header } from "@/components/navbar/header";
 import { Footer } from "@/components/footer";
 import { headers } from "next/headers";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-  display: 'swap',
-  adjustFontFallback: true,
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: 'swap',
-  adjustFontFallback: true,
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: 'swap',
-  adjustFontFallback: true,
-});
 
 export const metadata: Metadata = {
   ...baseMetadata,
@@ -50,10 +28,23 @@ export default async function RootLayout({
   const isAdmin = pathname.startsWith('/admin');
 
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={
+        {
+          "--font-sans":
+            'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          "--font-geist-sans":
+            'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          "--font-geist-mono":
+            'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+        } as Record<string, string>
+      }
+    >
       <head />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="antialiased"
         suppressHydrationWarning
       >
         <ThemeProvider

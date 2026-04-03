@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo, useCallback, startTransition } from 'react';
+import { useState, useRef, useMemo, useCallback, startTransition } from 'react';
 import { Container } from '@/components/ui/container';
 import { ExamApiResponse, ExamResult } from '@/lib/exam-utils';
 import { toast } from 'sonner';
 import { Alert, AlertAction, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Eye, Loader2, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import RoutineSearch from '@/components/exam-routine/routine-search';
 import type { ValidationVariant } from '@/components/exam-routine/routine-search';
 import ExamRoutineResults from '@/components/exam-routine/routine-result-card';
@@ -20,36 +19,6 @@ interface MultipleExamResults {
     };
 }
 
-interface PreviewRow {
-    program: string;
-    slot: string;
-    date: string;
-    startTime: string;
-    endTime: string;
-    courseCode: string;
-    courseTitle: string;
-    students: string;
-    faculty: string;
-}
-
-interface PreviewResponse {
-    totalRows: number;
-    previewCount: number;
-    rows: PreviewRow[];
-}
-
-const PREVIEW_COLUMNS: Array<{ key: keyof PreviewRow; label: string }> = [
-    { key: 'program', label: 'Program' },
-    { key: 'slot', label: 'Slot' },
-    { key: 'date', label: 'Date' },
-    { key: 'startTime', label: 'Start Time' },
-    { key: 'endTime', label: 'End Time' },
-    { key: 'courseCode', label: 'Course Code' },
-    { key: 'courseTitle', label: 'Course Title' },
-    { key: 'students', label: 'Students' },
-    { key: 'faculty', label: 'Faculty' },
-];
-
 export default function ExamRoutinePageClient() {
     const [courseCode, setCourseCode] = useState('');
     const [courseCodes, setCourseCodes] = useState<string[]>([]);
@@ -61,86 +30,7 @@ export default function ExamRoutinePageClient() {
     const [validationVariant, setValidationVariant] = useState<ValidationVariant>('error');
     const [showWarning, setShowWarning] = useState(true);
     const [downloading, setDownloading] = useState(false);
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewLoading, setPreviewLoading] = useState(false);
-    const [previewError, setPreviewError] = useState<string | null>(null);
-    const [previewData, setPreviewData] = useState<PreviewResponse | null>(null);
     const scheduleRef = useRef<HTMLDivElement>(null);
-
-    // Auto-refresh when page becomes visible (user comes back to tab)
-    useEffect(() => {
-        let lastRefreshTime = 0;
-        const REFRESH_COOLDOWN = 10000; // 10 seconds cooldown between refreshes
-
-        const handleVisibilityChange = () => {
-            const now = Date.now();
-            // Avoid refreshing too frequently
-            if (!document.hidden && Object.keys(results).length > 0 && (now - lastRefreshTime) > REFRESH_COOLDOWN) {
-                lastRefreshTime = now;
-                // Page is now visible and we have results, refresh them silently
-                const refetchResults = async () => {
-                    const currentCodes = Object.keys(results);
-
-                    try {
-                        // Re-fetch each course code with cache-busting timestamp
-                        for (const code of currentCodes) {
-                            const examResponse = await fetch(`/api/exams?code=${encodeURIComponent(code)}&timestamp=${Date.now()}`);
-                            if (examResponse.ok) {
-                                const examData = await examResponse.json();
-                                // Use startTransition for non-urgent updates
-                                startTransition(() => {
-                                    setResults(prev => ({
-                                        ...prev,
-                                        [code]: { data: examData }
-                                    }));
-                                });
-                            }
-                        }
-                    } catch (err) {
-                        console.error('Failed to refresh data on visibility change:', err);
-                    }
-                };
-
-                refetchResults();
-            }
-        };
-
-        document.addEventListener('visibilitychange', handleVisibilityChange, { passive: true });
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-        };
-    }, [results]);
-
-    // Periodic refresh every 5 minutes when results are displayed
-    useEffect(() => {
-        if (Object.keys(results).length === 0) return;
-
-        const intervalId = setInterval(async () => {
-            const currentCodes = Object.keys(results);
-
-            try {
-                // Silently re-fetch each course code
-                for (const code of currentCodes) {
-                    const examResponse = await fetch(`/api/exams?code=${encodeURIComponent(code)}&timestamp=${Date.now()}`);
-                    if (examResponse.ok) {
-                        const examData = await examResponse.json();
-                        // Use startTransition for non-urgent background updates
-                        startTransition(() => {
-                            setResults(prev => ({
-                                ...prev,
-                                [code]: { data: examData }
-                            }));
-                        });
-                    }
-                }
-            } catch (err) {
-                console.error('Failed to refresh data periodically:', err);
-            }
-        }, 5 * 60 * 1000); // 5 minutes
-
-        return () => clearInterval(intervalId);
-    }, [results]);
 
     // Validate course code format (must include section like ABC123.2)
     const validateCourseCode = useCallback((code: string): boolean => {
@@ -249,7 +139,11 @@ export default function ExamRoutinePageClient() {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to refresh exam data');
+                const payload = await response.json().catch(() => ({} as { error?: string }));
+                if (response.status === 429) {
+                    throw new Error(payload.error ?? 'Too many refresh requests. Please try again shortly.');
+                }
+                throw new Error(payload.error ?? 'Failed to refresh exam data');
             }
 
             await response.json(); // Consume the response
@@ -351,11 +245,17 @@ export default function ExamRoutinePageClient() {
                 const response = await fetch(`/api/exams?code=${encodeURIComponent(codesToSearch[0])}`);
 
                 if (!response.ok) {
+                    const payload = await response.json().catch(() => ({} as { error?: string }));
+                    if (response.status === 429) {
+                        setValidationVariant('warning');
+                        setValidationError(payload.error ?? 'Too many search requests. Please wait a moment and try again.');
+                        return;
+                    }
                     if (response.status === 404) {
                         setValidationVariant('error');
                         setValidationError(`Course section "${codesToSearch[0]}" not found. Please check the course code and section number.`);
                     } else {
-                        throw new Error(`Failed to fetch data for ${codesToSearch[0]}`);
+                        throw new Error(payload.error ?? `Failed to fetch data for ${codesToSearch[0]}`);
                     }
                     return;
                 }
@@ -377,7 +277,13 @@ export default function ExamRoutinePageClient() {
                 const response = await fetch(`/api/exams?codes=${encodeURIComponent(codesParam)}`);
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch exam data');
+                    const payload = await response.json().catch(() => ({} as { error?: string }));
+                    if (response.status === 429) {
+                        setValidationVariant('warning');
+                        setValidationError(payload.error ?? 'Too many search requests. Please wait a moment and try again.');
+                        return;
+                    }
+                    throw new Error(payload.error ?? 'Failed to fetch exam data');
                 }
 
                 const batchData = await response.json();
@@ -748,32 +654,6 @@ export default function ExamRoutinePageClient() {
         }
     }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
 
-    const fetchRoutinePreview = useCallback(async () => {
-        try {
-            setPreviewLoading(true);
-            setPreviewError(null);
-            const response = await fetch('/api/exams/preview?limit=20', { cache: 'no-store' });
-            if (!response.ok) {
-                throw new Error('Failed to fetch preview data');
-            }
-            const data = (await response.json()) as PreviewResponse;
-            setPreviewData(data);
-        } catch (err) {
-            const message = err instanceof Error ? err.message : 'Failed to fetch preview data';
-            setPreviewError(message);
-            setPreviewData(null);
-        } finally {
-            setPreviewLoading(false);
-        }
-    }, []);
-
-    const handlePreviewOpenChange = useCallback((open: boolean) => {
-        setPreviewOpen(open);
-        if (open) {
-            void fetchRoutinePreview();
-        }
-    }, [fetchRoutinePreview]);
-
     return (
         <div className="pt-12 md:pt-16">
             <Container className="py-6 md:py-8">
@@ -786,62 +666,6 @@ export default function ExamRoutinePageClient() {
                             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                                 Find your exam schedules by entering course codes.
                             </p>
-                            <div className="mt-4 flex justify-center">
-                                <Dialog open={previewOpen} onOpenChange={handlePreviewOpenChange}>
-                                    <DialogTrigger asChild>
-                                        <Button variant="outline">
-                                            <Eye className="size-4" />
-                                            Preview Current Routine
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="max-w-[95vw] w-[1100px]">
-                                        <DialogHeader>
-                                            <DialogTitle>Current Exam Routine Preview</DialogTitle>
-                                            <DialogDescription>
-                                                Showing first {previewData?.previewCount ?? 0} rows
-                                                {previewData ? ` of ${previewData.totalRows.toLocaleString()} total` : ''}.
-                                            </DialogDescription>
-                                        </DialogHeader>
-                                        {previewLoading ? (
-                                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                                <Loader2 className="size-4 animate-spin" />
-                                                Loading preview...
-                                            </div>
-                                        ) : previewError ? (
-                                            <Alert variant="destructive">
-                                                <AlertDescription>{previewError}</AlertDescription>
-                                            </Alert>
-                                        ) : previewData && previewData.rows.length > 0 ? (
-                                            <div className="max-h-[65vh] overflow-auto rounded-md border">
-                                                <table className="w-full text-xs">
-                                                    <thead className="bg-muted/50">
-                                                        <tr>
-                                                            {PREVIEW_COLUMNS.map(col => (
-                                                                <th key={col.key} className="px-3 py-2 text-left font-medium whitespace-nowrap">
-                                                                    {col.label}
-                                                                </th>
-                                                            ))}
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y">
-                                                        {previewData.rows.map((row, i) => (
-                                                            <tr key={i} className="hover:bg-muted/30">
-                                                                {PREVIEW_COLUMNS.map(col => (
-                                                                    <td key={col.key} className="px-3 py-2 whitespace-nowrap max-w-[220px] truncate">
-                                                                        {row[col.key]}
-                                                                    </td>
-                                                                ))}
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        ) : (
-                                            <p className="text-sm text-muted-foreground">No exam routine data found.</p>
-                                        )}
-                                    </DialogContent>
-                                </Dialog>
-                            </div>
                         </div>
 
                         {/* Important Notice */}

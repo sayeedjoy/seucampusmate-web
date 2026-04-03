@@ -16,5 +16,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/admin/login');
   }
 
-  return <AdminShell>{children}</AdminShell>;
+  return (
+    <AdminShell
+      userName={session.user.name ?? 'Admin'}
+      userEmail={session.user.email ?? ''}
+      isSuperAdmin={session.user.isSuperAdmin}
+    >
+      {children}
+    </AdminShell>
+  );
 }

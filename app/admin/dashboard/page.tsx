@@ -3,12 +3,21 @@ import { examSchedules, uploadHistory, adminUsers } from '@/lib/db/schema';
 import { sql, desc, asc } from 'drizzle-orm';
 import DashboardClient from './DashboardClient';
 import { UploadHistory, ExamSchedule } from '@/lib/db/schema';
+import { auth } from '@/auth';
+import { isSuperAdminEmail } from '@/lib/superadmin';
 
 type HistoryWithAdmin = UploadHistory & { uploadedByName: string | null };
 type PreviewRow = Pick<
   ExamSchedule,
   'program' | 'slot' | 'date' | 'startTime' | 'endTime' | 'courseCode' | 'courseTitle' | 'students' | 'faculty'
 >;
+type AdminSummary = {
+  id: number;
+  name: string | null;
+  email: string;
+  createdAt: Date;
+  isSuperAdmin: boolean;
+};
 
 async function getStats() {
   const [countResult, history, previewRows] = await Promise.all([
@@ -52,7 +61,36 @@ async function getStats() {
 }
 
 export default async function DashboardPage() {
+  const session = await auth();
   const { totalRows, history, previewRows } = await getStats();
+  const isSuperAdmin = Boolean(session?.user?.isSuperAdmin);
 
-  return <DashboardClient totalRows={totalRows} history={history} previewRows={previewRows} />;
+  let admins: AdminSummary[] = [];
+  if (isSuperAdmin) {
+    const users = await db
+      .select({
+        id: adminUsers.id,
+        name: adminUsers.name,
+        email: adminUsers.email,
+        createdAt: adminUsers.createdAt,
+      })
+      .from(adminUsers)
+      .orderBy(asc(adminUsers.createdAt));
+
+    admins = users.map(user => ({
+      ...user,
+      isSuperAdmin: isSuperAdminEmail(user.email),
+    }));
+  }
+
+  return (
+    <DashboardClient
+      totalRows={totalRows}
+      history={history}
+      previewRows={previewRows}
+      isSuperAdmin={isSuperAdmin}
+      admins={admins}
+      currentAdminId={session?.user?.id ? Number(session.user.id) : null}
+    />
+  );
 }
