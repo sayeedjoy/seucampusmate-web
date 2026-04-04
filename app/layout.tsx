@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/navbar/header";
 import { Footer } from "@/components/footer";
 import { headers } from "next/headers";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,14 +33,12 @@ export default async function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
       style={
         {
-          "--font-sans":
-            'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-          "--font-geist-sans":
-            'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-          "--font-geist-mono":
-            'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+          "--font-sans": GeistSans.style.fontFamily,
+          "--font-geist-sans": GeistSans.style.fontFamily,
+          "--font-geist-mono": GeistMono.style.fontFamily,
         } as Record<string, string>
       }
     >
