@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/navbar/header";
 import { Footer } from "@/components/footer";
+import { ChatWidget } from "@/components/chatbot/ChatWidget";
 import { headers } from "next/headers";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -62,6 +63,7 @@ export default async function RootLayout({
               {!isAdmin && <Footer />}
             </div>
             <Toaster richColors position="top-right" />
+            {!isAdmin && <ChatWidget />}
           </TooltipProvider>
         </ThemeProvider>
       </body>

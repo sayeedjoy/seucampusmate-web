@@ -32,12 +32,30 @@ function normalizeHeader(value: string) {
     .toLowerCase();
 }
 
+const TIME_FIELDS = new Set(['Start Time', 'End Time']);
+
+// Excel stores times as fractions of a day (0.5 = 12:00 PM).
+// Convert to "HH:MM AM/PM" only when the raw value is a bare number fraction.
+function excelFractionToTime(value: unknown): string {
+  if (typeof value === 'number' && value >= 0 && value < 1) {
+    const totalMinutes = Math.round(value * 24 * 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const displayHour = hours % 12 || 12;
+    return `${displayHour}:${String(minutes).padStart(2, '0')} ${period}`;
+  }
+  return String(value ?? '');
+}
+
 function normalizeRow(row: Record<string, unknown>) {
   const normalized: Record<string, string> = {};
   for (const [rawKey, rawValue] of Object.entries(row)) {
     const normalizedKey = normalizeHeader(rawKey);
     const canonicalKey = HEADER_ALIASES[normalizedKey] ?? rawKey.trim();
-    normalized[canonicalKey] = String(rawValue ?? '');
+    normalized[canonicalKey] = TIME_FIELDS.has(canonicalKey)
+      ? excelFractionToTime(rawValue)
+      : String(rawValue ?? '');
   }
   return normalized;
 }
