@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LayoutDashboard, Upload, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import AdminSessionGuard from './AdminSessionGuard';
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -28,6 +29,7 @@ export default function AdminShell({
 
   return (
     <div className="min-h-screen flex">
+      <AdminSessionGuard />
       <aside className="w-56 border-r bg-muted/30 flex flex-col">
         <div className="px-4 py-5 border-b">
           <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">SEU CampusMate</p>

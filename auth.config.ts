@@ -1,8 +1,17 @@
 import type { NextAuthConfig } from 'next-auth';
+import { ADMIN_SESSION_MAX_AGE_SECONDS } from '@/lib/admin-session';
 
 export const authConfig = {
   pages: {
     signIn: '/admin/login',
+  },
+  session: {
+    strategy: 'jwt',
+    maxAge: ADMIN_SESSION_MAX_AGE_SECONDS,
+    updateAge: 5 * 60,
+  },
+  jwt: {
+    maxAge: ADMIN_SESSION_MAX_AGE_SECONDS,
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
