@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, boolean } from 'drizzle-orm/pg-core';
 
 export const adminUsers = pgTable('admin_users', {
   id: serial('id').primaryKey(),
@@ -32,6 +32,19 @@ export const uploadHistory = pgTable('upload_history', {
   uploadedAt: timestamp('uploaded_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const apiKeys = pgTable('api_keys', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  keyHash: text('key_hash').notNull().unique(),
+  keyPrefix: text('key_prefix').notNull(),
+  createdById: integer('created_by_id').references(() => adminUsers.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  lastUsedAt: timestamp('last_used_at', { withTimezone: true }),
+  isActive: boolean('is_active').notNull().default(true),
+});
+
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type ExamSchedule = typeof examSchedules.$inferSelect;
 export type UploadHistory = typeof uploadHistory.$inferSelect;
+export type ApiKey = typeof apiKeys.$inferSelect;
+export type NewApiKey = typeof apiKeys.$inferInsert;
