@@ -21,7 +21,6 @@ import { math } from '@streamdown/math';
 import { mermaid } from '@streamdown/mermaid';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import type { ChatStatus, UIMessage } from 'ai';
 
@@ -159,12 +158,7 @@ export function ChatWindow({ messages, status, onSend, onStop, onClose, onClear 
       {/* ── Header ── */}
       <div className="flex items-center gap-2.5 px-4 py-2.5 border-b border-border/50 shrink-0 bg-card">
         <div className="relative shrink-0">
-          <Avatar className="size-8">
-            <AvatarImage src="/aiicon.png" alt="AI" />
-            <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
-              AI
-            </AvatarFallback>
-          </Avatar>
+          <img src="/aiicon.png" alt="AI" className="size-8 object-contain shrink-0" />
           <span
             className={cn(
               'absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full ring-2 ring-card transition-colors duration-500',
@@ -318,12 +312,7 @@ export function ChatWindow({ messages, status, onSend, onStop, onClose, onClear 
                     ) : (
                       /* AI message — no bubble, plain prose */
                       <div className="flex gap-2.5 max-w-[96%] flex-1">
-                        <Avatar className="size-6 mt-0.5 shrink-0">
-                          <AvatarImage src="/aiicon.png" alt="AI" />
-                          <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
-                            AI
-                          </AvatarFallback>
-                        </Avatar>
+                        <img src="/aiicon.png" alt="AI" className="size-6 mt-0.5 shrink-0 object-contain" />
 
                         <div className="flex flex-col gap-1.5 min-w-0 flex-1">
                           <div className="text-sm leading-relaxed text-foreground">
@@ -384,12 +373,7 @@ export function ChatWindow({ messages, status, onSend, onStop, onClose, onClear 
                   exit={{ opacity: 0 }}
                   className="flex gap-2.5 mb-5"
                 >
-                  <Avatar className="size-6 mt-0.5 shrink-0">
-                    <AvatarImage src="/aiicon.png" alt="AI" />
-                    <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-semibold">
-                      AI
-                    </AvatarFallback>
-                  </Avatar>
+                  <img src="/aiicon.png" alt="AI" className="size-6 mt-0.5 shrink-0 object-contain" />
                   <ThinkingDots />
                 </motion.div>
               )}

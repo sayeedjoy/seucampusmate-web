@@ -21,6 +21,11 @@ const RATE_LIMIT_MESSAGE =
   'You have reached the chat limit for now. Please wait and try again later.';
 const RAG_TIMEOUT_MS = 15000;
 const SESSION_COOKIE_NAME = 'chat_session_id';
+const SESSION_COOKIE_VALUE = 'Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000';
+
+function setSessionCookie(headers: Headers, sessionId: string) {
+  headers.set('Set-Cookie', `${SESSION_COOKIE_NAME}=${sessionId}; ${SESSION_COOKIE_VALUE}`);
+}
 
 function getOrCreateSessionId(request: NextRequest): string {
   const cookies = request.cookies;
@@ -91,7 +96,7 @@ export async function POST(req: NextRequest) {
 
   if (!rateLimit.allowed) {
     const headers = rateLimitHeaders(rateLimit);
-    headers['Set-Cookie'] = `${SESSION_COOKIE_NAME}=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
+    setSessionCookie(headers, sessionId);
     return createUIMessageStreamResponse({
       headers,
       stream: createUIMessageStream({
@@ -123,7 +128,7 @@ export async function POST(req: NextRequest) {
   const lastUser = [...normalized].reverse().find((message) => message.role === 'user');
   if (!lastUser) {
     const headers = rateLimitHeaders(rateLimit);
-    headers['Set-Cookie'] = `${SESSION_COOKIE_NAME}=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
+    setSessionCookie(headers, sessionId);
     return createUIMessageStreamResponse({
       headers,
       stream: createUIMessageStream({
@@ -169,7 +174,7 @@ export async function POST(req: NextRequest) {
   });
 
   const headers = rateLimitHeaders(rateLimit);
-  headers['Set-Cookie'] = `${SESSION_COOKIE_NAME}=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
+  setSessionCookie(headers, sessionId);
 
   return createUIMessageStreamResponse({
     headers,

@@ -82,10 +82,10 @@ export function getClientIp(request: { headers: Headers; ip?: string | null }) {
   return 'unknown';
 }
 
-export function rateLimitHeaders(result: RateLimitResult): HeadersInit {
-  return {
+export function rateLimitHeaders(result: RateLimitResult): Headers {
+  return new Headers({
     'Retry-After': String(result.retryAfterSeconds),
     'X-RateLimit-Remaining': String(result.remaining),
     'X-RateLimit-Reset': String(result.resetAt),
-  };
+  });
 }
