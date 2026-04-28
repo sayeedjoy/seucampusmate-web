@@ -1,92 +1,146 @@
-import { streamText } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
+import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 import { NextRequest } from 'next/server';
+import { checkChatbotRateLimit } from '@/lib/chatbot-rate-limit';
+import { getClientIp, rateLimitHeaders } from '@/lib/rate-limit';
 
-// ── RAG helpers ──────────────────────────────────────────────────────────────
+type IncomingMessage = {
+  role: string;
+  parts?: Array<{ type: string; text?: string }>;
+  content?: string;
+};
 
-const ROUTINE_KEYWORDS = [
-  /exam/i, /routine/i, /schedule/i, /course\s*code/i,
-  /cse\s*\d/i, /eee\s*\d/i, /bba\s*\d/i, /ete\s*\d/i,
-  /when.*exam/i, /exam.*when/i, /midterm/i, /final/i,
-];
+type RagHistoryItem = {
+  role: 'user' | 'assistant';
+  content: string;
+};
 
-function detectRoutineQuery(text: string): string | null {
-  if (!ROUTINE_KEYWORDS.some((r) => r.test(text))) return null;
-  const match = text.match(/[A-Z]{2,4}\s*\d{3}(?:\.\d)?/i);
-  return match ? match[0] : text;
+const FALLBACK_MESSAGE =
+  'I am having trouble connecting right now. Please try again in a moment.';
+const RATE_LIMIT_MESSAGE =
+  'You have reached the chat limit for now. Please wait and try again later.';
+const RAG_TIMEOUT_MS = 15000;
+
+function writeAssistantText(
+  writer: Parameters<Parameters<typeof createUIMessageStream>[0]['execute']>[0]['writer'],
+  text: string
+) {
+  const idSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const textId = `text-${idSuffix}`;
+
+  writer.write({ type: 'start' });
+  writer.write({ type: 'text-start', id: textId });
+  writer.write({ type: 'text-delta', id: textId, delta: text });
+  writer.write({ type: 'text-end', id: textId });
+  writer.write({ type: 'finish' });
 }
 
-async function fetchRoutineContext(query: string): Promise<string> {
-  const apiKey = process.env.CHATBOT_INTERNAL_API_KEY;
-  if (!apiKey) return '';
-  const base = process.env.AUTH_URL ?? 'http://localhost:3000';
+function getMessageText(message: IncomingMessage): string {
+  const partText = message.parts?.find((part) => part.type === 'text')?.text;
+  if (typeof partText === 'string') return partText.trim();
+  if (typeof message.content === 'string') return message.content.trim();
+  return '';
+}
+
+async function fetchRagAnswer(question: string, history: RagHistoryItem[]): Promise<string> {
+  const ragBase = process.env.RAG_API?.trim();
+  if (!ragBase) return FALLBACK_MESSAGE;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), RAG_TIMEOUT_MS);
+
   try {
-    const res = await fetch(
-      `${base}/api/chatbot/routine?search=${encodeURIComponent(query)}`,
-      { headers: { 'x-api-key': apiKey }, cache: 'no-store' }
-    );
-    if (!res.ok) return '';
-    const data = await res.json();
-    return (data.summary as string) || '';
+    const response = await fetch(`${ragBase.replace(/\/+$/, '')}/chat`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ question, history }),
+      cache: 'no-store',
+      signal: controller.signal,
+    });
+
+    if (!response.ok) return FALLBACK_MESSAGE;
+
+    const data = (await response.json()) as { answer?: unknown };
+    const answer = typeof data.answer === 'string' ? data.answer.trim() : '';
+    return answer || FALLBACK_MESSAGE;
   } catch {
-    return '';
+    return FALLBACK_MESSAGE;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
-// ── Route handler ────────────────────────────────────────────────────────────
-
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req);
+  const { config, result: rateLimit } = await checkChatbotRateLimit(ip);
+
+  if (!rateLimit.allowed) {
+    const headers = rateLimitHeaders(rateLimit);
+    return createUIMessageStreamResponse({
+      headers,
+      stream: createUIMessageStream({
+        execute: ({ writer }) => {
+          writeAssistantText(
+            writer,
+            `${RATE_LIMIT_MESSAGE} Limit: ${config.limit} message(s) per ${Math.max(
+              1,
+              Math.round(config.windowSeconds / 60)
+            )} minute(s).`
+          );
+        },
+      }),
+    });
+  }
+
   const body = await req.json();
 
-  const messages: Array<{
-    role: string;
-    parts?: Array<{ type: string; text?: string }>;
-    content?: string;
-  }> = body.messages ?? [];
+  const messages: IncomingMessage[] = Array.isArray(body.messages) ? body.messages : [];
 
-  const lastUser = [...messages].reverse().find((m) => m.role === 'user');
-  const userText =
-    lastUser?.parts?.find((p) => p.type === 'text')?.text ??
-    (typeof lastUser?.content === 'string' ? lastUser.content : '');
+  const normalized = messages
+    .filter((message) => message.role === 'user' || message.role === 'assistant')
+    .map((message) => ({
+      role: message.role as 'user' | 'assistant',
+      content: getMessageText(message),
+    }))
+    .filter((message) => message.content.length > 0);
 
-  const routineQuery = detectRoutineQuery(userText);
-  const routineContext = routineQuery ? await fetchRoutineContext(routineQuery) : '';
+  const lastUser = [...normalized].reverse().find((message) => message.role === 'user');
+  if (!lastUser) {
+    return createUIMessageStreamResponse({
+      stream: createUIMessageStream({
+        execute: ({ writer }) => {
+          writeAssistantText(writer, FALLBACK_MESSAGE);
+        },
+      }),
+    });
+  }
 
-  const systemPrompt = [
-    'You are SEU CampusMate, a helpful AI assistant for students of Southeast University Bangladesh.',
-    'You help with exam routines, CGPA calculation, attendance tracking, and general campus queries.',
-    'Keep answers concise and under 300 words. If you are unsure, say so.',
-    routineContext ? `\n## Retrieved Exam Routine Data:\n${routineContext}` : '',
-  ]
-    .filter(Boolean)
-    .join('\n');
+  const question = lastUser.content;
+  const history: RagHistoryItem[] = [];
+  let hasUsedQuestion = false;
 
-  const coreMessages = messages
-    .filter((m) => m.role === 'user' || m.role === 'assistant')
-    .map((m) => ({
-      role: m.role as 'user' | 'assistant',
-      content:
-        m.parts?.find((p) => p.type === 'text')?.text ??
-        (typeof m.content === 'string' ? m.content : ''),
-    }));
+  for (let i = normalized.length - 1; i >= 0; i -= 1) {
+    const message = normalized[i];
+    if (!message) continue;
 
-  const or = createOpenAI({
-    baseURL: 'https://openrouter.ai/api/v1',
-    apiKey: process.env.OPENROUTER_API_KEY ?? '',
-    headers: {
-      'HTTP-Referer': process.env.AUTH_URL ?? 'http://localhost:3000',
-      'X-Title': 'SEU CampusMate',
-    },
+    if (!hasUsedQuestion && message.role === 'user' && message.content === question) {
+      hasUsedQuestion = true;
+      continue;
+    }
+
+    history.unshift(message);
+  }
+
+  const answer = await fetchRagAnswer(question, history);
+
+  return createUIMessageStreamResponse({
+    headers: rateLimitHeaders(rateLimit),
+    stream: createUIMessageStream({
+      execute: ({ writer }) => {
+        writeAssistantText(writer, answer);
+      },
+    }),
   });
-
-  const modelId = process.env.OPENROUTER_MODEL ?? 'google/gemini-2.0-flash-001';
-
-  const result = streamText({
-    model: or(modelId),
-    system: systemPrompt,
-    messages: coreMessages,
-    maxOutputTokens: 2048,
-  });
-
-  return result.toUIMessageStreamResponse();
 }

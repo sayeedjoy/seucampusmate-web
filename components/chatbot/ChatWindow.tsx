@@ -9,6 +9,7 @@ import { cjk } from '@streamdown/cjk';
 import { code } from '@streamdown/code';
 import { math } from '@streamdown/math';
 import { mermaid } from '@streamdown/mermaid';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -205,18 +206,29 @@ export function ChatWindow({ messages, status, onSend, onStop, onClose }: ChatWi
                     isUser ? 'ml-auto items-end' : 'items-start'
                   )}
                 >
-                  <div
-                    className={cn(
-                      'w-fit min-w-0 max-w-full rounded-lg text-sm overflow-hidden',
-                      isUser && 'bg-secondary text-foreground px-4 py-3'
+                  <div className={cn('flex items-start gap-2', isUser && 'justify-end')}>
+                    {!isUser && (
+                      <Image
+                        src="/chatbot/reply-icon.svg"
+                        alt="AI reply"
+                        width={18}
+                        height={18}
+                        className="mt-1 shrink-0"
+                      />
                     )}
-                  >
-                    <MessageMarkdown isAnimating={isStreaming && msg === messages.at(-1)}>
-                      {text}
-                    </MessageMarkdown>
+                    <div
+                      className={cn(
+                        'w-fit min-w-0 max-w-full rounded-lg text-sm overflow-hidden',
+                        isUser && 'bg-secondary text-foreground px-4 py-3'
+                      )}
+                    >
+                      <MessageMarkdown isAnimating={isStreaming && msg === messages.at(-1)}>
+                        {text}
+                      </MessageMarkdown>
+                    </div>
                   </div>
                   {!isUser && (
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1">
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
