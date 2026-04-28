@@ -1,4 +1,4 @@
-import { eq, desc, lt, count } from 'drizzle-orm';
+import { eq, desc, lt, count, inArray } from 'drizzle-orm';
 import { db } from './index';
 import { chatHistory, type ChatHistory } from './schema';
 
@@ -138,6 +138,15 @@ export async function deleteChatHistoryBySession(sessionId: string): Promise<{ d
   const result = await db
     .delete(chatHistory)
     .where(eq(chatHistory.sessionId, sessionId))
+    .returning({ id: chatHistory.id });
+  return { deleted: result.length };
+}
+
+export async function deleteChatHistoryBySessions(sessionIds: string[]): Promise<{ deleted: number }> {
+  if (sessionIds.length === 0) return { deleted: 0 };
+  const result = await db
+    .delete(chatHistory)
+    .where(inArray(chatHistory.sessionId, sessionIds))
     .returning({ id: chatHistory.id });
   return { deleted: result.length };
 }

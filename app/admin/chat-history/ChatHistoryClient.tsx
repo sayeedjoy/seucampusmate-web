@@ -70,12 +70,16 @@ function SessionGroup({
   onDeleteMessage,
   onDeleteSession,
   deletingId,
+  selected,
+  onToggleSelected,
 }: {
   sessionId: string;
   messages: ChatRecord[];
   onDeleteMessage: (id: string) => void;
   onDeleteSession: (sessionId: string) => void;
   deletingId: string | null;
+  selected: boolean;
+  onToggleSelected: (sessionId: string, checked: boolean) => void;
 }) {
   const [expanded, setExpanded] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -98,6 +102,13 @@ function SessionGroup({
     <div className="rounded-lg border bg-card overflow-hidden">
       {/* Session header */}
       <div className="flex items-center gap-2 px-4 py-2.5 bg-muted/40 border-b">
+        <input
+          type="checkbox"
+          className="size-4 shrink-0 accent-primary"
+          checked={selected}
+          onChange={(e) => onToggleSelected(sessionId, e.target.checked)}
+          aria-label={`Select session ${sessionId}`}
+        />
         <button
           onClick={() => setExpanded((v) => !v)}
           className="flex items-center gap-2 flex-1 min-w-0 text-left group"
@@ -326,6 +337,8 @@ export default function ChatHistoryClient() {
   const [deletingAll, setDeletingAll] = useState(false);
   const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
   const [sessionInput, setSessionInput] = useState('');
+  const [selectedSessions, setSelectedSessions] = useState<Set<string>>(new Set());
+  const [deletingSelected, setDeletingSelected] = useState(false);
 
   const startIndex = totalRecords === 0 ? 0 : (page - 1) * pageSize + 1;
   const endIndex = Math.min(page * pageSize, totalRecords);
@@ -334,6 +347,7 @@ export default function ChatHistoryClient() {
     const timer = setTimeout(() => {
       setSessionFilter(sessionInput.trim());
       setPage(1);
+      setSelectedSessions(new Set());
     }, 300);
     return () => clearTimeout(timer);
   }, [sessionInput]);
@@ -364,6 +378,10 @@ export default function ChatHistoryClient() {
   useEffect(() => {
     fetchHistory();
   }, [fetchHistory]);
+
+  useEffect(() => {
+    setSelectedSessions(new Set());
+  }, [page]);
 
   async function handleDeleteMessage(id: string) {
     setDeletingId(id);
@@ -405,6 +423,28 @@ export default function ChatHistoryClient() {
     }
   }
 
+  async function handleDeleteSelectedSessions() {
+    const sessionIds = Array.from(selectedSessions);
+    if (sessionIds.length === 0) return;
+    setDeletingSelected(true);
+    try {
+      const res = await fetch('/api/admin/chat-history', {
+        method: 'DELETE',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ sessionIds }),
+      });
+      if (!res.ok) throw new Error('Failed to delete selected sessions');
+      setSelectedSessions(new Set());
+      await fetchHistory();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to delete selected sessions');
+    } finally {
+      setDeletingSelected(false);
+    }
+  }
+
   const groupedBySession = useMemo(() => {
     const map = new Map<string, ChatRecord[]>();
     for (const record of records) {
@@ -417,6 +457,26 @@ export default function ChatHistoryClient() {
 
   const sessionCount = groupedBySession.size;
   const uniqueSessionsTotal = records[0]?.totalSessions ?? 0;
+  const pageSessionIds = Array.from(groupedBySession.keys());
+  const selectedCount = selectedSessions.size;
+  const allPageSelected = pageSessionIds.length > 0 && pageSessionIds.every((id) => selectedSessions.has(id));
+
+  function toggleSelectAllCurrentPage(checked: boolean) {
+    if (checked) {
+      setSelectedSessions(new Set(pageSessionIds));
+      return;
+    }
+    setSelectedSessions(new Set());
+  }
+
+  function toggleSessionSelection(sessionId: string, checked: boolean) {
+    setSelectedSessions((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(sessionId);
+      else next.delete(sessionId);
+      return next;
+    });
+  }
 
   return (
     <div className="p-6 space-y-5">
@@ -499,6 +559,27 @@ export default function ChatHistoryClient() {
               <RefreshCw className={cn('size-4', loading && 'animate-spin')} />
             </Button>
           </div>
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            <label className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+              <input
+                type="checkbox"
+                className="size-4 accent-primary"
+                checked={allPageSelected}
+                onChange={(e) => toggleSelectAllCurrentPage(e.target.checked)}
+                disabled={pageSessionIds.length === 0}
+              />
+              Select all sessions on this page
+            </label>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="h-7"
+              disabled={selectedCount === 0 || deletingSelected}
+              onClick={handleDeleteSelectedSessions}
+            >
+              {deletingSelected ? 'Deleting...' : `Delete selected (${selectedCount})`}
+            </Button>
+          </div>
         </CardHeader>
 
         <CardContent className="pt-0">
@@ -536,6 +617,8 @@ export default function ChatHistoryClient() {
                   onDeleteMessage={handleDeleteMessage}
                   onDeleteSession={handleDeleteSession}
                   deletingId={deletingId}
+                  selected={selectedSessions.has(sessionId)}
+                  onToggleSelected={toggleSessionSelection}
                 />
               ))}
 

@@ -5,6 +5,7 @@ import {
   deleteChatHistoryById,
   deleteAllChatHistory,
   deleteChatHistoryBySession,
+  deleteChatHistoryBySessions,
 } from '@/lib/db/chat-history';
 
 export async function GET(request: NextRequest) {
@@ -43,6 +44,20 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Record not found' }, { status: 404 });
     }
     return NextResponse.json({ deleted: 1, id });
+  }
+
+  try {
+    const body = await request.json();
+    const sessionIds = Array.isArray(body?.sessionIds)
+      ? body.sessionIds.filter((value: unknown): value is string => typeof value === 'string' && value.trim().length > 0)
+      : [];
+    if (sessionIds.length > 0) {
+      const uniqueSessionIds = [...new Set<string>(sessionIds)];
+      const { deleted } = await deleteChatHistoryBySessions(uniqueSessionIds);
+      return NextResponse.json({ deleted, sessionIds: uniqueSessionIds });
+    }
+  } catch {
+    // Ignore missing/invalid JSON body and continue with query-param handlers.
   }
 
   const sessionId = searchParams.get('sessionId');
