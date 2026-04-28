@@ -25,10 +25,9 @@ import { cn } from '@/lib/utils';
 import type { ChatStatus, UIMessage } from 'ai';
 
 const QUICK_SUGGESTIONS = [
-  { emoji: '📅', label: 'Exam Routine', text: 'What is the exam routine this semester?' },
-  { emoji: '📊', label: 'CGPA Calculator', text: 'How do I calculate my CGPA?' },
-  { emoji: '✅', label: 'Attendance Policy', text: 'What is the class attendance policy?' },
-  { emoji: '🚌', label: 'Bus Schedule', text: 'What are the campus bus schedules?' },
+  { emoji: '📅', text: '**What is the exam routine this semester?**' },
+  { emoji: '👤', text: '**Who is Shahriar Manzoor?**' },
+  { emoji: '🏫', text: '**What is CampusMate?**' },
 ];
 
 const STREAMDOWN_PLUGINS = { cjk, code, math, mermaid };
@@ -268,7 +267,7 @@ export function ChatWindow({ messages, status, onSend, onStop, onClose, onClear 
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 w-full px-1">
+              <div className="flex flex-col gap-2 w-full px-1">
                 {QUICK_SUGGESTIONS.map((s, i) => (
                   <motion.button
                     key={s.text}
@@ -277,11 +276,11 @@ export function ChatWindow({ messages, status, onSend, onStop, onClose, onClear 
                     transition={{ delay: 0.08 + i * 0.06 }}
                     onClick={() => onSend(s.text)}
                     type="button"
-                    className="flex flex-col items-start gap-1.5 p-3 rounded-xl border border-border/60 bg-muted/20 hover:bg-muted/50 hover:border-border/80 transition-all duration-150 text-left group"
+                    className="flex items-center gap-3 p-3 rounded-xl border border-border/60 bg-muted/20 hover:bg-muted/50 hover:border-border/80 transition-all duration-150 text-left group"
                   >
-                    <span className="text-lg leading-none">{s.emoji}</span>
+                    <span className="text-lg leading-none shrink-0">{s.emoji}</span>
                     <span className="text-xs font-medium text-foreground/80 group-hover:text-foreground leading-snug transition-colors">
-                      {s.label}
+                      {s.text.replace(/\*\*/g, '')}
                     </span>
                   </motion.button>
                 ))}
