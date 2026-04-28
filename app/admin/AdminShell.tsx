@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LayoutDashboard, Upload, Key, MessageSquare, LogOut } from 'lucide-react';
+import { LayoutDashboard, Upload, Key, MessageSquare, LogOut, History } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AdminSessionGuard from './AdminSessionGuard';
 
@@ -14,6 +14,7 @@ const navItems = [
   { href: '/admin/upload', label: 'Upload Routine', icon: Upload },
   { href: '/admin/api-keys', label: 'API Keys', icon: Key },
   { href: '/admin/chat-settings', label: 'Chat Settings', icon: MessageSquare },
+  { href: '/admin/chat-history', label: 'Chat History', icon: History },
 ];
 
 export default function AdminShell({

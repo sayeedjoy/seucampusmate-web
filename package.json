@@ -9,7 +9,8 @@
     "lint": "eslint",
     "seed:admin": "tsx scripts/seed-admin.ts",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "cleanup:chat-history": "tsx scripts/cleanup-chat-history.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.103",

@@ -11,7 +11,7 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
 
-  const { messages, status, stop, sendMessage } = useChat({
+  const { messages, status, stop, sendMessage, setMessages } = useChat({
     transport: new DefaultChatTransport({ api: '/api/chatbot/chat' }),
     onFinish: () => {
       if (!open) setHasUnread(true);
@@ -41,6 +41,7 @@ export function ChatWidget() {
             onSend={handleSend}
             onStop={stop}
             onClose={handleClose}
+            onClear={() => setMessages([])}
           />
         )}
       </AnimatePresence>

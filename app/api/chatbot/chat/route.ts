@@ -2,6 +2,7 @@ import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 import { NextRequest } from 'next/server';
 import { checkChatbotRateLimit } from '@/lib/chatbot-rate-limit';
 import { getClientIp, rateLimitHeaders } from '@/lib/rate-limit';
+import { saveChatMessage } from '@/lib/db/chat-history';
 
 type IncomingMessage = {
   role: string;
@@ -19,6 +20,16 @@ const FALLBACK_MESSAGE =
 const RATE_LIMIT_MESSAGE =
   'You have reached the chat limit for now. Please wait and try again later.';
 const RAG_TIMEOUT_MS = 15000;
+const SESSION_COOKIE_NAME = 'chat_session_id';
+
+function getOrCreateSessionId(request: NextRequest): string {
+  const cookies = request.cookies;
+  let sessionId = cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+  }
+  return sessionId;
+}
 
 function writeAssistantText(
   writer: Parameters<Parameters<typeof createUIMessageStream>[0]['execute']>[0]['writer'],
@@ -74,10 +85,13 @@ async function fetchRagAnswer(question: string, history: RagHistoryItem[]): Prom
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
+  const userAgent = req.headers.get('user-agent');
+  const sessionId = getOrCreateSessionId(req);
   const { config, result: rateLimit } = await checkChatbotRateLimit(ip);
 
   if (!rateLimit.allowed) {
     const headers = rateLimitHeaders(rateLimit);
+    headers['Set-Cookie'] = `${SESSION_COOKIE_NAME}=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
     return createUIMessageStreamResponse({
       headers,
       stream: createUIMessageStream({
@@ -108,7 +122,10 @@ export async function POST(req: NextRequest) {
 
   const lastUser = [...normalized].reverse().find((message) => message.role === 'user');
   if (!lastUser) {
+    const headers = rateLimitHeaders(rateLimit);
+    headers['Set-Cookie'] = `${SESSION_COOKIE_NAME}=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
     return createUIMessageStreamResponse({
+      headers,
       stream: createUIMessageStream({
         execute: ({ writer }) => {
           writeAssistantText(writer, FALLBACK_MESSAGE);
@@ -135,8 +152,27 @@ export async function POST(req: NextRequest) {
 
   const answer = await fetchRagAnswer(question, history);
 
+  await saveChatMessage({
+    sessionId,
+    role: 'user',
+    content: question,
+    userAgent,
+    ipAddress: ip,
+  });
+
+  await saveChatMessage({
+    sessionId,
+    role: 'assistant',
+    content: answer,
+    userAgent,
+    ipAddress: ip,
+  });
+
+  const headers = rateLimitHeaders(rateLimit);
+  headers['Set-Cookie'] = `${SESSION_COOKIE_NAME}=${sessionId}; Path=/; HttpOnly; SameSite=Lax; Max-Age=31536000`;
+
   return createUIMessageStreamResponse({
-    headers: rateLimitHeaders(rateLimit),
+    headers,
     stream: createUIMessageStream({
       execute: ({ writer }) => {
         writeAssistantText(writer, answer);
