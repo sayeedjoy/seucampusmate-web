@@ -1,5 +1,11 @@
 # SEU CampusMate Web
 
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+[![Live](https://img.shields.io/badge/Live-campusmate.app-22C55E?logo=vercel&logoColor=white)](https://campusmate.app)
+
 ![SEU CampusMate - Web and Mobile](docs/screenshots/git.png)
 
 Web companion for [Southeast University](https://seu.edu.bd) students. Academic tools, campus info, and student resources in one place.
