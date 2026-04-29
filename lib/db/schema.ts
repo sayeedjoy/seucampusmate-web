@@ -53,6 +53,19 @@ export const chatHistory = pgTable('chat_history', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const teamMembers = pgTable('team_members', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  role: text('role').notNull(),
+  batch: text('batch').notNull(),
+  githubUrl: text('github_url'),
+  imageUrl: text('image_url').notNull(),
+  imageFileId: text('image_file_id'),
+  displayOrder: integer('display_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type ExamSchedule = typeof examSchedules.$inferSelect;
 export type UploadHistory = typeof uploadHistory.$inferSelect;
@@ -60,3 +73,5 @@ export type ApiKey = typeof apiKeys.$inferSelect;
 export type NewApiKey = typeof apiKeys.$inferInsert;
 export type ChatHistory = typeof chatHistory.$inferSelect;
 export type NewChatHistory = typeof chatHistory.$inferInsert;
+export type TeamMember = typeof teamMembers.$inferSelect;
+export type NewTeamMember = typeof teamMembers.$inferInsert;

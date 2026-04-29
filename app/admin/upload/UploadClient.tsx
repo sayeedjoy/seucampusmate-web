@@ -32,6 +32,7 @@ export default function UploadClient() {
     const ext = selected.name.substring(selected.name.lastIndexOf('.')).toLowerCase();
     if (!allowed.includes(ext)) {
       setError('Only .csv, .xlsx, and .xls files are supported.');
+      toast.error('Only .csv, .xlsx, and .xls files are supported.');
       return;
     }
     setFile(selected);
@@ -60,13 +61,16 @@ export default function UploadClient() {
       const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Failed to preview file.');
+        const message = data.error ?? 'Failed to preview file.';
+        setError(message);
+        toast.error(message);
         return;
       }
       setPreviewData(data);
       setStep('previewing');
     } catch {
       setError('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
     } finally {
       setLoading(false);
     }
@@ -86,7 +90,9 @@ export default function UploadClient() {
       const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Upload failed.');
+        const message = data.error ?? 'Upload failed.';
+        setError(message);
+        toast.error(message);
         setStep('previewing');
         return;
       }
@@ -95,6 +101,7 @@ export default function UploadClient() {
       router.refresh();
     } catch {
       setError('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
       setStep('previewing');
     } finally {
       setLoading(false);

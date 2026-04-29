@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import type { ChatbotRateLimitConfig } from '@/lib/chatbot-rate-limit';
+import { toast } from 'sonner';
 
 export default function ChatSettingsClient({
   initialConfig,
@@ -34,12 +35,16 @@ export default function ChatSettingsClient({
     const parsedWindowSeconds = Number(windowSeconds);
 
     if (!Number.isFinite(parsedLimit) || parsedLimit < 1) {
-      setError('Limit must be a number greater than or equal to 1.');
+      const message = 'Limit must be a number greater than or equal to 1.';
+      setError(message);
+      toast.error(message);
       setSaving(false);
       return;
     }
     if (!Number.isFinite(parsedWindowSeconds) || parsedWindowSeconds < 60) {
-      setError('Window seconds must be a number greater than or equal to 60.');
+      const message = 'Window seconds must be a number greater than or equal to 60.';
+      setError(message);
+      toast.error(message);
       setSaving(false);
       return;
     }
@@ -57,7 +62,9 @@ export default function ChatSettingsClient({
 
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? 'Failed to save settings.');
+        const message = data.error ?? 'Failed to save settings.';
+        setError(message);
+        toast.error(message);
         return;
       }
 
@@ -65,9 +72,11 @@ export default function ChatSettingsClient({
       setLimit(String(data.limit));
       setWindowSeconds(String(data.windowSeconds));
       setSaved(true);
+      toast.success('Chat settings saved.');
       router.refresh();
     } catch {
       setError('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
     } finally {
       setSaving(false);
     }

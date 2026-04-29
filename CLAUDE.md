@@ -22,6 +22,7 @@ Copy `.env.example` to `.env.local` and populate:
 - `NEXT_PUBLIC_ACADEMIC_CALENDAR_URL` / `NEXT_PUBLIC_BLOOD_DONORS_API_URL` — External APIs
 - `NEXT_PUBLIC_MAP_STYLE_DARK` / `NEXT_PUBLIC_MAP_STYLE_LIGHT` — MapLibre GL tile styles
 - `CP_USERNAMES_API_URL` / `CODEFORCES_API_BASE` — Codeforces leaderboard integration
+- `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` — Cloudinary uploads for `/about` team photos (admin)
 
 ## Architecture
 
@@ -57,7 +58,7 @@ Copy `.env.example` to `.env.local` and populate:
 
 ## Deployment
 
-Built as `output: "standalone"` for Docker. A `Dockerfile` is included. Remote images are allowed from `userpic.codeforces.org`, `play-lh.googleusercontent.com`, and `avatars.githubusercontent.com`.
+Built as `output: "standalone"` for Docker. A `Dockerfile` is included. Remote images are allowed from `userpic.codeforces.org`, `play-lh.googleusercontent.com`, `avatars.githubusercontent.com`, and `res.cloudinary.com`.
 
 ## Adding a New Tool
 

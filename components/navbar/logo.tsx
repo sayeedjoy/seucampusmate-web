@@ -33,6 +33,7 @@ export function Logo({ className }: LogoProps) {
           src="/logo.webp"
           alt="CampusMate Logo"
           fill
+          sizes="(max-width: 767px) 32px, (max-width: 1023px) 36px, 40px"
           className="object-contain"
           priority
         />

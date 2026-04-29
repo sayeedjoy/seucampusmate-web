@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Key, Plus, Copy, Check, Trash2, PowerOff, Power } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 type ApiKeyRow = {
   id: number;
@@ -61,14 +62,18 @@ export default function ApiKeysClient({ keys, isSuperAdmin }: Props) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setCreateError(data.error ?? 'Failed to create key.');
+        const message = data.error ?? 'Failed to create key.';
+        setCreateError(message);
+        toast.error(message);
         return;
       }
       setRevealedKey(data.rawKey);
       setNewKeyName('');
+      toast.success('API key created.');
       router.refresh();
     } catch {
       setCreateError('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
     } finally {
       setCreating(false);
     }
@@ -78,6 +83,7 @@ export default function ApiKeysClient({ keys, isSuperAdmin }: Props) {
     if (!revealedKey) return;
     await navigator.clipboard.writeText(revealedKey);
     setCopied(true);
+    toast.success('API key copied to clipboard.');
     setTimeout(() => setCopied(false), 2000);
   }
 
@@ -96,13 +102,14 @@ export default function ApiKeysClient({ keys, isSuperAdmin }: Props) {
       const res = await fetch(`/api/admin/api-keys/${deleteTarget.id}`, { method: 'DELETE' });
       if (!res.ok) {
         const data = await res.json();
-        alert(data.error ?? 'Failed to delete key.');
+        toast.error(data.error ?? 'Failed to delete key.');
         return;
       }
       setDeleteTarget(null);
+      toast.success('API key deleted.');
       router.refresh();
     } catch {
-      alert('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
     } finally {
       setDeleting(false);
     }
@@ -119,12 +126,13 @@ export default function ApiKeysClient({ keys, isSuperAdmin }: Props) {
       });
       if (!res.ok) {
         const data = await res.json();
-        alert(data.error ?? 'Failed to update key.');
+        toast.error(data.error ?? 'Failed to update key.');
         return;
       }
+      toast.success(key.isActive ? 'API key disabled.' : 'API key enabled.');
       router.refresh();
     } catch {
-      alert('Failed to connect to server.');
+      toast.error('Failed to connect to server.');
     } finally {
       setTogglingId(null);
     }

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed:admin": "tsx scripts/seed-admin.ts",
+    "seed:team": "tsx scripts/seed-team.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "cleanup:chat-history": "tsx scripts/cleanup-chat-history.ts"
@@ -16,6 +17,9 @@
     "@ai-sdk/openai": "^2.0.103",
     "@ai-sdk/react": "^2.0.181",
     "@base-ui/react": "^1.1.0",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@neondatabase/serverless": "^1.0.2",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-use-controllable-state": "^1.2.2",
