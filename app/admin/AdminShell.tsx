@@ -68,7 +68,7 @@ const navSections: NavSection[] = [
     title: 'System',
     items: [
       { href: '/admin/users', label: 'Users', icon: Shield, superAdminOnly: true },
-      { href: '/admin/api-keys', label: 'API Keys', icon: Key },
+      { href: '/admin/api-keys', label: 'API Docs', icon: Key },
     ],
   },
 ];

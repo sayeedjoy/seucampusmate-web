@@ -1,29 +1,12 @@
-import crypto from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { eq } from 'drizzle-orm';
-import { db } from '@/lib/db';
-import { apiKeys } from '@/lib/db/schema';
 import { getExamCache, CachedExamRow } from '@/lib/exam-cache';
 import { normalizeCourseCode, ExamResult } from '@/lib/exam-utils';
 import { checkRateLimit, rateLimitHeaders } from '@/lib/rate-limit';
 
-async function resolveApiKey(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  const xApiKey = request.headers.get('x-api-key');
-  const raw = xApiKey ?? (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null);
-  if (!raw) return null;
-
-  const hash = crypto.createHash('sha256').update(raw).digest('hex');
-  const rows = await db
-    .select()
-    .from(apiKeys)
-    .where(eq(apiKeys.keyHash, hash))
-    .limit(1);
-
-  if (!rows.length || !rows[0].isActive) return null;
-
-  await db.update(apiKeys).set({ lastUsedAt: new Date() }).where(eq(apiKeys.id, rows[0].id));
-  return rows[0];
+function resolveClientKey(request: NextRequest) {
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const clientIp = forwardedFor?.split(',')[0]?.trim();
+  return clientIp || 'anonymous';
 }
 
 function stripStudents(row: CachedExamRow): ExamResult {
@@ -43,13 +26,8 @@ function buildSummary(results: ExamResult[]): string {
 }
 
 export async function GET(request: NextRequest) {
-  const key = await resolveApiKey(request);
-  if (!key) {
-    return NextResponse.json({ error: 'Invalid API key' }, { status: 401 });
-  }
-
   const rateLimit = checkRateLimit({
-    key: `chatbot-routine:${key.id}`,
+    key: `chatbot-routine:${resolveClientKey(request)}`,
     limit: 60,
     windowMs: 60_000,
   });
