@@ -1,14 +1,49 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { FileDown, Image } from 'lucide-react';
+import { FileText, ImageIcon, Download, Loader2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export interface ExamRoutineDownloadProps {
   totalResults: number;
   downloading: boolean;
   onDownloadPDF: () => Promise<void>;
   onDownloadPNG: () => Promise<void>;
+}
+
+interface FormatOptionProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  disabled: boolean;
+  loading: boolean;
+  onClick: () => void;
+}
+
+function FormatOption({ icon, title, description, disabled, loading, onClick }: FormatOptionProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(
+        'group relative flex w-full items-center gap-4 rounded-xl border border-border bg-card p-4 text-left ring-1 ring-foreground/5 transition-all duration-200',
+        'hover:border-primary/40 hover:ring-primary/20 hover:shadow-sm',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'disabled:cursor-not-allowed disabled:opacity-60'
+      )}
+    >
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+        {loading ? <Loader2 className="size-5 animate-spin" /> : icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-semibold text-foreground">
+          {loading ? 'Generating…' : title}
+        </span>
+        <span className="block truncate text-xs text-muted-foreground">{description}</span>
+      </span>
+      <Download className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-y-0.5 group-hover:text-primary" />
+    </button>
+  );
 }
 
 export default function ExamRoutineDownload({
@@ -22,56 +57,35 @@ export default function ExamRoutineDownload({
   }
 
   return (
-    <div className="mt-6 mb-6 max-w-5xl mx-auto">
-      <Card className="border-border shadow-sm transition-shadow duration-200">
-        <CardContent className="p-6">
-          <div className="text-center mb-6">
-            <h3 className="text-lg font-semibold text-foreground mb-2">Export Your Schedule</h3>
-            <p className="text-sm text-muted-foreground">
-              Download your exam schedule for offline access
+    <div className="mx-auto mt-10 max-w-3xl">
+      <div className="rounded-xl border border-border bg-muted/30 p-5">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-semibold text-foreground">Export schedule</h3>
+            <p className="text-xs text-muted-foreground">
+              Save all {totalResults} {totalResults === 1 ? 'exam' : 'exams'} for offline access
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button
-              onClick={onDownloadPDF}
-              disabled={downloading}
-              className="cursor-pointer transition-colors duration-200 w-full sm:w-auto gap-2"
-              aria-label="Download as PDF"
-            >
-              {downloading ? (
-                <>
-                  <span className="size-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                  <span>Generating PDF…</span>
-                </>
-              ) : (
-                <>
-                  <FileDown className="size-4" />
-                  <span>Download PDF</span>
-                </>
-              )}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={onDownloadPNG}
-              disabled={downloading}
-              className="cursor-pointer transition-colors duration-200 w-full sm:w-auto gap-2"
-              aria-label="Download as PNG"
-            >
-              {downloading ? (
-                <>
-                  <span className="size-4 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
-                  <span>Generating PNG…</span>
-                </>
-              ) : (
-                <>
-                  <Image className="size-4" />
-                  <span>Download PNG</span>
-                </>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <FormatOption
+            icon={<FileText className="size-5" />}
+            title="Download PDF"
+            description="Printable document, ideal for sharing"
+            disabled={downloading}
+            loading={downloading}
+            onClick={onDownloadPDF}
+          />
+          <FormatOption
+            icon={<ImageIcon className="size-5" />}
+            title="Download PNG"
+            description="Image to save or post on your phone"
+            disabled={downloading}
+            loading={downloading}
+            onClick={onDownloadPNG}
+          />
+        </div>
+      </div>
     </div>
   );
 }

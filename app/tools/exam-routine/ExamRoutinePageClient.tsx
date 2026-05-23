@@ -491,56 +491,171 @@ export default function ExamRoutinePageClient() {
         try {
             const jsPDFModule = await import('jspdf');
             const jsPDF = jsPDFModule.default;
-            const doc = new jsPDF();
+            const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
-            doc.setFontSize(20);
-            doc.setTextColor(59, 130, 246);
-            doc.text('Exam Schedule', 20, 30);
+            const pageW = doc.internal.pageSize.getWidth();
+            const pageH = doc.internal.pageSize.getHeight();
+            const marginX = 40;
+            const contentW = pageW - marginX * 2;
 
-            doc.setFontSize(12);
-            doc.setTextColor(100, 100, 100);
-            doc.text(`Generated on ${new Date().toLocaleDateString()}`, 20, 40);
-            doc.text(`Course codes: ${courseCodes.join(', ')}`, 20, 50);
+            // Palette (RGB) matching the app's warm amber primary
+            const BRAND: [number, number, number] = [217, 119, 6];
+            const INK: [number, number, number] = [28, 25, 23];
+            const MUTED: [number, number, number] = [120, 113, 108];
+            const BORDER: [number, number, number] = [231, 229, 228];
+            const SOFT: [number, number, number] = [250, 250, 249];
 
-            let yPosition = 70;
+            const statusFor = (date: string) => {
+                const days = getDaysRemaining(date);
+                if (days === null) return 'TBD';
+                if (days < 0) return 'Done';
+                if (days === 0) return 'Today';
+                if (days === 1) return 'Tomorrow';
+                return `${days} days`;
+            };
 
-            getAllExams.forEach((exam) => {
-                if (yPosition > 250) {
+            const drawHeader = () => {
+                // Top accent bar
+                doc.setFillColor(...BRAND);
+                doc.rect(0, 0, pageW, 6, 'F');
+
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(...BRAND);
+                doc.text('SEU CAMPUSMATE', marginX, 38);
+
+                doc.setFontSize(22);
+                doc.setTextColor(...INK);
+                doc.text('Exam Schedule', marginX, 62);
+
+                // Count, right aligned
+                doc.setFontSize(22);
+                doc.setTextColor(...INK);
+                doc.text(String(getTotalResults), pageW - marginX, 56, { align: 'right' });
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(...MUTED);
+                doc.text(getTotalResults === 1 ? 'EXAM' : 'EXAMS', pageW - marginX, 67, { align: 'right' });
+
+                doc.setFontSize(9);
+                doc.setTextColor(...MUTED);
+                const meta = `Generated ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}  •  ${courseCodes.join(', ')}`;
+                doc.text(meta, marginX, 82, { maxWidth: contentW });
+
+                return 100; // y position after header
+            };
+
+            const drawFooter = (pageNum: number) => {
+                doc.setDrawColor(...BORDER);
+                doc.setLineWidth(0.5);
+                doc.line(marginX, pageH - 34, pageW - marginX, pageH - 34);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(...MUTED);
+                doc.text('campusmate.app — verify with official CSE Department announcements.', marginX, pageH - 20);
+                doc.text(`Page ${pageNum}`, pageW - marginX, pageH - 20, { align: 'right' });
+            };
+
+            // Column layout
+            const dateX = marginX + 12;
+            const courseX = marginX + 150;
+            const timeRightX = pageW - marginX - 12;
+            let pageNum = 1;
+            let y = drawHeader();
+
+            // Table header row
+            const drawTableHead = (startY: number) => {
+                doc.setFillColor(...SOFT);
+                doc.rect(marginX, startY, contentW, 24, 'F');
+                doc.setDrawColor(...BORDER);
+                doc.setLineWidth(0.5);
+                doc.rect(marginX, startY, contentW, 24, 'S');
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(8);
+                doc.setTextColor(...MUTED);
+                doc.text('DATE', dateX, startY + 16);
+                doc.text('COURSE', courseX, startY + 16);
+                doc.text('TIME', timeRightX, startY + 16, { align: 'right' });
+                return startY + 24;
+            };
+
+            y = drawTableHead(y);
+
+            getAllExams.forEach((exam, i) => {
+                const titleLines = doc.splitTextToSize(exam.courseTitle, courseX - marginX > 0 ? timeRightX - courseX - 60 : 260);
+                const facultyLines = doc.splitTextToSize(`Faculty: ${exam.faculty}`, timeRightX - courseX - 60);
+                const rowH = Math.max(48, 22 + titleLines.length * 13 + facultyLines.length * 11);
+
+                // Page break
+                if (y + rowH > pageH - 50) {
+                    drawFooter(pageNum);
                     doc.addPage();
-                    yPosition = 30;
+                    pageNum += 1;
+                    y = drawHeader();
+                    y = drawTableHead(y);
                 }
 
-                doc.setFontSize(14);
-                doc.setTextColor(0, 0, 0);
-                doc.text(exam.courseTitle, 20, yPosition);
-                yPosition += 10;
+                // Zebra background
+                if (i % 2 === 1) {
+                    doc.setFillColor(...SOFT);
+                    doc.rect(marginX, y, contentW, rowH, 'F');
+                }
 
-                doc.setFontSize(10);
-                doc.setTextColor(59, 130, 246);
-                doc.text(`Course: ${exam.courseCode}`, 20, yPosition);
-                yPosition += 8;
+                // Date + status
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(...INK);
+                const dateLines = doc.splitTextToSize(formatDate(exam.date), courseX - dateX - 10);
+                doc.text(dateLines, dateX, y + 16);
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8);
+                doc.setTextColor(...BRAND);
+                doc.text(statusFor(exam.date), dateX, y + 16 + dateLines.length * 11 + 4);
 
+                // Course title + code + faculty
+                doc.setFont('helvetica', 'bold');
                 doc.setFontSize(10);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`Date: ${formatDate(exam.date)}`, 20, yPosition);
-                yPosition += 6;
-                doc.text(`Time: ${formatTime(exam.startTime, exam.endTime)}`, 20, yPosition);
-                yPosition += 6;
-                doc.text(`Faculty: ${exam.faculty}`, 20, yPosition);
-                yPosition += 15;
+                doc.setTextColor(...INK);
+                doc.text(titleLines, courseX, y + 16);
+                let cy = y + 16 + titleLines.length * 13;
+                doc.setFont('courier', 'bold');
+                doc.setFontSize(8.5);
+                doc.setTextColor(...BRAND);
+                doc.text(exam.courseCode, courseX, cy);
+                cy += 12;
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(8.5);
+                doc.setTextColor(...MUTED);
+                doc.text(facultyLines, courseX, cy);
+
+                // Time, right aligned
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(9);
+                doc.setTextColor(...INK);
+                doc.text(formatTime(exam.startTime, exam.endTime), timeRightX, y + 16, { align: 'right' });
+
+                // Row separator
+                doc.setDrawColor(...BORDER);
+                doc.setLineWidth(0.5);
+                doc.line(marginX, y + rowH, pageW - marginX, y + rowH);
+
+                y += rowH;
             });
 
-            doc.save(`exam-schedule-${new Date().toISOString().split('T')[0]}.pdf`);
+            // Outer table border on last page section
+            drawFooter(pageNum);
 
+            doc.save(`exam-schedule-${new Date().toISOString().split('T')[0]}.pdf`);
+            toast.success('Schedule PDF downloaded');
         } catch (error) {
             console.error('Error generating PDF:', error);
             toast.error('Error generating PDF');
         } finally {
             setDownloading(false);
         }
-    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
+    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime, getDaysRemaining]);
 
-    // Download as PNG
+    // Download as PNG — branded, table-style schedule poster
     const downloadAsPNG = useCallback(async () => {
         if (getTotalResults === 0) return;
 
@@ -548,111 +663,118 @@ export default function ExamRoutinePageClient() {
         try {
             const html2canvas = (await import('html2canvas-pro')).default;
 
+            // Brand / theme palette (warm amber to match the app's primary)
+            const BRAND = '#d97706';
+            const INK = '#1c1917';
+            const MUTED = '#78716c';
+            const BORDER = '#e7e5e4';
+            const SOFT = '#fafaf9';
+
+            const escapeHtml = (value: string) =>
+                value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            const statusFor = (date: string) => {
+                const days = getDaysRemaining(date);
+                if (days === null) return { label: 'TBD', bg: '#f5f5f4', fg: MUTED };
+                if (days < 0) return { label: 'Done', bg: '#dcfce7', fg: '#15803d' };
+                if (days === 0) return { label: 'Today', bg: '#ffedd5', fg: '#c2410c' };
+                if (days === 1) return { label: 'Tomorrow', bg: '#fef3c7', fg: '#b45309' };
+                return { label: `${days} days`, bg: '#fef3c7', fg: '#b45309' };
+            };
+
+            const rowsHtml = getAllExams
+                .map((exam, i) => {
+                    const status = statusFor(exam.date);
+                    const bg = i % 2 === 0 ? '#ffffff' : SOFT;
+                    return `
+                        <tr style="background:${bg};">
+                            <td style="padding:14px 16px;border-bottom:1px solid ${BORDER};vertical-align:top;width:200px;">
+                                <div style="font-size:13px;font-weight:600;color:${INK};">${escapeHtml(formatDate(exam.date))}</div>
+                                <div style="margin-top:6px;display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;background:${status.bg};color:${status.fg};">${status.label}</div>
+                            </td>
+                            <td style="padding:14px 16px;border-bottom:1px solid ${BORDER};vertical-align:top;">
+                                <div style="font-size:14px;font-weight:600;color:${INK};line-height:1.35;">${escapeHtml(exam.courseTitle)}</div>
+                                <div style="margin-top:4px;font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:${BRAND};">${escapeHtml(exam.courseCode)}</div>
+                                <div style="margin-top:4px;font-size:12px;color:${MUTED};">${escapeHtml(exam.faculty)}</div>
+                            </td>
+                            <td style="padding:14px 16px;border-bottom:1px solid ${BORDER};vertical-align:top;text-align:right;white-space:nowrap;width:150px;">
+                                <div style="font-size:13px;font-weight:600;color:${INK};">${escapeHtml(formatTime(exam.startTime, exam.endTime))}</div>
+                            </td>
+                        </tr>`;
+                })
+                .join('');
+
             const wrapper = document.createElement('div');
-            wrapper.style.width = '800px';
-            wrapper.style.padding = '40px';
-            wrapper.style.backgroundColor = 'white';
-            wrapper.style.fontFamily = 'Arial, sans-serif';
-            wrapper.style.position = 'absolute';
-            wrapper.style.left = '-9999px';
+            wrapper.style.cssText =
+                "position:absolute;left:-9999px;top:0;width:860px;background:#ffffff;font-family:Arial,Helvetica,sans-serif;color:" +
+                INK +
+                ';';
 
-            const header = document.createElement('div');
-            header.style.marginBottom = '30px';
+            wrapper.innerHTML = `
+                <div style="height:6px;background:linear-gradient(90deg,${BRAND},#f59e0b);"></div>
+                <div style="padding:36px 40px 28px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                        <div>
+                            <div style="font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:${BRAND};">SEU CampusMate</div>
+                            <h1 style="margin:6px 0 0;font-size:28px;font-weight:800;color:${INK};">Exam Schedule</h1>
+                        </div>
+                        <div style="text-align:right;">
+                            <div style="font-size:34px;font-weight:800;line-height:1;color:${INK};">${getTotalResults}</div>
+                            <div style="font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${MUTED};">${getTotalResults === 1 ? 'Exam' : 'Exams'}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:14px;font-size:12px;color:${MUTED};">
+                        Generated ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        &nbsp;•&nbsp; ${escapeHtml(courseCodes.join(', '))}
+                    </div>
+                </div>
+                <div style="padding:0 40px;">
+                    <table style="width:100%;border-collapse:collapse;border:1px solid ${BORDER};border-radius:12px;overflow:hidden;">
+                        <thead>
+                            <tr style="background:${SOFT};">
+                                <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${MUTED};border-bottom:1px solid ${BORDER};">Date</th>
+                                <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${MUTED};border-bottom:1px solid ${BORDER};">Course</th>
+                                <th style="padding:10px 16px;text-align:right;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:${MUTED};border-bottom:1px solid ${BORDER};">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                </div>
+                <div style="padding:24px 40px 36px;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:${MUTED};">
+                    <span>campusmate.app</span>
+                    <span>Always verify with official CSE Department announcements.</span>
+                </div>`;
 
-            const title = document.createElement('h1');
-            title.textContent = 'Exam Schedule';
-            title.style.fontSize = '24px';
-            title.style.margin = '0 0 10px 0';
-            title.style.color = '#3b82f6';
-
-            const subtitle = document.createElement('p');
-            subtitle.textContent = `Generated on ${new Date().toLocaleDateString()} | Courses: ${courseCodes.join(', ')}`;
-            subtitle.style.fontSize = '12px';
-            subtitle.style.margin = '0';
-            subtitle.style.color = '#666666';
-
-            header.appendChild(title);
-            header.appendChild(subtitle);
-
-            const content = document.createElement('div');
-
-            getAllExams.forEach((exam) => {
-                const examDiv = document.createElement('div');
-                examDiv.style.marginBottom = '20px';
-                examDiv.style.padding = '15px';
-                examDiv.style.border = '1px solid #e5e7eb';
-                examDiv.style.borderRadius = '8px';
-                examDiv.style.backgroundColor = '#f9fafb';
-
-                const courseTitle = document.createElement('h3');
-                courseTitle.textContent = exam.courseTitle;
-                courseTitle.style.margin = '0 0 8px 0';
-                courseTitle.style.fontSize = '16px';
-                courseTitle.style.color = '#111827';
-                courseTitle.style.fontWeight = 'bold';
-
-                const courseCode = document.createElement('div');
-                courseCode.textContent = `Course: ${exam.courseCode}`;
-                courseCode.style.fontSize = '12px';
-                courseCode.style.color = '#3b82f6';
-                courseCode.style.marginBottom = '8px';
-                courseCode.style.fontWeight = '600';
-
-                const examDate = document.createElement('div');
-                examDate.textContent = `Date: ${formatDate(exam.date)}`;
-                examDate.style.fontSize = '14px';
-                examDate.style.color = '#374151';
-                examDate.style.marginBottom = '4px';
-
-                const examTime = document.createElement('div');
-                examTime.textContent = `Time: ${formatTime(exam.startTime, exam.endTime)}`;
-                examTime.style.fontSize = '14px';
-                examTime.style.color = '#374151';
-                examTime.style.marginBottom = '4px';
-
-                const faculty = document.createElement('div');
-                faculty.textContent = `Faculty: ${exam.faculty}`;
-                faculty.style.fontSize = '14px';
-                faculty.style.color = '#374151';
-
-                examDiv.appendChild(courseTitle);
-                examDiv.appendChild(courseCode);
-                examDiv.appendChild(examDate);
-                examDiv.appendChild(examTime);
-                examDiv.appendChild(faculty);
-
-                content.appendChild(examDiv);
-            });
-
-            wrapper.appendChild(header);
-            wrapper.appendChild(content);
             document.body.appendChild(wrapper);
 
             const canvas = await html2canvas(wrapper, {
                 width: 860,
                 height: wrapper.scrollHeight,
+                scale: 2,
+                backgroundColor: '#ffffff',
                 useCORS: false,
                 allowTaint: false,
-                logging: false
+                logging: false,
             });
 
             document.body.removeChild(wrapper);
 
             const link = document.createElement('a');
             link.download = `exam-schedule-${new Date().toISOString().split('T')[0]}.png`;
-            link.href = canvas.toDataURL('image/png', 0.9);
+            link.href = canvas.toDataURL('image/png', 0.95);
 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
+            toast.success('Schedule image downloaded');
         } catch (error) {
             console.error('Error generating PNG:', error);
             toast.error('Error generating PNG');
         } finally {
             setDownloading(false);
         }
-    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime]);
+    }, [getTotalResults, getAllExams, courseCodes, formatDate, formatTime, getDaysRemaining]);
 
     return (
         <div className="pt-12 md:pt-16">
