@@ -57,18 +57,42 @@ function getMessageText(message: IncomingMessage): string {
   return '';
 }
 
-async function fetchRagAnswer(question: string, history: RagHistoryItem[]): Promise<string> {
+function extractDelta(payload: string): string {
+  try {
+    const parsed = JSON.parse(payload) as
+      | string
+      | { answer?: unknown; delta?: unknown; text?: unknown; content?: unknown; token?: unknown };
+    if (typeof parsed === 'string') return parsed;
+    const value = parsed.answer ?? parsed.delta ?? parsed.text ?? parsed.content ?? parsed.token;
+    return typeof value === 'string' ? value : '';
+  } catch {
+    return payload;
+  }
+}
+
+// Streams the RAG answer from `${RAG_API}/chat/stream` (SSE), invoking `onDelta`
+// for each token as it arrives, and resolving with the full accumulated answer.
+async function streamRagAnswer(
+  question: string,
+  history: RagHistoryItem[],
+  onDelta: (delta: string) => void
+): Promise<string> {
   const ragBase = process.env.RAG_API?.trim();
-  if (!ragBase) return FALLBACK_MESSAGE;
+  if (!ragBase) {
+    onDelta(FALLBACK_MESSAGE);
+    return FALLBACK_MESSAGE;
+  }
 
   const controller = new AbortController();
+  // Guards time-to-first-byte; cleared once the stream is flowing so long
+  // answers are not aborted mid-stream.
   const timeoutId = setTimeout(() => controller.abort(), RAG_TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${ragBase.replace(/\/+$/, '')}/chat`, {
+    const response = await fetch(`${ragBase.replace(/\/+$/, '')}/chat/stream`, {
       method: 'POST',
       headers: {
-        accept: 'application/json',
+        accept: 'text/event-stream',
         'content-type': 'application/json',
       },
       body: JSON.stringify({ question, history }),
@@ -76,12 +100,49 @@ async function fetchRagAnswer(question: string, history: RagHistoryItem[]): Prom
       signal: controller.signal,
     });
 
-    if (!response.ok) return FALLBACK_MESSAGE;
+    if (!response.ok || !response.body) {
+      onDelta(FALLBACK_MESSAGE);
+      return FALLBACK_MESSAGE;
+    }
 
-    const data = (await response.json()) as { answer?: unknown };
-    const answer = typeof data.answer === 'string' ? data.answer.trim() : '';
-    return answer || FALLBACK_MESSAGE;
+    clearTimeout(timeoutId);
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let full = '';
+
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() ?? '';
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!line.startsWith('data:')) continue;
+
+        const payload = line.slice(5).trim();
+        if (!payload || payload === '[DONE]') continue;
+
+        const delta = extractDelta(payload);
+        if (delta) {
+          full += delta;
+          onDelta(delta);
+        }
+      }
+    }
+
+    if (!full.trim()) {
+      onDelta(FALLBACK_MESSAGE);
+      return FALLBACK_MESSAGE;
+    }
+
+    return full.trim();
   } catch {
+    onDelta(FALLBACK_MESSAGE);
     return FALLBACK_MESSAGE;
   } finally {
     clearTimeout(timeoutId);
@@ -155,20 +216,10 @@ export async function POST(req: NextRequest) {
     history.unshift(message);
   }
 
-  const answer = await fetchRagAnswer(question, history);
-
   await saveChatMessage({
     sessionId,
     role: 'user',
     content: question,
-    userAgent,
-    ipAddress: ip,
-  });
-
-  await saveChatMessage({
-    sessionId,
-    role: 'assistant',
-    content: answer,
     userAgent,
     ipAddress: ip,
   });
@@ -179,8 +230,27 @@ export async function POST(req: NextRequest) {
   return createUIMessageStreamResponse({
     headers,
     stream: createUIMessageStream({
-      execute: ({ writer }) => {
-        writeAssistantText(writer, answer);
+      execute: async ({ writer }) => {
+        const idSuffix = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const textId = `text-${idSuffix}`;
+
+        writer.write({ type: 'start' });
+        writer.write({ type: 'text-start', id: textId });
+
+        const answer = await streamRagAnswer(question, history, (delta) => {
+          writer.write({ type: 'text-delta', id: textId, delta });
+        });
+
+        writer.write({ type: 'text-end', id: textId });
+        writer.write({ type: 'finish' });
+
+        await saveChatMessage({
+          sessionId,
+          role: 'assistant',
+          content: answer,
+          userAgent,
+          ipAddress: ip,
+        });
       },
     }),
   });
