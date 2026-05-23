@@ -26,13 +26,12 @@ function FormatOption({ icon, title, description, disabled, loading, onClick }: 
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'group relative flex w-full items-center gap-4 rounded-xl border border-border bg-card p-4 text-left ring-1 ring-foreground/5 transition-all duration-200',
-        'hover:border-primary/40 hover:ring-primary/20 hover:shadow-sm',
+        'group relative flex w-full items-center gap-4 rounded-xl border border-border bg-card p-4 text-left',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         'disabled:cursor-not-allowed disabled:opacity-60'
       )}
     >
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
         {loading ? <Loader2 className="size-5 animate-spin" /> : icon}
       </span>
       <span className="min-w-0 flex-1">
@@ -41,7 +40,7 @@ function FormatOption({ icon, title, description, disabled, loading, onClick }: 
         </span>
         <span className="block truncate text-xs text-muted-foreground">{description}</span>
       </span>
-      <Download className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-y-0.5 group-hover:text-primary" />
+      <Download className="size-4 shrink-0 text-muted-foreground" />
     </button>
   );
 }

@@ -226,7 +226,7 @@ export default function ExamRoutineResults({
                     <li
                       key={`${exam.courseCode}-${index}`}
                       className={cn(
-                        'rounded-lg border border-border bg-card px-4 py-3 ring-1 ring-foreground/5 transition-colors hover:border-primary/30',
+                        'rounded-lg border border-border bg-card px-4 py-3',
                         status === 'past' && 'opacity-70'
                       )}
                     >

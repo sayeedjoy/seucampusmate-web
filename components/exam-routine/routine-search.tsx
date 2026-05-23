@@ -48,7 +48,7 @@ export default function RoutineSearch({
 
   return (
     <div className="max-w-5xl mx-auto mb-10">
-      <Card className="border-border shadow-sm transition-shadow duration-200">
+      <Card>
         <CardContent className="p-6">
           <form onSubmit={onSubmit} className="space-y-5">
             <div className="space-y-2">
