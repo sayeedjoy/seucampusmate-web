@@ -31,6 +31,18 @@ function getStatus(days: number | null): ExamStatus {
   return 'upcoming';
 }
 
+function parseTimeToMinutes(time: string): number {
+  if (!time) return 0;
+  const match = time.trim().match(/^(\d+):(\d+)\s*(AM|PM)$/i);
+  if (!match) return 0;
+  let hours = parseInt(match[1]);
+  const minutes = parseInt(match[2]);
+  const meridiem = match[3].toUpperCase();
+  if (meridiem === 'PM' && hours !== 12) hours += 12;
+  if (meridiem === 'AM' && hours === 12) hours = 0;
+  return hours * 60 + minutes;
+}
+
 // Minimal DD/MM/YYYY-first parser to split the date into rail labels.
 function parseDate(s: string): Date | null {
   if (!s || !s.trim()) return null;
@@ -124,7 +136,11 @@ export default function ExamRoutineResults({
         });
       }
     }
-    return Array.from(map.values());
+    const groups = Array.from(map.values());
+    for (const group of groups) {
+      group.exams.sort((a, b) => parseTimeToMinutes(a.startTime) - parseTimeToMinutes(b.startTime));
+    }
+    return groups;
   }, [allExams, formatDate, getDaysRemaining]);
 
   if (loading) {
@@ -213,11 +229,11 @@ export default function ExamRoutineResults({
                 <div className="relative flex w-3 shrink-0 justify-center">
                   <span
                     className={cn(
-                      'absolute top-1.5 z-10 size-3 rounded-full ring-4',
+                      'absolute top-2 z-10 size-3 rounded-full ring-4',
                       NODE_COLOR[status]
                     )}
                   />
-                  <span className="absolute top-1.5 bottom-0 w-px bg-border" aria-hidden />
+                  <span className={cn('absolute top-2 w-px bg-border', isLast ? 'bottom-0' : '-bottom-7')} aria-hidden />
                 </div>
 
                 {/* Exams for this date */}
