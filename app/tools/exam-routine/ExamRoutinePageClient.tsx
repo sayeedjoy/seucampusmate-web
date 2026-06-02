@@ -36,7 +36,8 @@ export default function ExamRoutinePageClient() {
     const validateCourseCode = useCallback((code: string): boolean => {
         const trimmedCode = code.trim();
         // Pattern: Letters followed by numbers, then a dot, then section number
-        const pattern = /^[A-Z]{2,4}\d{3}\.\d+$/i;
+        //const pattern = /^[A-Z]{2,4}\d{3}\.\d+$/i;
+         const pattern = /^[A-Z]{2,4}\d{3,4}\.\d+$/i;
         return pattern.test(trimmedCode);
     }, []);
 
