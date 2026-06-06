@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
+import { requireAdmin } from '@/lib/roles';
 import {
   getChatHistoryPage,
   deleteChatHistoryById,
@@ -10,9 +11,8 @@ import {
 
 export async function GET(request: NextRequest) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, parseInt(searchParams.get('page') ?? '1', 10) || 1);
@@ -25,9 +25,8 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const { searchParams } = new URL(request.url);
   const deleteAll = searchParams.get('all') === 'true';

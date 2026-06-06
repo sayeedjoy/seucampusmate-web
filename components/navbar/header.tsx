@@ -17,8 +17,8 @@ interface NavLink {
 export const navLinks = [
 	{ label: "Home", href: "/" },
 	{ label: "Features", href: "/#features" },
-	{ label: "Resume Builder", href: "/tools/resume-builder", isNew: true },
 	{ label: "CP Leaderboard", href: "/cp" },
+	{ label: "Hackathons", href: "/hackathon", isNew: true },
 	{ label: "About", href: "/about" },
 	{ label: "Contact", href: "/contact" },
 ];

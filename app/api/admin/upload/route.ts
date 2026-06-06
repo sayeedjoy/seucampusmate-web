@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { requireAdmin } from '@/lib/roles';
 import { NextRequest, NextResponse } from 'next/server';
 import * as XLSX from 'xlsx';
 import { db } from '@/lib/db';
@@ -62,9 +63,8 @@ function normalizeRow(row: Record<string, unknown>) {
 
 export async function POST(request: NextRequest) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const formData = await request.formData();
   const action = formData.get('action') as string;
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (action === 'confirm') {
-    const adminId = session.user.id ? Number(session.user.id) : null;
+    const adminId = session!.user.id ? Number(session!.user.id) : null;
 
     try {
       await db.transaction(async (tx) => {

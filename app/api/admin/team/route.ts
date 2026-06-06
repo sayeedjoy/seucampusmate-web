@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { requireAdmin } from '@/lib/roles';
 import { db } from '@/lib/db';
 import { teamMembers } from '@/lib/db/schema';
 import { uploadImage } from '@/lib/cloudinary';
@@ -7,9 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const rows = await db
     .select()
@@ -21,9 +21,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const formData = await request.formData();
   const name = String(formData.get('name') ?? '').trim();

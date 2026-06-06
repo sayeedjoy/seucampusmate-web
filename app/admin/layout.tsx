@@ -23,6 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       userName={session.user.name ?? 'Admin'}
       userEmail={session.user.email ?? ''}
       isSuperAdmin={session.user.isSuperAdmin}
+      role={session.user.role}
     >
       {children}
     </AdminShell>

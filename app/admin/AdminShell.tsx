@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   LogOut,
   MessageSquare,
+  Rocket,
   Settings,
   Shield,
   Upload,
@@ -38,6 +39,8 @@ type NavItem = {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   superAdminOnly?: boolean;
+  // Items moderators are allowed to see. Moderators see only these.
+  moderatorVisible?: boolean;
 };
 
 type NavSection = {
@@ -55,7 +58,10 @@ const navSections: NavSection[] = [
   },
   {
     title: 'Content',
-    items: [{ href: '/admin/team', label: 'Team', icon: Users }],
+    items: [
+      { href: '/admin/team', label: 'Team', icon: Users },
+      { href: '/admin/hackathon', label: 'Hackathons', icon: Rocket, moderatorVisible: true },
+    ],
   },
   {
     title: 'AI & Activity',
@@ -90,19 +96,25 @@ export default function AdminShell({
   userName,
   userEmail,
   isSuperAdmin,
+  role,
 }: {
   children: React.ReactNode;
   userName: string;
   userEmail: string;
   isSuperAdmin: boolean;
+  role: string;
 }) {
   const pathname = usePathname();
   const pageTitle = getPageTitle(pathname);
 
+  const isModerator = !isSuperAdmin && role === 'moderator';
+
   const visibleSections = navSections
     .map((section) => ({
       ...section,
-      items: section.items.filter((item) => !item.superAdminOnly || isSuperAdmin),
+      items: section.items.filter((item) =>
+        isModerator ? item.moderatorVisible : !item.superAdminOnly || isSuperAdmin
+      ),
     }))
     .filter((section) => section.items.length > 0);
 

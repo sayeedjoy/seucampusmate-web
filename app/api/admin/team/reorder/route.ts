@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { requireAdmin } from '@/lib/roles';
 import { db } from '@/lib/db';
 import { teamMembers } from '@/lib/db/schema';
 import { eq, inArray } from 'drizzle-orm';
@@ -7,9 +8,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   let body: { orderedIds?: unknown };
   try {

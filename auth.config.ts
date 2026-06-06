@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from 'next-auth';
 import { ADMIN_SESSION_MAX_AGE_SECONDS } from '@/lib/admin-session';
+import { isModerator } from '@/lib/roles';
 
 export const authConfig = {
   pages: {
@@ -25,8 +26,17 @@ export const authConfig = {
       if (isSetupPage || isSetupApi) return true;
 
       if (isAdminRoute && !isLoginPage) {
-        if (isLoggedIn) return true;
-        return false;
+        if (!isLoggedIn) return false;
+
+        // Moderators are scoped to the Hackathon section only; bounce them back
+        // to /admin/hackathon from any other admin page.
+        if (isModerator(auth!.user as { role?: string; isSuperAdmin?: boolean })) {
+          const isHackathonArea = nextUrl.pathname.startsWith('/admin/hackathon');
+          if (!isHackathonArea) {
+            return Response.redirect(new URL('/admin/hackathon', nextUrl));
+          }
+        }
+        return true;
       }
       if (isLoginPage && isLoggedIn) {
         return Response.redirect(new URL('/admin/dashboard', nextUrl));

@@ -10,11 +10,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type AdminSummary = {
   id: number;
   name: string | null;
   email: string;
+  role: string;
   createdAt: Date;
   isSuperAdmin: boolean;
 };
@@ -33,6 +41,7 @@ export default function UsersClient({ admins, currentAdminId }: Props) {
     name: '',
     email: '',
     password: '',
+    role: 'admin',
   });
 
   async function handleCreateAdmin(e: React.FormEvent) {
@@ -54,7 +63,7 @@ export default function UsersClient({ admins, currentAdminId }: Props) {
         toast.error(message);
         return;
       }
-      setForm({ name: '', email: '', password: '' });
+      setForm({ name: '', email: '', password: '', role: 'admin' });
       toast.success('Admin created.');
       router.refresh();
     } catch {
@@ -103,7 +112,7 @@ export default function UsersClient({ admins, currentAdminId }: Props) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <form onSubmit={handleCreateAdmin} className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <form onSubmit={handleCreateAdmin} className="grid grid-cols-1 md:grid-cols-5 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="admin-name">Name</Label>
               <Input
@@ -137,6 +146,21 @@ export default function UsersClient({ admins, currentAdminId }: Props) {
                 minLength={8}
               />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="admin-role">Role</Label>
+              <Select
+                value={form.role}
+                onValueChange={value => setForm(prev => ({ ...prev, role: value }))}
+              >
+                <SelectTrigger id="admin-role" className="w-full">
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="moderator">Moderator</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="flex items-end">
               <Button type="submit" disabled={creatingAdmin} className="w-full">
                 <UserPlus className="size-4" />
@@ -155,7 +179,13 @@ export default function UsersClient({ admins, currentAdminId }: Props) {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium truncate">{admin.name || admin.email}</p>
-                      {admin.isSuperAdmin && <Badge variant="secondary">Superadmin</Badge>}
+                      {admin.isSuperAdmin ? (
+                        <Badge variant="secondary">Superadmin</Badge>
+                      ) : (
+                        <Badge variant={admin.role === 'moderator' ? 'outline' : 'secondary'}>
+                          {admin.role === 'moderator' ? 'Moderator' : 'Admin'}
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5 truncate">
                       {admin.email} · Added {format(new Date(admin.createdAt), 'dd MMM yyyy')}

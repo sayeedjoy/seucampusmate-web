@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { requireAdmin } from '@/lib/roles';
 import { db } from '@/lib/db';
 import { teamMembers } from '@/lib/db/schema';
 import { deleteImage, uploadImage } from '@/lib/cloudinary';
@@ -9,9 +10,8 @@ type RouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const { id: idParam } = await context.params;
   const id = Number(idParam);
@@ -77,9 +77,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const { id: idParam } = await context.params;
   const id = Number(idParam);

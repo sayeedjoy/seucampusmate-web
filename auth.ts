@@ -6,6 +6,7 @@ import { adminUsers } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { verifyPassword } from '@/lib/auth-utils';
 import { isSuperAdminEmail } from '@/lib/superadmin';
+import { DEFAULT_ROLE } from '@/lib/roles';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -31,6 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: String(user.id),
           email: user.email,
           name: user.name ?? undefined,
+          role: user.role,
         };
       },
     }),
@@ -42,6 +44,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.email = user.email;
+        token.role = user.role ?? DEFAULT_ROLE;
       }
       token.isSuperAdmin = isSuperAdminEmail((user?.email ?? token.email) as string | undefined);
       return token;
@@ -50,6 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.id && session.user) {
         session.user.id = token.id as string;
         session.user.isSuperAdmin = Boolean(token.isSuperAdmin);
+        session.user.role = (token.role as string | undefined) ?? DEFAULT_ROLE;
       }
       return session;
     },

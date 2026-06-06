@@ -10,6 +10,7 @@ type AdminSummary = {
   id: number;
   name: string | null;
   email: string;
+  role: string;
   createdAt: Date;
   isSuperAdmin: boolean;
 };
@@ -26,6 +27,7 @@ export default async function UsersPage() {
       id: adminUsers.id,
       name: adminUsers.name,
       email: adminUsers.email,
+      role: adminUsers.role,
       createdAt: adminUsers.createdAt,
     })
     .from(adminUsers)

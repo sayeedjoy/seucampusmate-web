@@ -174,6 +174,12 @@ export const pageMetadata = {
       "Explore the complete course catalog for Southeast University. Browse courses, prerequisites, credits, and descriptions for all programs offered at SEU.",
     path: "/course-catalog",
   },
+  hackathon: {
+    title: "Hackathon Tracker Bangladesh",
+    description:
+      "Discover upcoming and past hackathons in Bangladesh. Browse events with host, date, venue or online details, and registration links — curated by SEU CampusMate.",
+    path: "/hackathon",
+  },
 } as const;
 
 export type PageMetadataKey = keyof typeof pageMetadata;

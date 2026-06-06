@@ -4,12 +4,12 @@ import { desc, eq } from 'drizzle-orm';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { apiKeys, adminUsers } from '@/lib/db/schema';
+import { requireAdmin } from '@/lib/roles';
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   const rows = await db
     .select({
@@ -30,9 +30,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = requireAdmin(session);
+  if (denied) return denied;
 
   let body: { name?: string };
   try {
@@ -50,7 +49,7 @@ export async function POST(request: NextRequest) {
   const keyHash = crypto.createHash('sha256').update(rawKey).digest('hex');
   const keyPrefix = rawKey.slice(0, 11);
 
-  const createdById = session.user.id ? Number(session.user.id) : null;
+  const createdById = session!.user.id ? Number(session!.user.id) : null;
 
   const inserted = await db
     .insert(apiKeys)

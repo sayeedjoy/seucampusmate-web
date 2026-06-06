@@ -1,10 +1,13 @@
-import { pgTable, serial, text, integer, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, boolean, uuid, date } from 'drizzle-orm/pg-core';
 
 export const adminUsers = pgTable('admin_users', {
   id: serial('id').primaryKey(),
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   name: text('name'),
+  // 'admin' (full access) | 'moderator' (Hackathon section only).
+  // Superadmin is determined by SUPERADMIN_EMAIL env, not this column.
+  role: text('role').notNull().default('admin'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
@@ -66,6 +69,26 @@ export const teamMembers = pgTable('team_members', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const hackathons = pgTable('hackathons', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  host: text('host').notNull(),
+  // Stored as ISO 'YYYY-MM-DD'; displayed as "5 May 2026". Start day of the event.
+  eventDate: date('event_date').notNull(),
+  // Optional last day for multi-day events; null for single-day events.
+  endDate: date('end_date'),
+  isOnline: boolean('is_online').notNull().default(false),
+  isPostponed: boolean('is_postponed').notNull().default(false),
+  location: text('location'),
+  bannerUrl: text('banner_url').notNull(),
+  // Cloudinary public_id when uploaded; null when a link was pasted.
+  bannerFileId: text('banner_file_id'),
+  eventLink: text('event_link').notNull(),
+  createdById: integer('created_by_id').references(() => adminUsers.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type ExamSchedule = typeof examSchedules.$inferSelect;
 export type UploadHistory = typeof uploadHistory.$inferSelect;
@@ -75,3 +98,5 @@ export type ChatHistory = typeof chatHistory.$inferSelect;
 export type NewChatHistory = typeof chatHistory.$inferInsert;
 export type TeamMember = typeof teamMembers.$inferSelect;
 export type NewTeamMember = typeof teamMembers.$inferInsert;
+export type Hackathon = typeof hackathons.$inferSelect;
+export type NewHackathon = typeof hackathons.$inferInsert;

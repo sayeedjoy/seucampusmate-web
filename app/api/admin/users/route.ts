@@ -3,6 +3,7 @@ import { hashPassword } from '@/lib/auth-utils';
 import { db } from '@/lib/db';
 import { adminUsers } from '@/lib/db/schema';
 import { isSuperAdminEmail, normalizeEmail } from '@/lib/superadmin';
+import { DEFAULT_ROLE, isValidRole } from '@/lib/roles';
 import { asc, eq } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -20,6 +21,7 @@ export async function GET() {
       id: adminUsers.id,
       name: adminUsers.name,
       email: adminUsers.email,
+      role: adminUsers.role,
       createdAt: adminUsers.createdAt,
     })
     .from(adminUsers)
@@ -43,15 +45,21 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { name, email, password } = body as {
+  const { name, email, password, role } = body as {
     name?: string;
     email?: string;
     password?: string;
+    role?: string;
   };
 
   const trimmedName = (name ?? '').trim();
   const normalizedEmail = normalizeEmail(email);
   const safePassword = password ?? '';
+  const safeRole = role === undefined ? DEFAULT_ROLE : role;
+
+  if (!isValidRole(safeRole)) {
+    return NextResponse.json({ error: 'Invalid role.' }, { status: 400 });
+  }
 
   if (!trimmedName || !normalizedEmail || !safePassword) {
     return NextResponse.json(
@@ -90,11 +98,13 @@ export async function POST(request: NextRequest) {
       name: trimmedName,
       email: normalizedEmail,
       passwordHash,
+      role: safeRole,
     })
     .returning({
       id: adminUsers.id,
       name: adminUsers.name,
       email: adminUsers.email,
+      role: adminUsers.role,
       createdAt: adminUsers.createdAt,
     });
 
