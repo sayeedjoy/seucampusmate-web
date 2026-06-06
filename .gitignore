@@ -46,3 +46,5 @@ next-env.d.ts
 *.iml
 *.ipr
 /.claude/settings.local.json
+/openspec
+*.env
