@@ -3,10 +3,10 @@
 import * as React from "react"
 import { Container } from "@/components/ui/container"
 import { Button } from "@/components/ui/button"
+import { SectionHeader } from "@/components/section-header"
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { IntegrationCard } from "./integration-card"
 import { integrations } from "./integrations-data"
-import { AuroraText } from "../ui/aurora-text"
 
 const INITIAL_VISIBLE = 8
 
@@ -15,48 +15,40 @@ export function IntegrationsSection2() {
   const visibleItems = expanded ? integrations : integrations.slice(0, INITIAL_VISIBLE)
   const hasMore = integrations.length > INITIAL_VISIBLE
 
+  const toggle = hasMore ? (
+    <Button
+      variant="outline"
+      onClick={() => setExpanded((e) => !e)}
+      aria-expanded={expanded}
+      aria-controls="toolkit-grid"
+      className="gap-1.5"
+    >
+      {expanded ? "Show fewer tools" : `Show all ${integrations.length} tools`}
+      {expanded ? <ChevronUp className="size-4" aria-hidden /> : <ChevronDown className="size-4" aria-hidden />}
+    </Button>
+  ) : null
+
   return (
-    <section id="features" className="scroll-mt-20 py-16 sm:py-20 lg:py-24">
-      <Container>
-        {/* Header */}
-        <div className="mx-auto mb-12 w-full max-w-2xl text-center sm:mb-16 lg:flex lg:flex-col lg:items-center">
-          <h2 className="text-4xl font-bold tracking-tight sm:text-5xl md:whitespace-nowrap md:text-6xl lg:text-7xl">
-            The Ultimate <AuroraText>SEU</AuroraText> Student Toolkit
-          </h2>
-          <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            Key tools and resources to power your journey at Southeast University.
-          </p>
-        </div>
+    <section id="features" aria-labelledby="toolkit-title" className="scroll-mt-20 py-16 sm:py-20 lg:py-24">
+      <Container className="max-w-[90rem]">
+        <SectionHeader
+          id="toolkit-title"
+          eyebrow="Tools"
+          title="The SEU student toolkit"
+          description="Calculators, routines and course references, set up for Southeast University."
+          action={<div className="hidden sm:block">{toggle}</div>}
+        />
 
-        {/* Grid: 4 columns × 3 rows */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 sm:gap-5 lg:gap-6">
+        <ul id="toolkit-grid" className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           {visibleItems.map((item) => (
-            <IntegrationCard key={item.id} integration={item} />
+            <li key={item.id} className="flex">
+              <IntegrationCard integration={item} />
+            </li>
           ))}
-        </div>
+        </ul>
 
-        {hasMore && (
-          <div className="mt-8 flex justify-center">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setExpanded((e) => !e)}
-              className="gap-1.5"
-            >
-              {expanded ? (
-                <>
-                  Show less
-                  <ChevronUp className="size-4" />
-                </>
-              ) : (
-                <>
-                  Show more
-                  <ChevronDown className="size-4" />
-                </>
-              )}
-            </Button>
-          </div>
-        )}
+        {/* On phones the toggle follows the list, where the thumb already is */}
+        {toggle ? <div className="mt-6 sm:hidden [&_button]:w-full">{toggle}</div> : null}
       </Container>
     </section>
   )

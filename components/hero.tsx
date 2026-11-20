@@ -1,298 +1,108 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion } from 'motion/react';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarGroup,
-  AvatarGroupCount,
-  AvatarImage,
-} from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Star, Download } from 'lucide-react';
-import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
-import { AuroraText } from '@/components/ui/aurora-text';
+import Link from 'next/link';
+import { MotionConfig, motion } from 'motion/react';
+import { HeroPhone } from '@/components/hero-phone';
+import { HeroWidgets } from '@/components/hero-widgets';
 import { cn } from '@/lib/utils';
 
 const EASE = [0.16, 1, 0.3, 1] as [number, number, number, number];
+const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.apppulse.seu&hl=en';
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay, ease: EASE },
-  }),
-};
-
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.85 },
-  show: (delay: number) => ({
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.5, delay, ease: EASE },
-  }),
-};
+// One page-load sequence: copy, then the widget wall, then the phone.
+const rise = (delay: number, y = 16) => ({
+  initial: { opacity: 0, y },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: EASE },
+});
 
 export function Hero() {
-  const [count, setCount] = useState(0);
-  const targetCount = 10000;
-
-  useEffect(() => {
-    const duration = 2000;
-    let startTime: number | null = null;
-    let animationFrameId: number;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeOutQuad = (t: number) => t * (2 - t);
-      const easedProgress = easeOutQuad(progress);
-      setCount(Math.floor(easedProgress * targetCount));
-      if (progress < 1) animationFrameId = requestAnimationFrame(animate);
-    };
-
-    const timeoutId = setTimeout(() => {
-      animationFrameId = requestAnimationFrame(animate);
-    }, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  const formatCount = (num: number) => {
-    if (num >= 10000) return '10K+';
-    if (num >= 1000) return `${Math.floor(num / 1000)}K+`;
-    return num.toLocaleString();
-  };
-
   return (
-    <section className="relative bg-background min-h-[60vh] sm:min-h-[70vh] lg:min-h-fit w-full pt-8 pb-2 sm:pt-10 sm:pb-4 md:pt-12 md:pb-5 lg:pt-16 lg:pb-0 xl:pt-20 xl:pb-0 overflow-hidden">
-
-      {/* Background glow blobs */}
-      <div className="absolute -top-20 left-1/4 -translate-x-1/2 w-[500px] h-[400px] bg-primary/10 rounded-full blur-3xl pointer-events-none" aria-hidden />
-      <div className="absolute top-10 right-0 w-[400px] h-[500px] bg-primary/6 rounded-full blur-3xl pointer-events-none" aria-hidden />
-
-      {/* Subtle dot grid */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle, var(--border) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-          maskImage: 'radial-gradient(ellipse 80% 70% at 50% 0%, #000 50%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 0%, #000 50%, transparent 100%)',
-        }}
-        aria-hidden
-      />
-
-      <div className="relative z-20 mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-8 sm:gap-10 md:gap-12 lg:gap-16 xl:gap-20 items-center">
-
-          {/* Left: Text content */}
-          <div className="order-1 space-y-5 sm:space-y-6 text-center lg:text-left px-4 sm:px-6 md:px-0">
-
-            {/* Badge */}
-            <motion.div
-              className="flex justify-center lg:justify-start"
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
-              custom={0}
+    <MotionConfig reducedMotion="user">
+      <section
+        aria-labelledby="hero-title"
+        className="relative w-full overflow-hidden bg-background pt-12 sm:pt-16 lg:pt-20"
+      >
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_380px] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:px-8">
+          {/* Copy */}
+          <motion.div className="relative z-20 max-w-[34rem] lg:col-start-1 lg:row-start-1" {...rise(0)}>
+            {/* Context before the claim. A label, not a link: no arrow, no hover. */}
+            {/* A solid chip inside a soft pill, 4px in on every side (32px pill, 24px chip) */}
+            <p className="inline-flex h-8 items-center gap-2.5 rounded-full border border-foreground/[0.06] bg-foreground/[0.04] pl-1 pr-3.5 text-[13.5px] font-medium leading-none text-foreground/85 dark:border-white/10 dark:bg-white/[0.06]">
+              <span className="inline-flex h-6 items-center rounded-full bg-foreground px-2.5 text-[12px] font-semibold text-background">
+                10K+
+              </span>
+              SEU students use it
+            </p>
+            <h1
+              id="hero-title"
+              className="mt-5 text-balance text-[44px] font-bold leading-[1.04] tracking-[-0.04em] text-foreground sm:text-[56px] lg:text-[64px]"
             >
-              <div className={cn(
-                "group rounded-full border border-black/5 bg-neutral-100 text-sm transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
-              )}>
-                <AnimatedShinyText className="inline-flex items-center justify-center px-3.5 py-1 whitespace-nowrap transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
-                  <span>✨ 10K+ SEU Students Trust Us</span>
-                </AnimatedShinyText>
-              </div>
-            </motion.div>
-
-            {/* Heading */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
-              custom={0.1}
-            >
-              <h1 className="text-[36px] leading-[44px] sm:text-[48px] sm:leading-[56px] md:text-[56px] md:leading-[64px] lg:text-[60px] lg:leading-[68px] xl:text-[68px] xl:leading-[76px] 2xl:text-[76px] 2xl:leading-[84px] font-bold tracking-[-0.02em] text-foreground lg:whitespace-nowrap">
-                Your{' '}
-                <AuroraText colors={['#f59e0b', '#f97316', '#eab308', '#fb923c']} speed={0.8}>
-                  SEU Buddy
-                </AuroraText>
-              </h1>
-            </motion.div>
-
-            {/* Subheading */}
-            <motion.p
-              className="text-[14px] leading-[22px] sm:text-[16px] sm:leading-[26px] md:text-[17px] md:leading-[28px] text-muted-foreground max-w-sm sm:max-w-lg mx-auto lg:mx-0"
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
-              custom={0.2}
-            >
-              Track attendance, calculate CGPA, manage routines, and stay connected with your SEU community — everything for academic success.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3 pt-1"
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
-              custom={0.3}
-            >
+              Your SEU semester, sorted.
+            </h1>
+            <p className="mt-4 max-w-[26rem] text-pretty text-base leading-relaxed text-muted-foreground sm:text-[17px]">
+              CGPA, attendance and exam rooms for SEU students, in one app.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
               <a
-                href="https://play.google.com/store/apps/details?id=com.apppulse.seu&hl=en"
+                href={PLAY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                aria-label="Download CampusMate on Google Play"
+                className="inline-block rounded-lg transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                aria-label="Get CampusMate on Google Play (opens in a new tab)"
               >
                 <Image
                   src="/google-play.webp"
-                  alt="Get it on Google Play"
-                  width={160}
-                  height={48}
-                  className="h-10 sm:h-11 md:h-12 w-auto object-contain"
+                  alt=""
+                  width={140}
+                  height={42}
+                  className="h-11 w-auto object-contain"
+                  style={{ width: 'auto' }}
                   priority
                   fetchPriority="high"
                 />
               </a>
-            </motion.div>
-
-            {/* Social proof */}
-            <motion.div
-              className="flex flex-row flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-2 pt-2"
-              variants={fadeUp}
-              initial="hidden"
-              animate="show"
-              custom={0.4}
-            >
-              {/* Avatar group + count */}
-              <div className="flex items-center gap-2">
-                <TooltipProvider>
-                  <AvatarGroup>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Avatar className="w-7 h-7 border-2 border-background">
-                          <AvatarImage src="/model/jihad-68b7340f77d12.webp" alt="Jihad" />
-                          <AvatarFallback>J</AvatarFallback>
-                        </Avatar>
-                      </TooltipTrigger>
-                      <TooltipContent><p>Jihad</p></TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Avatar className="w-7 h-7 border-2 border-background">
-                          <AvatarImage src="/model/rafi-68b7340e7054e.webp" alt="Rafi" />
-                          <AvatarFallback>R</AvatarFallback>
-                        </Avatar>
-                      </TooltipTrigger>
-                      <TooltipContent><p>Rafi</p></TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Avatar className="w-7 h-7 border-2 border-background">
-                          <AvatarImage src="/model/tomal-68b73419de9bc.webp" alt="Tomal" />
-                          <AvatarFallback>T</AvatarFallback>
-                        </Avatar>
-                      </TooltipTrigger>
-                      <TooltipContent><p>Tomal</p></TooltipContent>
-                    </Tooltip>
-                    <AvatarGroupCount className="!size-7 text-xs">+3</AvatarGroupCount>
-                  </AvatarGroup>
-                </TooltipProvider>
-                <div className="text-left">
-                  <span className="text-[15px] font-bold text-foreground leading-none">{formatCount(count)}</span>
-                  <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">students</p>
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div className="w-px h-6 bg-border" aria-hidden />
-
-              {/* Stars */}
-              <div className="flex items-center gap-1.5">
-                <div className="flex items-center gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 dark:text-yellow-400 dark:fill-yellow-400" aria-hidden="true" />
-                  ))}
-                </div>
-                <div className="text-left">
-                  <span className="text-[15px] font-semibold text-foreground leading-none">4.9/5</span>
-                  <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">rating</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right: Phone mockup */}
-          <motion.div
-            className="order-2 relative flex justify-center lg:justify-end lg:pl-12"
-            variants={scaleIn}
-            initial="hidden"
-            animate="show"
-            custom={0.15}
-          >
-            {/* Glow halo */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden>
-              <div className="w-[55%] h-[65%] bg-primary/20 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative animate-float will-change-transform mx-10 sm:mx-14 md:mx-0">
-              <Image
-                src="/hero-light.webp"
-                alt="SEU CampusMate App Preview"
-                width={480}
-                height={960}
-                className="w-full max-w-[200px] h-auto sm:max-w-[260px] md:max-w-[300px] lg:w-[340px] lg:max-w-none xl:w-[380px] 2xl:w-[420px] object-contain relative z-10"
-                priority
-              />
-
-              {/* Floating stat: Downloads — hidden on xs */}
-              <motion.div
-                className="hidden sm:flex absolute -left-10 md:-left-12 top-[18%] z-20 items-center gap-2 bg-background/90 backdrop-blur-sm border border-border rounded-full px-3 py-2 shadow-md"
-                variants={scaleIn}
-                initial="hidden"
-                animate="show"
-                custom={0.6}
+              <Link
+                href="/#features"
+                className="rounded-sm text-sm font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
-                <div className="w-6 h-6 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
-                  <Download className="w-3 h-3 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-foreground leading-none">10K+</p>
-                  <p className="text-[10px] text-muted-foreground leading-tight">Downloads</p>
-                </div>
-              </motion.div>
-
-              {/* Floating stat: Rating — hidden on xs */}
-              <motion.div
-                className="hidden sm:flex absolute -right-10 md:-right-12 bottom-[22%] z-20 items-center gap-2 bg-background/90 backdrop-blur-sm border border-border rounded-full px-3 py-2 shadow-md"
-                variants={scaleIn}
-                initial="hidden"
-                animate="show"
-                custom={0.75}
-              >
-                <div className="w-6 h-6 rounded-full bg-yellow-500/15 flex items-center justify-center flex-shrink-0">
-                  <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-bold text-foreground leading-none">4.9 / 5</p>
-                  <p className="text-[10px] text-muted-foreground leading-tight">App Rating</p>
-                </div>
-              </motion.div>
+                Or use the tools on the web
+              </Link>
             </div>
           </motion.div>
 
+          {/* Scene: a block on small screens (tiles behind the phone); on lg its
+              children join the grid, so the wall sits under the copy and slides
+              beneath the phone. */}
+          <div className="relative mt-10 lg:contents">
+            <motion.div
+              className={cn(
+                // Small screens: the 960px design shifted so the CGPA and attendance tiles sit mid-screen
+                'relative left-1/2 z-0 w-[960px] -translate-x-[calc(50%_-_90px)]',
+                '[mask-image:linear-gradient(to_right,transparent_12%,#000_24%,#000_58%,transparent_68%)]',
+                'lg:left-0 lg:col-start-1 lg:row-start-2 lg:mt-4 lg:-ml-[100px] lg:-mr-[200px] lg:w-auto lg:translate-x-0',
+                'lg:[mask-image:linear-gradient(to_right,transparent_2%,#000_28%)]',
+              )}
+              {...rise(0.15, 24)}
+            >
+              <HeroWidgets />
+            </motion.div>
+
+            {/* The app, live. The stage is transparent around the phone, so the
+                wall shows through beside it; xl/lg: the 560px stage draws its
+                380px phone 90px in from each side (hero-phone.css). */}
+            <motion.div
+              className="relative z-10 mx-auto -mt-6 w-full max-w-[358px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:-mx-[90px] lg:mt-16 lg:w-[560px] lg:max-w-none"
+              {...rise(0.3, 32)}
+              role="img"
+              aria-label="The CampusMate app: the CGPA card opens into the calculator, a grade is picked and the CGPA updates"
+            >
+              <HeroPhone />
+            </motion.div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </MotionConfig>
   );
 }

@@ -1,47 +1,28 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Container } from "@/components/ui/container"
-import { BentoGrid } from "./bento-grid"
-import { BentoCard } from "./bento-card"
-import { BENTO_ITEMS } from "./bento-items"
+import { SectionHeader } from "@/components/section-header"
+import { FeatureBento } from "./feature-bento"
 import type { BentoGridSectionProps } from "./types"
 
 const BentoGridSection = React.forwardRef<HTMLElement, BentoGridSectionProps>(
-  ({ className, items = BENTO_ITEMS, ...props }, ref) => (
+  ({ className, ...props }, ref) => (
     <section
       ref={ref}
-      className={cn("w-full py-10 md:py-16 lg:py-24", className)}
+      id="app"
+      aria-labelledby="app-title"
+      className={cn("w-full scroll-mt-20 py-16 sm:py-20 lg:py-24", className)}
       {...props}
     >
-      <Container>
-        <div className="mb-8 text-center md:mb-12">
-          <h2 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-            Features for Your Campus Life
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Everything you need to stay organized, productive, and connected at
-            Southeast University.
-          </p>
-        </div>
+      <Container className="max-w-[90rem]">
+        <SectionHeader
+          id="app-title"
+          eyebrow="In the app"
+          title="Your semester, in your pocket"
+          description="Today's classes, the marks you still need, tasks, exam slips and fees, all in the CampusMate app."
+        />
 
-        <BentoGrid>
-          {items.map((item, index) => (
-            <BentoCard
-              key={item.title}
-              size={item.size}
-              imagePlaceholder={item.imagePlaceholder}
-              image={item.image}
-              title={item.title}
-              description={item.description}
-              icon={item.icon}
-              badge={item.badge}
-              iconColorClass={item.iconColorClass}
-              iconBgClass={item.iconBgClass}
-              iconVariant={item.iconVariant}
-              priority={index < 3}
-            />
-          ))}
-        </BentoGrid>
+        <FeatureBento />
       </Container>
     </section>
   )

@@ -1,9 +1,7 @@
-import Link from "next/link";
-import type { ComponentProps } from "react";
-import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
 import { Marquee } from "@/components/ui/marquee";
+import { SectionHeader } from "@/components/section-header";
 
 const testimonials = [
   {
@@ -56,57 +54,69 @@ const testimonials = [
   },
 ];
 
+const STATS = [
+  { value: "10K+", label: "downloads" },
+  { value: "7K+", label: "active users" },
+  { value: "4.9", label: "Play Store rating" },
+];
+
 const Testimonials = () => (
-  <div className="flex min-h-0 items-center justify-center py-8 md:py-12">
-    <div className="h-full w-full overflow-hidden">
-      <h2 className="text-pretty px-6 text-center font-semibold text-3xl sm:text-4xl md:text-5xl tracking-[-0.03em]">
-        What our users say
-      </h2>
-      <p className="mt-3 text-center text-muted-foreground text-xl">
-        See what our users have to say about CampusMate
-      </p>
-      <div className="relative mt-8 md:mt-14 overflow-hidden">
-        <div className="absolute inset-y-0 left-0 z-10 w-[15%] bg-linear-to-r from-background to-transparent" />
-        <div className="absolute inset-y-0 right-0 z-10 w-[15%] bg-linear-to-l from-background to-transparent" />
-        <Marquee className="[--duration:20s]" pauseOnHover>
-          <TestimonialList />
-        </Marquee>
-        <Marquee className="mt-0 [--duration:20s]" pauseOnHover reverse>
-          <TestimonialList />
-        </Marquee>
-      </div>
+  <section aria-labelledby="reviews-title" className="w-full py-16 sm:py-20 lg:py-24">
+    <Container className="max-w-[90rem]">
+      <SectionHeader
+        id="reviews-title"
+        eyebrow="Reviews"
+        title="What SEU students say"
+        description="From CampusMate's reviews on Google Play."
+        action={
+          <dl className="flex gap-8 sm:gap-10">
+            {STATS.map((s) => (
+              <div key={s.label} className="flex flex-col-reverse">
+                <dt className="mt-1 text-sm text-muted-foreground">{s.label}</dt>
+                <dd className="text-3xl font-bold tracking-[-0.02em] text-foreground tabular-nums sm:text-4xl">{s.value}</dd>
+              </div>
+            ))}
+          </dl>
+        }
+      />
+    </Container>
+
+    {/* The reel runs edge to edge; the fades keep its ends soft */}
+    <div className="relative overflow-hidden motion-reduce:[&_.animate-marquee]:[animation-play-state:paused]">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-[12%] bg-linear-to-r from-background to-transparent" aria-hidden />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-[12%] bg-linear-to-l from-background to-transparent" aria-hidden />
+      <Marquee className="[--duration:40s]" pauseOnHover>
+        <TestimonialList />
+      </Marquee>
+      <Marquee className="[--duration:40s]" pauseOnHover reverse>
+        <TestimonialList />
+      </Marquee>
     </div>
-  </div>
+  </section>
 );
 
 const TestimonialList = () =>
   testimonials.map((testimonial) => (
-    <div
-      className="min-w-[280px] sm:min-w-96 max-w-sm rounded-xl bg-accent p-6"
+    <figure
+      className="flex w-[300px] flex-col justify-between gap-6 rounded-2xl border border-border bg-card p-6 sm:w-[380px]"
       key={testimonial.id}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Avatar className="size-10 overflow-hidden">
-            <div className="relative w-full h-full">
-              <AvatarImage
-                  src={testimonial.avatar.trim()}
-                  alt={testimonial.name}
-                  className="object-cover size-full text-transparent"
-              />
-            </div>
-            <AvatarFallback className="bg-primary font-medium text-primary-foreground text-xl">
-              {testimonial.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-semibold">{testimonial.name}</p>
-            <p className="text-gray-500 text-sm">{testimonial.designation}</p>
-          </div>
+      <blockquote className="text-pretty text-[15px] leading-relaxed text-foreground sm:text-base">
+        {testimonial.testimonial}
+      </blockquote>
+      <figcaption className="flex items-center gap-3">
+        <Avatar className="size-9">
+          <AvatarImage src={testimonial.avatar.trim()} alt="" className="object-cover" />
+          <AvatarFallback className="bg-muted text-sm font-medium text-foreground">
+            {testimonial.name.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <p className="text-sm font-semibold capitalize text-foreground">{testimonial.name}</p>
+          <p className="text-sm text-muted-foreground">{testimonial.designation}</p>
         </div>
-      </div>
-      <p className="mt-5 text-[17px]">{testimonial.testimonial}</p>
-    </div>
+      </figcaption>
+    </figure>
   ));
 
 export default Testimonials;

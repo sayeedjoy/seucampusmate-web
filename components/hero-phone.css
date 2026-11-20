@@ -1,0 +1,509 @@
+/* The landing hero's phone. Every rule nests under .hp so nothing leaks out.
+   The stage is transparent (the page is the ground); the phone keeps the
+   app's own light look in both page themes. */
+.hp {
+  & .ss-stage {
+    --hp-blue: #1565c0;
+    --hp-blue-deep: #0b4a9c;
+    --hp-blue-soft: #e4eefa;
+    --hp-ink: #16181d;
+    --hp-ink-2: #5b6272;
+    --hp-line: #e6e8ec;
+    --hp-open: cubic-bezier(0.3, 0.75, 0.1, 1);
+    overflow: hidden;
+    background: transparent;
+    /* The phone runs off the hero's foot and dissolves into the page */
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 88px), transparent);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 88px), transparent);
+  }
+
+  /* Pinned from the top, centered, off the bottom */
+  & .hp-phone {
+    position: absolute;
+    top: 24px;
+    left: 90px;
+    box-shadow: 0 30px 60px -24px rgba(20, 24, 40, 0.38), 0 6px 14px -6px rgba(20, 24, 40, 0.14);
+  }
+
+  & .ss-stage[data-layout="compact"] .hp-phone {
+    top: 16px;
+    left: 16px;
+  }
+
+  /* Compact: the phone draws at 0.75, so the small type steps up a size to
+     stay readable in a phone column */
+  & .ss-stage[data-layout="compact"] {
+    & .hp-greet-hi,
+    & .hp-head-sub,
+    & .hp-term-count,
+    & .hp-score-label,
+    & .hp-score-note,
+    & .hp-course .ss-row__subtitle {
+      font-size: 14px;
+      line-height: 19px;
+    }
+
+    & .hp-head-title {
+      gap: 10px;
+    }
+  }
+
+  & .hp-phone .ss-phone__status {
+    color: var(--hp-ink);
+  }
+
+  & .hp-phone[data-open] .ss-phone__status {
+    color: #fff;
+  }
+
+  & .ss-phone__screen {
+    font-family: inherit;
+    letter-spacing: -0.01em;
+    color: var(--hp-ink);
+  }
+
+  /* ---------------- Home ---------------- */
+
+  /* Lasting layers, so text never re-snaps when a move or the open lands */
+  & .hp-home,
+  & .hp-greet,
+  & .ss-expand__content {
+    will-change: transform;
+  }
+
+  & .hp-home {
+    position: absolute;
+    inset: 0;
+    background: #f5f6fa;
+    /* Recedes by dimming only: a scale would land its text with a hop */
+    transition: opacity 0.6s ease;
+  }
+
+  & .hp-home[data-back] {
+    opacity: 0.55;
+  }
+
+  & .hp-greet {
+    position: absolute;
+    top: 62px;
+    right: 18px;
+    left: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  & .hp-avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f59e0b;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+    text-box: trim-both cap alphabetic;
+  }
+
+  & .hp-greet-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  & .hp-greet-hi {
+    font-size: 13px;
+    line-height: 17px;
+    color: var(--hp-ink-2);
+  }
+
+  & .hp-greet-name {
+    font-size: 17px;
+    line-height: 22px;
+    font-weight: 700;
+  }
+
+  & .hp-greet-icons {
+    display: flex;
+    gap: 18px;
+    color: #3a4150;
+  }
+
+  & .hp-section {
+    position: absolute;
+    top: 128px;
+    left: 18px;
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 650;
+  }
+
+  & .hp-tiles {
+    position: absolute;
+    top: 162px;
+    left: 18px;
+    display: flex;
+    gap: 10px;
+  }
+
+  & .hp-tile {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 132px;
+    padding: 14px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--hp-line);
+  }
+
+  & .hp-tile-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-bottom: 4px;
+    border-radius: 50%;
+  }
+
+  & .hp-tone--blue { background: #e4eefa; color: #1565c0; }
+  & .hp-tone--green { background: #ddf3e7; color: #1f9d55; }
+  & .hp-tone--amber { background: #fdf0d2; color: #c98a04; }
+
+  & .hp-tile-label {
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  & .hp-slot {
+    position: absolute;
+    left: 16px;
+    width: calc(100% - 32px);
+    border-radius: 22px;
+  }
+
+  & .hp-more {
+    position: absolute;
+    right: 16px;
+    left: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  & .hp-more-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 128px;
+    padding: 16px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--hp-line);
+  }
+
+  & .hp-more-card > :first-child {
+    margin-bottom: 8px;
+  }
+
+  /* ---------------- The card that becomes the calculator ---------------- */
+
+  /* Press and expansion have separate owners: Expand's inline clip transition
+     must not replace the card's press feedback */
+  & .hp-press {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.2s ease;
+    will-change: transform;
+  }
+
+  & .hp-phone:has(.hp-slot[data-pressed]) .hp-press {
+    transform: scale(0.98);
+  }
+
+  & .hp-detail {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  & .hp-detail-inner {
+    position: relative;
+    min-height: 100%;
+    background: #f5f6fa;
+    will-change: transform;
+    transition: transform 0.62s var(--hp-open), background-color 0.18s ease-out;
+  }
+
+  /* Closing, the body and its ground go first, so the card lands as only its
+     header band; opening, the growing card reveals them */
+  & .hp-detail:not([data-open]) .hp-detail-inner {
+    background-color: transparent;
+    transition: transform 0.62s var(--hp-open), background-color 0.16s ease-out 0.08s;
+  }
+
+  & .hp-detail:not([data-open]) .hp-body,
+  & .hp-detail:not([data-open]) .hp-score {
+    opacity: 0;
+    transition: opacity 0.08s ease-out;
+  }
+
+  & .hp-body,
+  & .hp-score {
+    transition: opacity 0.2s ease 0.12s;
+  }
+
+  & .hp-head {
+    position: relative;
+    height: 266px;
+    color: #fff;
+    background:
+      radial-gradient(80% 120% at 100% 0%, rgba(255, 255, 255, 0.16), transparent 60%),
+      linear-gradient(150deg, #1e7ae0 0%, var(--hp-blue) 45%, var(--hp-blue-deep) 100%);
+  }
+
+  & .hp-back {
+    position: absolute;
+    top: 62px;
+    left: 14px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease, background-color 0.15s ease;
+  }
+
+  & .hp-detail[data-open] .hp-back {
+    opacity: 1;
+    transition-delay: 0.25s, 0s;
+  }
+
+  & .hp-back[data-pressed] {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  /* Closed, the card shows the band from LIFT (40) to 136: the title sits
+     24pt in from its top and 20pt in from its left */
+  & .hp-head-title {
+    position: absolute;
+    top: 64px;
+    left: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    will-change: transform;
+    transition: transform 0.62s var(--hp-open);
+  }
+
+  & .hp-head-name {
+    font-size: 19px;
+    line-height: 25px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+  }
+
+  & .hp-head-sub {
+    font-size: 13px;
+    line-height: 18px;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  & .hp-score {
+    position: absolute;
+    top: 146px;
+    left: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  & .hp-score-label {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  & .hp-score-value {
+    font-size: 52px;
+    line-height: 60px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & .hp-score-note {
+    display: flex;
+    gap: 0.28em;
+    font-size: 13px;
+    line-height: 18px;
+    color: rgba(255, 255, 255, 0.78);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- The course list ---- */
+
+  & .hp-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 16px 0;
+  }
+
+  & .hp-term {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 4px;
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 650;
+  }
+
+  & .hp-term-count {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--hp-ink-2);
+  }
+
+  & .hp-courses {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--hp-line);
+  }
+
+  & .hp-courses > :not(:first-child) {
+    border-top: 1px solid #eef0f3;
+  }
+
+  & .hp-course {
+    --ss-row-pad: 14px;
+    align-items: center;
+  }
+
+  & .hp-course .ss-row__title {
+    font-size: 15px;
+    font-weight: 650;
+  }
+
+  & .hp-course .ss-row__subtitle {
+    font-size: 13px;
+    color: var(--hp-ink-2);
+  }
+
+  & .hp-anchor {
+    position: relative;
+    z-index: 2;
+  }
+
+  & .hp-chip {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 48px;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 15px;
+    background: var(--hp-blue-soft);
+    color: var(--hp-blue);
+    font-size: 14px;
+    line-height: 18px;
+    font-weight: 650;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Waiting for a grade: an outlined dropdown */
+  & .hp-chip:not([data-set]) {
+    padding: 0 10px 0 12px;
+    background: #fff;
+    color: var(--hp-ink-2);
+    box-shadow: inset 0 0 0 1px #cfd5df;
+  }
+
+  & .hp-chip[data-open] {
+    box-shadow: inset 0 0 0 1.5px var(--hp-blue);
+    color: var(--hp-blue);
+  }
+
+  & .hp-chip[data-set] svg {
+    color: var(--hp-blue);
+  }
+
+  /* Pressed, the chip takes one step of its own surface (a Material state
+     layer), never a scale that would land its label with a hop */
+  & .hp-chip[data-pressed] {
+    background: #eaf1fb;
+  }
+
+  /* The row pads 12pt; the chip's right inset matches its top and bottom */
+  & .hp-course .hp-chip {
+    margin-right: 5px;
+  }
+
+  & .hp-chip--filler {
+    background: #f1f3f6;
+  }
+
+  /* The chip being graded holds one even width in both states, so its label
+     crossfades in place and the chevron never lands on a half pixel */
+  & .hp-chip--pick {
+    width: 84px;
+    padding: 0;
+  }
+
+  & .hp-chip--pick:not([data-set]) {
+    padding: 0;
+  }
+
+  & .hp-menu {
+    position: absolute;
+    top: calc(100% - 6px);
+    right: 14px;
+    width: 148px;
+    padding: 6px;
+    --ss-popover-bg: #fff;
+    --ss-popover-shadow: 0 0 0 1px rgba(20, 24, 40, 0.06), 0 14px 30px -10px rgba(20, 24, 40, 0.3);
+    border-radius: 14px;
+  }
+
+  & .hp-menu .ss-menu__item {
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 9px;
+  }
+
+  & .hp-menu .ss-menu__item[data-active] {
+    background: var(--hp-blue-soft);
+  }
+
+  & .hp-menu-row {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--hp-ink);
+  }
+
+  & .hp-menu-row b {
+    font-weight: 650;
+  }
+
+  & .hp-menu-row span {
+    color: var(--hp-ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+}

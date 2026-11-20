@@ -44,7 +44,7 @@ function IconWrap({
 const CodeIcon = () => (
   <Image
     src="/codeicon.png"
-    alt="Code icon"
+    alt=""
     width={40}
     height={40}
     className="!size-10 !shrink-0 object-contain block"
@@ -71,7 +71,7 @@ export const integrations: Integration[] = [
     id: 0, // Unique ID
     name: "Resume Builder",
     description:
-        "Build a professional resume instantly. Live preview...",
+        "Build a clean resume with a live preview, then download it as a PDF.",
     icon: (
         <IconWrap iconClass={`${iconBase} text-cyan-600 dark:text-cyan-400`} bgClass="bg-cyan-100 dark:bg-cyan-950/50">
           <FaUserEdit />
@@ -84,7 +84,7 @@ export const integrations: Integration[] = [
     id: 1,
     name: "CGPA Calculator",
     description:
-      "Calculate your CGPA with precision, track semester performance, and strategically plan your academic journey.",
+      "Work out your CGPA and see what each course grade does to it.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-rose-600 dark:text-rose-400`} bgClass="bg-rose-100 dark:bg-rose-950/50">
         <FaCalculator />
@@ -96,7 +96,7 @@ export const integrations: Integration[] = [
     id: 2,
     name: "Course Catalog",
     description:
-      "Explore the complete curriculum with detailed course information, prerequisites, credits, and topics.",
+      "Look up any course's credits, prerequisites and topics.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-blue-600 dark:text-blue-400`} bgClass="bg-blue-100 dark:bg-blue-950/50">
         <FaBook />
@@ -108,7 +108,7 @@ export const integrations: Integration[] = [
     id: 3,
     name: "Curriculum",
     description:
-      "View the complete CSE curriculum with semester-wise course breakdown, credit distribution, and prerequisites.",
+      "The CSE curriculum, semester by semester, with credits and prerequisites.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-indigo-600 dark:text-indigo-400`} bgClass="bg-indigo-100 dark:bg-indigo-950/50">
         <FaListAlt />
@@ -120,7 +120,7 @@ export const integrations: Integration[] = [
     id: 4,
     name: "Assessment Tracking",
     description:
-      "Organize and track all your assignments, quizzes, and examination schedules with smart notifications.",
+      "Keep your assignments, quizzes and exams in one list.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-amber-600 dark:text-amber-400`} bgClass="bg-amber-100 dark:bg-amber-950/50">
         <FaClipboardList />
@@ -132,7 +132,7 @@ export const integrations: Integration[] = [
     id: 5,
     name: "CodeShare",
     description:
-      "Share code instantly with friends in real time and collaborate with them, no signup or login required.",
+      "Share code with friends in real time. No sign-up needed.",
     icon: <CodeIcon />,
     href: "https://code.campusmate.app/",
   },
@@ -140,7 +140,7 @@ export const integrations: Integration[] = [
     id: 6,
     name: "Tuition Calculator",
     description:
-      "Calculate semester fees, manage payment schedules, and track your financial obligations efficiently.",
+      "Work out your semester fee, waiver included, split into installments.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-emerald-600 dark:text-emerald-400`} bgClass="bg-emerald-100 dark:bg-emerald-950/50">
         <FaDollarSign />
@@ -152,7 +152,7 @@ export const integrations: Integration[] = [
     id: 7,
     name: "Exam Routine",
     description:
-      "Manage comprehensive exam schedules, track preparation progress, and analyze your performance trends.",
+      "Search a course code for its exam date, time and room.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-yellow-600 dark:text-yellow-400`} bgClass="bg-yellow-100 dark:bg-yellow-950/50">
         <FaStar />
@@ -164,7 +164,7 @@ export const integrations: Integration[] = [
     id: 8,
     name: "Academic Calendar",
     description:
-      "Stay updated with university events, deadlines, and important academic dates throughout the year.",
+      "University events, deadlines and key dates for the year.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-violet-600 dark:text-violet-400`} bgClass="bg-violet-100 dark:bg-violet-950/50">
         <FaCalendarAlt />
@@ -176,7 +176,7 @@ export const integrations: Integration[] = [
     id: 9,
     name: "Cover Page Generator",
     description:
-      "Create professional cover pages for your assignments with customizable fields and instant PDF download.",
+      "Fill in your details and download an assignment cover page as a PDF.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-slate-600 dark:text-slate-400`} bgClass="bg-slate-100 dark:bg-slate-800/50">
         <FaFileAlt />
@@ -187,7 +187,7 @@ export const integrations: Integration[] = [
   {
     id: 10,
     name: "Blood Donor",
-    description: "Find and connect with nearby blood donors or banks when needed.",
+    description: "Find nearby blood donors and blood banks when it matters.",
     icon: (
       <IconWrap iconClass={`${iconBase} text-red-600 dark:text-red-400`} bgClass="bg-red-100 dark:bg-red-950/50">
         <FaHeartbeat />
@@ -199,7 +199,7 @@ export const integrations: Integration[] = [
     id: 11,
     name: "CP Leaderboard",
     description:
-      "Codeforces CP Leaderboard for SEU students to track competitive programming progress.",
+      "Codeforces rankings for SEU's competitive programmers.",
     icon: <CPIcon />,
     href: "/cp",
   },
