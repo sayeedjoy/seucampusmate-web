@@ -6,15 +6,31 @@ import { MessageCircle, X } from 'lucide-react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport } from 'ai';
 import { ChatWindow } from './ChatWindow';
+import { usePremium } from '@/hooks/use-premium';
+
+type ChatMessage = { parts?: Array<{ type: string; text?: string }> };
+
+function messageText(message: ChatMessage): string {
+  return (message.parts ?? [])
+    .filter((p) => p.type === 'text')
+    .map((p) => p.text ?? '')
+    .join(' ');
+}
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
+  const { isPremium, openUpgrade } = usePremium();
 
   const { messages, status, stop, sendMessage, setMessages } = useChat({
     transport: new DefaultChatTransport({ api: '/api/chatbot/chat' }),
-    onFinish: () => {
+    onFinish: ({ message }) => {
       if (!open) setHasUnread(true);
+      // The server returns the hourly rate-limit notice as an assistant message.
+      // Free users who hit it get an upgrade prompt (Premium removes the limit).
+      if (!isPremium && /chat limit/i.test(messageText(message as ChatMessage))) {
+        openUpgrade('chatbot');
+      }
     },
   });
 

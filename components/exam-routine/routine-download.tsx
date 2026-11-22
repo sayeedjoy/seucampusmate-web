@@ -2,12 +2,15 @@
 
 import { FileText, ImageIcon, Download, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PremiumBadge } from '@/components/premium/PremiumBadge';
 
 export interface ExamRoutineDownloadProps {
   totalResults: number;
   downloading: boolean;
-  onDownloadPDF: () => Promise<void>;
-  onDownloadPNG: () => Promise<void>;
+  onDownloadPDF: () => void;
+  onDownloadPNG: () => void;
+  /** Show a Premium badge on the PDF option (free users). */
+  pdfIsPremium?: boolean;
 }
 
 interface FormatOptionProps {
@@ -17,9 +20,10 @@ interface FormatOptionProps {
   disabled: boolean;
   loading: boolean;
   onClick: () => void;
+  badge?: React.ReactNode;
 }
 
-function FormatOption({ icon, title, description, disabled, loading, onClick }: FormatOptionProps) {
+function FormatOption({ icon, title, description, disabled, loading, onClick, badge }: FormatOptionProps) {
   return (
     <button
       type="button"
@@ -35,8 +39,9 @@ function FormatOption({ icon, title, description, disabled, loading, onClick }: 
         {loading ? <Loader2 className="size-5 animate-spin" /> : icon}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-semibold text-foreground">
+        <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
           {loading ? 'Generating…' : title}
+          {badge}
         </span>
         <span className="block truncate text-xs text-muted-foreground">{description}</span>
       </span>
@@ -50,6 +55,7 @@ export default function ExamRoutineDownload({
   downloading,
   onDownloadPDF,
   onDownloadPNG,
+  pdfIsPremium = false,
 }: ExamRoutineDownloadProps) {
   if (totalResults === 0) {
     return null;
@@ -74,6 +80,7 @@ export default function ExamRoutineDownload({
             disabled={downloading}
             loading={downloading}
             onClick={onDownloadPDF}
+            badge={pdfIsPremium ? <PremiumBadge /> : undefined}
           />
           <FormatOption
             icon={<ImageIcon className="size-5" />}

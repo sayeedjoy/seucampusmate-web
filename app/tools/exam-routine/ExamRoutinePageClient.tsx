@@ -11,6 +11,7 @@ import RoutineSearch from '@/components/exam-routine/routine-search';
 import type { ValidationVariant } from '@/components/exam-routine/routine-search';
 import ExamRoutineResults from '@/components/exam-routine/routine-result-card';
 import ExamRoutineDownload from '@/components/exam-routine/routine-download';
+import { useFeatureGate } from '@/hooks/use-premium';
 
 interface MultipleExamResults {
     [courseCode: string]: {
@@ -31,6 +32,7 @@ export default function ExamRoutinePageClient() {
     const [showWarning, setShowWarning] = useState(true);
     const [downloading, setDownloading] = useState(false);
     const scheduleRef = useRef<HTMLDivElement>(null);
+    const examPdfGate = useFeatureGate('examRoutinePdf');
 
     // Validate course code format (must include section like ABC123.2)
     const validateCourseCode = useCallback((code: string): boolean => {
@@ -847,8 +849,12 @@ export default function ExamRoutinePageClient() {
                                 <ExamRoutineDownload
                                     totalResults={getTotalResults}
                                     downloading={downloading}
-                                    onDownloadPDF={downloadAsPDF}
+                                    onDownloadPDF={() => {
+                                        // PDF export is a Premium feature; PNG stays free.
+                                        if (examPdfGate.requireAccess()) downloadAsPDF();
+                                    }}
                                     onDownloadPNG={downloadAsPNG}
+                                    pdfIsPremium={!examPdfGate.isPremium}
                                 />
                             )}
                         </div>

@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useFeatureGate } from "@/hooks/use-premium";
 import {
   COURSE_COMPONENT_KEYS,
   COURSE_COMPONENT_LABELS,
@@ -159,6 +160,7 @@ export function MarksTracker() {
   const [draft, setDraft] = useState<CourseDraft>(emptyDraft());
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
+  const marksGate = useFeatureGate("marksTracker");
 
   useEffect(() => {
     // Add a small delay to prevent flash and ensure smooth loading
@@ -178,6 +180,8 @@ export function MarksTracker() {
   }, [courses]);
 
   const openCreate = () => {
+    // Free users are capped at a set number of courses; premium is unlimited.
+    if (!marksGate.requireAccess(courses.length)) return;
     setDraft(emptyDraft());
     setModalOpen(true);
   };

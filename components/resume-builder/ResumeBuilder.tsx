@@ -44,6 +44,7 @@ import {
 import { A4_W_PX_AT_96, A4_H_PX_AT_96 } from "@/lib/resume/constants";
 import { useResumeData } from "@/hooks/resume/useResumeData";
 import { useResumePdf } from "@/hooks/resume/useResumePdf";
+import { useFeatureGate } from "@/hooks/use-premium";
 import { ResumeSheet } from "./ResumeSheet";
 import { PersonalInfoSection } from "./PersonalInfoSection";
 import { SocialLinksSection } from "./SocialLinksSection";
@@ -81,6 +82,11 @@ export default function ResumeBuilder() {
   const previewOuterRef = useRef<HTMLDivElement>(null);
   const printRootRef = useRef<HTMLDivElement>(null);
   const { downloadPDF, isGenerating } = useResumePdf(printRootRef, data);
+
+  const pdfGate = useFeatureGate("resumePdf");
+  const handleDownload = () => {
+    if (pdfGate.requireAccess()) downloadPDF();
+  };
 
   const tabsScrollRef = useRef<HTMLDivElement>(null);
 
@@ -344,14 +350,21 @@ export default function ResumeBuilder() {
               </AlertDialogContent>
             </AlertDialog>
 
-            <Button
-              size="sm"
-              onClick={downloadPDF}
-              disabled={isGenerating}
-            >
-              <Download className="mr-1.5 h-4 w-4" />
-              {isGenerating ? "Processing…" : "Save PDF"}
-            </Button>
+            <div className="flex flex-col items-end gap-0.5">
+              <Button
+                size="sm"
+                onClick={handleDownload}
+                disabled={isGenerating}
+              >
+                <Download className="mr-1.5 h-4 w-4" />
+                {isGenerating ? "Processing…" : "Save PDF"}
+              </Button>
+              {!pdfGate.isPremium && (
+                <span className="text-[11px] text-muted-foreground">
+                  {pdfGate.remaining} free export{pdfGate.remaining === 1 ? "" : "s"} left this month
+                </span>
+              )}
+            </div>
           </div>
         </div>
 

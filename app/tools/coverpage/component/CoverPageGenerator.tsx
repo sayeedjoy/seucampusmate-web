@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, Edit3, Eye } from 'lucide-react'
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
+import { useFeatureGate } from '@/hooks/use-premium'
 import {
   ClassicTemplate,
   ModernTemplate,
@@ -31,6 +32,7 @@ export default function CoverPageGenerator() {
   const [data, setData] = useState<CoverPageData>(defaultData)
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('classic')
   const [isGenerating, setIsGenerating] = useState(false)
+  const pdfGate = useFeatureGate('coverpagePdf')
 
   // Load cached user data on component mount
   useEffect(() => {
@@ -630,6 +632,7 @@ export default function CoverPageGenerator() {
   }
 
   const generatePDF = async () => {
+    if (!pdfGate.requireAccess()) return
     setIsGenerating(true)
 
     try {
@@ -901,6 +904,12 @@ export default function CoverPageGenerator() {
                       <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       <span className="text-sm sm:text-base">{isGenerating ? 'Generating PDF...' : 'Download PDF'}</span>
                     </Button>
+                    {!pdfGate.isPremium && (
+                      <p className="mt-2 text-center text-xs text-muted-foreground">
+                        {pdfGate.remaining} free download{pdfGate.remaining === 1 ? '' : 's'} left this month ·{' '}
+                        <a href="/pricing" className="text-primary hover:underline">Go Premium</a>
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>

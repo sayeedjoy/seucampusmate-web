@@ -1,4 +1,5 @@
 import { Container } from "@/components/ui/container";
+import { siteConfig } from "@/site.config";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
+  const { business } = siteConfig;
   return (
     <Container className="py-16">
       <div className="max-w-4xl mx-auto">
@@ -50,9 +52,11 @@ export default function TermsPage() {
               Acceptance of Terms
             </h2>
             <p className="text-gray-600">
-              By accessing and using CampusMate, you accept and agree to be
-              bound by the terms and provision of this agreement. If you do not
-              agree to abide by the above, please do not use this service.
+              CampusMate ("the Service") is operated by{" "}
+              <strong>{business.legalName}</strong> ("we", "us", "our"). By
+              accessing and using CampusMate, you accept and agree to be bound by
+              the terms and provision of this agreement. If you do not agree to
+              abide by the above, please do not use this service.
             </p>
           </div>
 
@@ -168,6 +172,68 @@ export default function TermsPage() {
 
           <div className="bg-white rounded-xl shadow-lg p-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+              Subscriptions, Billing, and Cancellation
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Free and Premium plans
+                </h3>
+                <p className="text-gray-600">
+                  CampusMate offers a free plan with certain usage limits and a
+                  paid "Premium" subscription that removes those limits and
+                  unlocks additional features. Current features and prices are
+                  listed on our{" "}
+                  <a href="/pricing" className="text-blue-600 hover:underline">
+                    Pricing page
+                  </a>
+                  .
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Payments and Merchant of Record
+                </h3>
+                <p className="text-gray-600">
+                  Premium payments are processed by Paddle.com Market Limited
+                  ("Paddle"), which acts as the Merchant of Record for all orders.
+                  Paddle handles billing, payment processing, invoicing, and the
+                  collection of any applicable taxes. By subscribing, you also
+                  agree to Paddle&apos;s buyer terms.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Auto-renewal and cancellation
+                </h3>
+                <p className="text-gray-600">
+                  Premium subscriptions renew automatically at the end of each
+                  billing period (monthly or yearly) at the then-current price,
+                  until cancelled. You may cancel at any time and will retain
+                  access until the end of the current paid period.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Refunds
+                </h3>
+                <p className="text-gray-600">
+                  Refunds are governed by our{" "}
+                  <a
+                    href="/refund-policy"
+                    className="text-blue-600 hover:underline"
+                  >
+                    Refund Policy
+                  </a>
+                  . Prices may change with notice; changes do not affect the
+                  current paid period.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">
               Privacy and Data Protection
             </h2>
             <p className="text-gray-600">
@@ -233,12 +299,15 @@ export default function TermsPage() {
             </p>
             <div className="p-4 bg-gray-50 rounded-lg">
               <p className="text-gray-700">
-                <strong>Email:</strong> legal@campusmate.seu.edu
+                <strong>Operated by:</strong> {business.legalName}
                 <br />
-                <strong>Address:</strong> Southeast University, Dhaka,
-                Bangladesh
+                <strong>Email:</strong> {business.supportEmail}
                 <br />
-                <strong>Phone:</strong> +880-XXX-XXXXXX
+                <strong>Address:</strong> {business.address}
+                <br />
+                <strong>Phone:</strong> {business.phone}
+                <br />
+                <strong>Governing law:</strong> {business.governingLaw}
               </p>
             </div>
           </div>

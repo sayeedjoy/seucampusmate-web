@@ -153,24 +153,17 @@ export function Footer() {
                             Legal
                         </h3>
                         <ul className="space-y-3">
-                            <li>
-                                <Link
-                                    href="/privacy"
-                                    className="group inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                                >
-                                    <span>Privacy Policy</span>
-                                    <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-0.5 -translate-x-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200" />
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/terms"
-                                    className="group inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
-                                >
-                                    <span>Terms of Service</span>
-                                    <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-0.5 -translate-x-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200" />
-                                </Link>
-                            </li>
+                            {siteConfig.legalLinks.map((link) => (
+                                <li key={link.label}>
+                                    <Link
+                                        href={link.href}
+                                        className="group inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors duration-200"
+                                    >
+                                        <span>{link.label}</span>
+                                        <ArrowUpRight className="w-3 h-3 opacity-0 -translate-y-0.5 -translate-x-0.5 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 transition-all duration-200" />
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </MotionDiv>
                 </MotionDiv>

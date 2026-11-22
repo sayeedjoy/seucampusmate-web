@@ -1,4 +1,5 @@
 import { Container } from "@/components/ui/container";
+import { siteConfig } from "@/site.config";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
+  const { business } = siteConfig;
   return (
     <Container className="py-16">
       <div className="max-w-4xl mx-auto">
@@ -144,6 +146,41 @@ export default function PrivacyPage() {
 
           <div className="bg-white rounded-xl shadow-lg p-8">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+              Payment and Subscription Data
+            </h2>
+            <p className="text-gray-600 mb-4">
+              When you purchase a Premium subscription, payment is processed by
+              Paddle.com Market Limited ("Paddle"), our Merchant of Record. We do
+              not collect or store your full card or banking details — these are
+              handled directly by Paddle under their own privacy policy.
+            </p>
+            <ul className="text-gray-600 space-y-2">
+              <li>
+                • Paddle collects the information needed to process your payment
+                (such as billing name, email, country, and payment details).
+              </li>
+              <li>
+                • Paddle shares limited data back with us — for example your
+                subscription status, plan, and the email associated with the
+                order — so we can provide and manage your Premium access.
+              </li>
+              <li>
+                • Please review{" "}
+                <a
+                  href="https://www.paddle.com/legal/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                >
+                  Paddle&apos;s Privacy Policy
+                </a>{" "}
+                to understand how they handle your data.
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">
               Data Security
             </h2>
             <p className="text-gray-600 mb-4">
@@ -184,12 +221,13 @@ export default function PrivacyPage() {
             </p>
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <p className="text-gray-700">
-                <strong>Email:</strong> privacy@campusmate.seu.edu
+                <strong>Operated by:</strong> {business.legalName}
                 <br />
-                <strong>Address:</strong> Southeast University, Dhaka,
-                Bangladesh
+                <strong>Email:</strong> {business.supportEmail}
                 <br />
-                <strong>Phone:</strong> +880-XXX-XXXXXX
+                <strong>Address:</strong> {business.address}
+                <br />
+                <strong>Phone:</strong> {business.phone}
               </p>
             </div>
           </div>

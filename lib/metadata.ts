@@ -150,6 +150,18 @@ export const pageMetadata = {
       "Read SEU CampusMate's terms of service and usage guidelines. Understand your rights and responsibilities when using our platform and services.",
     path: "/terms",
   },
+  pricing: {
+    title: "Pricing",
+    description:
+      "SEU CampusMate pricing. Compare the Free and Premium plans, see what each includes, and upgrade for unlimited access to every academic tool.",
+    path: "/pricing",
+  },
+  refundPolicy: {
+    title: "Refund Policy",
+    description:
+      "SEU CampusMate's cancellation and refund policy for Premium subscriptions, including how to cancel and how to request a refund.",
+    path: "/refund-policy",
+  },
   curriculum: {
     title: "SEU CSE Course Curriculum",
     description:

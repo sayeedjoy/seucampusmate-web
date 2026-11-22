@@ -30,6 +30,30 @@ export const siteConfig = {
     { href: "/contact", label: "Feedback" },
   ] as const,
 
+  // Rendered in the footer "Legal" column. Kept here (not in the navbar) so Paddle's
+  // domain review finds Pricing + the required policies "accessible via navigation".
+  legalLinks: [
+    { href: "/pricing", label: "Pricing" },
+    { href: "/privacy", label: "Privacy Policy" },
+    { href: "/terms", label: "Terms of Service" },
+    { href: "/refund-policy", label: "Refund Policy" },
+  ] as const,
+
+  // ⚠️ PLACEHOLDERS — replace with your real business/legal details before submitting
+  // to Paddle. The legal name must also appear in the Terms of Service.
+  business: {
+    legalName: "[YOUR LEGAL NAME / COMPANY NAME]",
+    address: "[YOUR REGISTERED ADDRESS]",
+    supportEmail: "[YOUR SUPPORT EMAIL]",
+    phone: "[YOUR CONTACT PHONE]",
+    governingLaw: "[YOUR JURISDICTION, e.g. Bangladesh]",
+    // Pricing shown across the site — keep in sync with your Paddle catalog.
+    priceMonthly: "[PRICE]",
+    priceYearly: "[PRICE]",
+    currency: "USD",
+    refundWindowDays: "[N]",
+  },
+
   social: {
     github: "https://github.com/sayeedjoy/seucampusmate-web",
     facebook: "https://facebook.com",
